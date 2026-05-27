@@ -1,0 +1,29 @@
+#top-panel{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    height: calc(100vh - 28px);
+}
+#info-panel{
+    grid-column-start: 1;
+    grid-column-end: 4;
+    background-color: rgb(176,224,230);
+}
+#run-panel{
+    background-color: green;
+    grid-column-start: 4;
+    grid-column-end: 6;
+}
+.problem-tilte{
+    text-align: center;
+    word-wrap: break-word;
+}
+.problem-author{
+    text-align: center;
+    margin-top: 4px;
+    word-wrap: break-word;
+}
+#info-padding{
+    margin-left: 16px;
+    margin-right: 12px;
+    color: black;
+}
