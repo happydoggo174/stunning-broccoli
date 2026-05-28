@@ -254,7 +254,7 @@ function calculate_function(token,itr,param){
         break;
         case "tan":
             assert_fail(args.length!=1,"wrong number of argument for tan");
-            assert_fail(!(args[0]%90) && !((args[0]-90)%180),`tan of ${args[0]} is undefined`);
+            assert_fail((args[0]-90)%180==0,`tan of ${args[0]} is undefined`);
             out=Math.tan(deg_to_rad(args[0]));
         break;
         case "min":
@@ -269,6 +269,17 @@ function calculate_function(token,itr,param){
         case "ln":
             assert_fail(!args.length,"log require a number");
             assert_fail(args[0]<=0,"log parameter have to be bigger than zero");
+            if(token=="ln"){
+                out=Math.log(args[0]);
+            }else{
+                if(args.length==2){
+                    assert_fail(args[1]<=0,"exponent must be larger than zero");
+                    assert_fail(args[1]==1 && args[0]!=1,"log with base 1 is undefined for number other than 1");
+                    out=Math.log(args[1])/Math.log(args[0]);
+                }else{
+                    out=Math.log10(args[0]);
+                }
+            }
             out=((token=="ln")?Math.log(args[0]):Math.log10(args[0]));
         break;
         case "abs":
