@@ -9,7 +9,7 @@ const ops={
     "!":3
 };
 const func=new Set(["sin","cos","tan","asin","acos","atan","min","max","log","ln","abs","gamma"]);
-function deg_to_rag(angle){
+function deg_to_rad(angle){
     return angle*(Math.PI/180);
 }
 function rad_to_degree(angle){
@@ -246,16 +246,16 @@ function calculate_function(token,itr,param){
     switch(token){
         case "sin":
             assert_fail(args.length!=1,"wrong number of argument for sin");
-            out=Math.sin(deg_to_rag(args[0]));
+            out=Math.sin(deg_to_rad(args[0]));
         break;
         case "cos":
             assert_fail(args.length!=1,"wrong number of argument for cos");
-            out=Math.cos(deg_to_rag(args[0]));
+            out=Math.cos(deg_to_rad(args[0]));
         break;
         case "tan":
             assert_fail(args.length!=1,"wrong number of argument for tan");
             assert_fail(!(args[0]%90) && !((args[0]-90)%180),`tan of ${args[0]} is undefined`);
-            out=Math.tan(deg_to_rag(args[0]));
+            out=Math.tan(deg_to_rad(args[0]));
         break;
         case "min":
             assert_fail(!args.length,"min can't be called on an empty list of numbers");
