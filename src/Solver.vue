@@ -1,18 +1,59 @@
 <script setup>
-    import {ref} from "vue"
+    import { ref} from "vue"
     import {calculate,parse} from "./calc";
+    import Sample from "./Sample.vue";
+    import { show_dialog } from './notificationdaemon.js';
     let expr=ref("");
+    const expr_field=ref(null);
+    const param=defineProps({
+        parameter:Array,
+        output:Array
+    });
+    const buttons=ref(param.parameter);
     function parse_expr(){
         const exp=expr.value;
-        console.log(calculate(exp,{π:Math.PI}));
+        const base_object={"pi":Math.PI};
+        for(let val of param.output){
+            const total=Object.assign(val,base_object);
+            if(calculate(exp,total)!=val.output){
+                show_dialog(`wrong answer`,'your answer is wrong');
+                return;
+            };
+        }
+        show_dialog("passed","all test passed");
     }
+    function add_key(key){
+        expr.value=expr.value+key;
+        expr_field.value.focus();
+    }
+    function resize_field(){
+        const field=expr_field.value;
+        field.style.height="auto";
+        field.style.height=`${field.scrollHeight}px`;
+    }
+    function serialize_output(output,param){
+        const out=[];
+        for(let i=0;i<output.length;i++){
+            let output_string="f(";
+            for(let name of param){
+                output_string+=output[i][name]+",";
+            }
+            if(output_string.endsWith(",")){
+                output_string=output_string.slice(0,output_string.length-1);
+            }
+            output_string+=`)=${output[i]["output"]}`;
+            out.push(output_string);
+        }
+        return out;
+    }
+    const sample_input=ref(serialize_output(param.output,param.parameter));
 </script>
 <style scoped>
     #expr-field{
         padding: 4px;
-        min-height: 40vh;
         align-items: baseline;
         font-size: 18px;
+        flex-grow: 1;
     }
     #submit-btn{
         background-color: blue;
@@ -26,10 +67,78 @@
             background-color: rgb(0, 217, 255);
         }
     }
+    #data-key{
+        display: grid;
+        grid-template-columns: repeat(6,1fr);
+        button{
+            padding: 8px;
+            font-size: 20px;
+        }
+    }
+    .var-btn{
+        flex-grow: 1;
+        font-size: 20px;
+        padding: 8px;
+    }
+    .formula-field{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    #formula-label{
+        color: black;
+        font-size: 18px;
+    }
+    .sample-area{
+        display: flex;
+        flex-direction: column;
+        color: black;
+    }
+    #sample-title{
+        display: block;
+        font-size: 18px;
+        text-align: center;
+    }
+    #sample-list{
+        display: flex;
+        flex-direction: column;
+    }
 </style>
 <template>
-    <div style="display: flex;flex-direction: column;">    
-        <textarea id="expr-field" type="text" v-model="expr" ></textarea>
+    <div style="display: flex;flex-direction: column;">
+        <div class="formula-field">
+            <span id="formula-label">{{ `f(${buttons.join(",")})=` }}</span>
+            <textarea id="expr-field" type="text" v-model="expr" autofocus ref="expr_field" @input="resize_field"></textarea>
+        </div>    
+        <div class="row">
+            <button v-for="btn in buttons" @click="add_key(btn)" class="var-btn">{{ btn }}</button>
+        </div>
+        <div id="data-key">
+            <button @click="add_key('+')">+</button>
+            <button @click="add_key('-')">-</button>
+            <button @click="add_key('*')">*</button>
+            <button @click="add_key('/')">/</button>
+            <button @click="add_key('^()')">x<sup>y</sup></button>
+            <button @click="add_key('√')">√</button>
+            <button @click="add_key('!')">!</button>
+            <button @click="add_key('%')">%</button>
+            <button @click="add_key('||')">|x|</button>
+            <button @click="add_key('log()')">log</button>
+            <button @click="add_key('ln()')">ln</button>
+            <button @click="add_key('min()')">min</button>
+            <button @click="add_key('sin()')">sin</button>
+            <button @click="add_key('cos()')">cos</button>
+            <button @click="add_key('tan')">tan</button>
+            <button @click="add_key('asin()')">asin</button>
+            <button @click="add_key('acos()')">acos</button>
+            <button @click="add_key('atan()')">atan</button>
+        </div>
+        <div class="sample-area">
+            <span id="sample-title">sample input</span>
+            <div id="sample-list">
+                <Sample v-for="sample in sample_input" :text="sample"/>
+            </div>
+        </div>
         <button id="submit-btn" @click="parse_expr">submit</button> 
     </div>
 </template>

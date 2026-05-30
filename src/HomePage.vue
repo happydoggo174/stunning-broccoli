@@ -1,11 +1,12 @@
 <script setup>
+  import { onMounted,ref } from 'vue';
   import MathObject from './MathObject.vue';
   import NavBar from './NavBar.vue';
-  const problems=[
-    {title:"easy problem",difficulty:"easy",reaction:3,id:0},
-    {title:"medium problem",difficulty:"medium",reaction:-13,id:1},
-    {title:"hard problem",difficulty:"hard",reaction:26,id:2}
-  ];
+  import { get_problems } from './api.js';
+  const problems=ref([]);
+  onMounted(async()=>{
+    problems.value=await get_problems();
+  });
 </script>
 <style>
   @import './index.css';

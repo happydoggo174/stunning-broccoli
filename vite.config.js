@@ -6,6 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
+  cacheDir:".buildcache",
   plugins: [
     vue(),
     vueDevTools(),
@@ -15,4 +16,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  build: {
+    sourcemap:false,
+  }
 })

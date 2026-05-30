@@ -33,7 +33,7 @@ import Solver from './Solver.vue';
             </div>
         </div>
         <div id="run-panel">
-            <Solver/>
+            <Solver :parameter="detail.parameter" :output="detail.output"/>
         </div>
     </div>
 </template>
