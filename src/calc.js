@@ -280,7 +280,6 @@ function calculate_function(token,itr,param){
                     out=Math.log10(args[0]);
                 }
             }
-            out=((token=="ln")?Math.log(args[0]):Math.log10(args[0]));
         break;
         case "abs":
             assert_fail(!args.length,"abs can't be called without argument");
@@ -363,5 +362,9 @@ function calculate_internal(itr,param,options){
  * @param {Object} param 
  */
 export function calculate(expr,param){
-    return calculate_internal(parse(expr),param,{});
+    const out=calculate_internal(parse(expr),param,{});
+    const budget=14-(Math.ceil(Math.log10(out))+1);
+    const rounder=Math.pow(10,budget);
+    const output=Math.round((out+Number.EPSILON)*rounder)/rounder;
+    return output;
 }

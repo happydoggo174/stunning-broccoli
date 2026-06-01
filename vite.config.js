@@ -19,8 +19,16 @@ export default defineConfig({
   build: {
     sourcemap:false,
   },
+  server:{
+    watch: {
+      usePolling: true,
+      ignored: ['**/.git/**'],
+      interval: 100 // checks files every 100ms  
+    },
+  },
   watch: {
       usePolling: true,
+      ignored: ['**/.git/**'],
       interval: 100 // checks files every 100ms  
   },
   base:'/stunning-broccoli/'
