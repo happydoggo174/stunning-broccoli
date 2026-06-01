@@ -35,6 +35,7 @@
     }
 </style>
 <script setup>
+    import AuthCorner from './AuthCorner.vue';
     function home(){window.location.href="/";}
     function login(){window.location.href="/login";}
 </script>
@@ -44,9 +45,6 @@
             <button class="nav-btn" @click="home">home</button>
             <button class="nav-btn">favorite</button>
         </div>
-        <div class="row">
-            <button class="nav-btn" @click="login">login</button>
-            <button id="profile-btn"></button>
-        </div>
+        <AuthCorner/>
         </nav>
 </template>

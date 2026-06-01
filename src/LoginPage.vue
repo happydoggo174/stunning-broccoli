@@ -4,7 +4,7 @@
     import eye_closed from "@/assets/eye_closed.svg";
     import NavBar from './NavBar.vue';
     import {login} from "./api.js";
-    import Banner from './Banner.vue';
+    import { show_dialog} from './notificationdaemon';
     let username=ref("");
     let password=ref("");
     let show_password=ref(false);
@@ -23,12 +23,12 @@
         }
         try{
             if(!(await login(name,pass))){
-                alert("wrong username or password");
+                show_dialog("error","wrong username or password",true);
                 return;
             }
             window.location.href="/";
         }catch{
-            alert("network error");
+            show_dialog("error","network error",true);
         }
     }
 </script>

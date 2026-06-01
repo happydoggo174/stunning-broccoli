@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/HomePage.vue';
 import ProblemPage from '@/ProblemPage.vue';
-import LoginPage from '@/LoginPage.vue';
 const routes = [
   {
     path: '/',
@@ -14,10 +13,6 @@ const routes = [
       id: Number(route.params.id)
     })
   },
-  {
-    path:"/login",
-    component:LoginPage
-  }
 ]
 
 const router = createRouter({

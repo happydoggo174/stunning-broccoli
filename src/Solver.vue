@@ -9,16 +9,49 @@
         parameter:Array,
         output:Array
     });
+    function serialize_output(output,param){
+        const out=[];
+        for(let i=0;i<output.length;i++){
+            let output_string="f(";
+            for(let name of param){
+                output_string+=output[i][name]+",";
+            }
+            if(output_string.endsWith(",")){
+                output_string=output_string.slice(0,output_string.length-1);
+            }
+            output_string+=`)=${output[i]["output"]}`;
+            out.push({display:output_string});
+        }
+        return out;
+    }
+    const sample_input=ref(serialize_output(param.output,param.parameter));
     const buttons=ref(param.parameter);
     function parse_expr(){
         const exp=expr.value;
         const base_object={"pi":Math.PI};
-        for(let val of param.output){
+        for(let i=0;i<param.output.length;i++){
+            const val=param.output[i];
             const total=Object.assign(val,base_object);
-            if(calculate(exp,total)!=val.output){
-                show_dialog(`wrong answer`,'your answer is wrong');
+            try{
+                if(calculate(exp,total)!=val.output){
+                    sample_input.value[i].status="fail";
+                    i++;
+                    for(;i<sample_input.value.length;i++){
+                        delete sample_input.value[i].status;
+                    }
+                    show_dialog(`wrong answer`,'your answer is wrong');
+                    return;
+                };
+            }catch(e){
+                sample_input.value[i].status="fail";
+                i++;
+                for(;i<sample_input.value.length;i++){
+                    delete sample_input.value[i].status;
+                }
+                show_dialog("error",e.message);
                 return;
-            };
+            }
+            sample_input.value[i].status="pass";
         }
         show_dialog("passed","all test passed");
     }
@@ -31,22 +64,6 @@
         field.style.height="auto";
         field.style.height=`${field.scrollHeight}px`;
     }
-    function serialize_output(output,param){
-        const out=[];
-        for(let i=0;i<output.length;i++){
-            let output_string="f(";
-            for(let name of param){
-                output_string+=output[i][name]+",";
-            }
-            if(output_string.endsWith(",")){
-                output_string=output_string.slice(0,output_string.length-1);
-            }
-            output_string+=`)=${output[i]["output"]}`;
-            out.push(output_string);
-        }
-        return out;
-    }
-    const sample_input=ref(serialize_output(param.output,param.parameter));
 </script>
 <style scoped>
     #expr-field{
@@ -136,7 +153,7 @@
         <div class="sample-area">
             <span id="sample-title">sample input</span>
             <div id="sample-list">
-                <Sample v-for="sample in sample_input" :text="sample"/>
+                <Sample v-for="sample in sample_input" :text="sample.display" :test_status="sample.status"/>
             </div>
         </div>
         <button id="submit-btn" @click="parse_expr">submit</button> 

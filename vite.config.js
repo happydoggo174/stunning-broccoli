@@ -18,5 +18,9 @@ export default defineConfig({
   },
   build: {
     sourcemap:false,
-  }
+  },
+  watch: {
+      usePolling: true,
+      interval: 100 // checks files every 100ms
+    }
 })
