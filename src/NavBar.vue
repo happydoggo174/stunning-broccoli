@@ -36,7 +36,8 @@
 </style>
 <script setup>
     import AuthCorner from './AuthCorner.vue';
-    function home(){window.location.href="/";}
+    import router from './router';
+    function home(){router.push("/");}
     function login(){window.location.href="/login";}
 </script>
 <template>
