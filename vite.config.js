@@ -21,6 +21,7 @@ export default defineConfig({
   },
   watch: {
       usePolling: true,
-      interval: 100 // checks files every 100ms
-    }
+      interval: 100 // checks files every 100ms  
+  },
+  base:'/stunning-brocoli/'
 })
