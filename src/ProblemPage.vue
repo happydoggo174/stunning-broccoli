@@ -1,9 +1,11 @@
 <script setup>
-import { reactive, watch } from 'vue';
+import { reactive, watch,ref } from 'vue';
 import { get_problem_detail } from './api.js';
-import { show_dialog } from './notificationdaemon.js';
+import Loading from './Loading.vue';
 import NavBar from './NavBar.vue';
 import Solver from './Solver.vue';
+    const err=ref(null);
+    const resolved=ref(false);
     const prop=defineProps({
         id:Number
     });
@@ -17,13 +19,13 @@ import Solver from './Solver.vue';
             data=await get_problem_detail(newid);
         }catch{
             if(cnt==count){
-                show_dialog("error","failed to load problem");
+                err.value="failed to load problem";
             }
             return;
         }
         if(cnt!=count || data==null){return;}
         Object.assign(detail,data);
-        
+        resolved.value=true;
     },{immediate:true});
 </script>
 <style scoped>
@@ -32,7 +34,7 @@ import Solver from './Solver.vue';
 </style>
 <template>
     <NavBar/>
-    <div v-if="detail.title==undefined" style="color: black;">loading...</div>
+    <Loading v-if="detail.title==undefined" :resolved="detail.title!=undefined" :err="err"/>
     <div id="top-panel" v-else>
         <div id="info-panel">
             <div id="info-padding">

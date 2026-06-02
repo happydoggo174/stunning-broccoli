@@ -3,14 +3,18 @@
   import MathObject from './MathObject.vue';
   import NavBar from './NavBar.vue';
   import { get_problems } from './api.js';
-  import { show_dialog } from './notificationdaemon';
+  import Loading from './Loading.vue';
+  const err=ref(null);
+  const resolved=ref(false);
   const problems=ref([]);
   onMounted(async()=>{
     try{
       problems.value=await get_problems();
     }catch{
-      show_dialog("error","error loading home page");
+      err.value="can't load problem";
+      return;
     }
+    resolved.value=true;
   });
 </script>
 <style>
@@ -18,6 +22,7 @@
 </style>
 <template>
   <NavBar/>
+  <Loading :err="err" :resolved="resolved"/>
   <MathObject
     v-for="prob in problems"
     :key="prob.id"
