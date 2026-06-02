@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomePage from '@/HomePage.vue';
-import ProblemPage from '@/ProblemPage.vue';
 const routes = [
   {
     path: '/',
@@ -8,7 +7,7 @@ const routes = [
   },
   {
     path:'/problem/:id',
-    component: ProblemPage,
+    component: ()=>import("@/ProblemPage.vue"),
     props:route => ({
       id: Number(route.params.id)
     })

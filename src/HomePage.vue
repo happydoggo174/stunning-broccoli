@@ -3,9 +3,14 @@
   import MathObject from './MathObject.vue';
   import NavBar from './NavBar.vue';
   import { get_problems } from './api.js';
+  import { show_dialog } from './notificationdaemon';
   const problems=ref([]);
   onMounted(async()=>{
-    problems.value=await get_problems();
+    try{
+      problems.value=await get_problems();
+    }catch{
+      show_dialog("error","error loading home page");
+    }
   });
 </script>
 <style>
