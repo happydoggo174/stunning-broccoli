@@ -15,9 +15,10 @@ import Solver from './Solver.vue';
         if(newid==undefined){return;}
         const cnt=++count;
         let data=null;
+        resolved.value=false;
         try{
             data=await get_problem_detail(newid);
-        }catch{
+        }catch(e){
             if(cnt==count){
                 err.value="failed to load problem";
             }
@@ -34,7 +35,7 @@ import Solver from './Solver.vue';
 </style>
 <template>
     <NavBar/>
-    <Loading v-if="detail.title==undefined" :resolved="detail.title!=undefined" :err="err"/>
+    <Loading v-if="!resolved" :resolved="resolved" :err="err"/>
     <div id="top-panel" v-else>
         <div id="info-panel">
             <div id="info-padding">
