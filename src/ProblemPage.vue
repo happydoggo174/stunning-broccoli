@@ -16,6 +16,7 @@ import Solver from './Solver.vue';
         const cnt=++count;
         let data=null;
         resolved.value=false;
+        err.value=false;
         try{
             data=await get_problem_detail(newid);
         }catch(e){
