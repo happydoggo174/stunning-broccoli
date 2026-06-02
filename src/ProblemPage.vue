@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, watch } from 'vue';
 import { get_problem_detail } from './api.js';
+import { show_dialog } from './notificationdaemon.js';
 import NavBar from './NavBar.vue';
 import Solver from './Solver.vue';
     const prop=defineProps({
@@ -11,7 +12,15 @@ import Solver from './Solver.vue';
     watch(()=>prop.id,async(newid)=>{
         if(newid==undefined){return;}
         const cnt=++count;
-        const data=await get_problem_detail(newid);
+        let data=null;
+        try{
+            data=await get_problem_detail(newid);
+        }catch{
+            if(cnt==count){
+                show_dialog("error","failed to load problem");
+            }
+            return;
+        }
         if(cnt!=count || data==null){return;}
         Object.assign(detail,data);
         

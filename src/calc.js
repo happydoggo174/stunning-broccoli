@@ -363,7 +363,8 @@ function calculate_internal(itr,param,options){
  */
 export function calculate(expr,param){
     const out=calculate_internal(parse(expr),param,{});
-    const budget=14-(Math.ceil(Math.log10(out))+1);
+    const budget=14-(Math.ceil(Math.log10(Math.abs(out)))+1);
+    if(budget<=0){return Math.round(out);}
     const rounder=Math.pow(10,budget);
     const output=Math.round((out+Number.EPSILON)*rounder)/rounder;
     return output;
