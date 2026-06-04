@@ -6,7 +6,8 @@
         id:Number,
         title:String,
         difficulty:String,
-        reaction:Number
+        reaction:Number,
+        problem_status:String|null
     });
     const react_image=computed(()=>(prop.reaction>=0)?like:dislike);
     const tilte_style=computed(()=>(prop.difficulty=="medium")?"color:rgb(7,0,80)":"");
