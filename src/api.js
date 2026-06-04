@@ -1,4 +1,4 @@
-const BASE_ADDR=window.location.href.includes("localhost")?"http://localhost:3000":`https://probable-giggle-k0p1.onrender.com/`;
+const BASE_ADDR=window.location.href.includes("localhost")?"http://localhost:3000":`https://probable-giggle-k0p1.onrender.com`;
 import { useAuth0 } from "@auth0/auth0-vue";
 /**
  * @type {null|ReturnType<useAuth0>}
