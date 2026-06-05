@@ -42,3 +42,12 @@ export async function like_problem(problem_id){
 export async function dislike_problem(problem_id){
     return await react_problem(problem_id,"dislike");
 }
+export async function get_problem_status(problem_id){
+    const headers=await make_auth_header();
+    if(!Object.hasOwn(headers,"Authorization")){
+        throw 0;
+    }
+    const resp=await fetch(`${BASE_ADDR}/problem/status?problem_id=${problem_id}`,{headers:headers});
+    if(!resp.ok){throw 0;}
+    return resp.json();
+}
