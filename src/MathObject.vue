@@ -23,7 +23,7 @@
     <RouterLink :to="`/problem/${id}`" :class="'math-problem '+`${bg_colors[difficulty]}-shadow`">
         <div class="difficult-cover" :style="`background-color:${bg_colors[difficulty]}`">
             <h2 class="tilte" :style="tilte_style">{{title}}</h2>
-            <img :src="done" alt="completed" v-if='1==1' style='background-color: white;border:1px solid black;margin-left: 12px;border-radius: 50%;'>
+            <img :src="done" alt="completed" v-if='problem_status=="solved"' style='background-color: white;border:1px solid black;margin-left: 12px;border-radius: 50%;'>
         </div>
         <div class="stat">
             <div class="row" style="align-items: center;">
