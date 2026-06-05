@@ -17,7 +17,7 @@
   </div>
 
   <div v-else style="display: flex;flex-direction: row;">
-    <p v-if="error" style="color: red;margin-right: 12px;">Error: {{ error.message }}</p>
+    <p v-if="error_msg" style="color: red;margin-right: 12px;">Error: {{ error_msg }}</p>
 
     <button @click="signup" class="auth-btn">Signup</button>
 
@@ -27,6 +27,7 @@
 
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
+import { computed } from 'vue';
 
 const {
   isLoading,
@@ -36,7 +37,12 @@ const {
   logout: auth0Logout,
   user
 } = useAuth0()
-
+const error_msg=computed(()=>{
+  if(!isAuthenticated.value && error.value?.message=="Login required"){
+    return null;
+  }
+  return error.value?.message;
+});
 const signup = () =>
   loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
 
