@@ -70,7 +70,7 @@ import { show_dialog } from './notificationdaemon.js';
         Object.assign(detail,data);
         resolved.value=true;
     },{immediate:true});
-    watch(isAuthenticated,async()=>{
+    watch(()=>[isAuthenticated,prop.id],async()=>{
         if(!isAuthenticated){return;}
         try{
             const pstatus=await get_problem_status(prop.id);
