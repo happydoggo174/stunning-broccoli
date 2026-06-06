@@ -31,5 +31,5 @@ export default defineConfig({
       ignored: ['**/.git/**'],
       interval: 100 // checks files every 100ms  
   },
-  base:'/stunning-broccoli/'
+  base:'/crispy-system/'
 })
