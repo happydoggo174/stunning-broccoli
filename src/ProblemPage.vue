@@ -10,7 +10,9 @@ import like from "@/assets/like.svg";
 import dislike from "@/assets/dislike.svg";
 import like_filled from "@/assets/like_filled.svg";
 import dislike_filled from "@/assets/dislike_filled.svg";
+import done_gray from "@/assets/done_gray.svg";
 import { show_dialog } from './notificationdaemon.js';
+import { is_problem_completed } from './completion.js';
     const err=ref(null);
     const resolved=ref(false);
     const prop=defineProps({
@@ -57,6 +59,9 @@ import { show_dialog } from './notificationdaemon.js';
         let data=null;
         resolved.value=false;
         err.value=false;
+        if(is_problem_completed(prop.id) && status.status!="solved"){
+            status.status='solved-offline';
+        }
         try{
             data=await get_problem_detail(newid);
         }catch(e){
@@ -78,6 +83,15 @@ import { show_dialog } from './notificationdaemon.js';
     },{immediate:true});
     const like_src=computed(()=> status.reaction=='liked'?like_filled:like);
     const dislike_src=computed(()=>status.reaction=='disliked'?dislike_filled:dislike);
+    const done_src=computed(()=>{
+        if(status.status=='solved-offline'){
+            return done_gray;
+        }
+        if(status.status=='solved'){
+            return done;
+        }
+        return "";
+    });
 </script>
 <style scoped>
     @import "./index.css";
@@ -91,7 +105,7 @@ import { show_dialog } from './notificationdaemon.js';
             <div id="info-padding">
                 <div style="display: flex;flex-direction: row;justify-content: center;">
                     <h1 class="problem-tilte">{{detail.title}}</h1>
-                    <img :src="done" v-if="status.status=='solved'" style="margin-left: 12px;">
+                    <img :src="done_src" style="margin-left: 12px;">
                 </div>
                 <h2 class="problem-author">{{detail.author}}</h2>
                 <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>
@@ -101,14 +115,16 @@ import { show_dialog } from './notificationdaemon.js';
                     </button>
                     <span style="margin-left: 12px;">{{ detail.reaction }}</span>
                     <button style="margin-left: 12px;border: none;" @click="handle_dislike">
-                        <img :src="dislike_src" alt="">
+                        <img :src="dislike_src" 
+                        :title="status.status=='solved-offline'?'please login to save progess into your account':''">
                     </button>
                 </div>
             </div>
         </div>
         <div id="run-panel">
-            <Solver :parameter="detail.parameter" @solved="status.status='solved'"
-            :output="detail.output" :problem_id="prop.id" :problem_status="status.status"/>
+            <Solver :parameter="detail.parameter" @solved="status.status='solved'" 
+            @solved-offline="status.status='solved-offline'":output="detail.output" 
+            :problem_id="prop.id" :problem_status="status.status"/>
         </div>
     </div>
 </template>

@@ -5,6 +5,7 @@
     import { show_dialog } from './notificationdaemon.js';
     import { mark_problem_status } from "./api";
     import { useAuth0 } from "@auth0/auth0-vue";
+    import { save_completion_local } from "./completion";
     let expr=ref("");
     const expr_field=ref(null);
     const param=defineProps({
@@ -13,7 +14,7 @@
         problem_id:Number,
         problem_status:String,
     });
-    const solved=defineEmits(["solved"]);
+    const solved=defineEmits(["solved","solved-offline"]);
     function serialize_output(output,param){
         const out=[];
         for(let i=0;i<output.length;i++){
@@ -35,14 +36,16 @@
     async function mark_solved() {
         if(param.problem_status!="solved"){
             if(!auth || !auth.isAuthenticated.value){
-                solved("solved");
+                solved("solved-offline");
+                save_completion_local(param.problem_id,"solved");
                 return show_dialog("success","please login to save your progress");
             }
             try{
                 await mark_problem_status(param.problem_id,"solved");
             }catch{
-                show_dialog("error","can't mark problem as completed");
-                return;
+                solved("solved-offline");
+                save_completion_local(param.problem_id,"solved");
+                return show_dialog("error","can't mark problem as completed");
             }
         }
         solved("solved");

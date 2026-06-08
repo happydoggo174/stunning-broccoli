@@ -61,6 +61,6 @@ export async function mark_problem_status(problem_id,result){
     url.searchParams.set("result",result);
     const resp=await fetch(url,{method:"POST",headers:headers});
     if(!resp.ok){
-        throw 0;
+        throw resp.status;
     }
 }

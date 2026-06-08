@@ -5,6 +5,8 @@
   import { get_problems } from './api.js';
   import Loading from './Loading.vue';
   import { useAuth0 } from '@auth0/auth0-vue';
+  import { sync_completion } from './completion';
+  import { show_dialog } from './notificationdaemon';
   const err=ref(null);
   const resolved=ref(false);
   const problems=ref([]);
@@ -19,6 +21,15 @@
         return;
       }
       resolved.value=true;
+      if(isAuthenticated.value){
+        sync_completion().then((sync_count)=>{
+          if(sync_count){
+            show_dialog("done","completed problem saved");
+          }
+        }).catch(()=>{
+          show_dialog("error","can't save completed problem");
+        });
+      }
     },{immediate:true});
   });
 </script>
