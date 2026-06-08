@@ -3,12 +3,17 @@
     import {calculate,parse} from "./calc";
     import Sample from "./Sample.vue";
     import { show_dialog } from './notificationdaemon.js';
+    import { mark_problem_status } from "./api";
+    import { useAuth0 } from "@auth0/auth0-vue";
     let expr=ref("");
     const expr_field=ref(null);
     const param=defineProps({
         parameter:Array,
-        output:Array
+        output:Array,
+        problem_id:Number,
+        problem_status:String,
     });
+    const solved=defineEmits(["solved"]);
     function serialize_output(output,param){
         const out=[];
         for(let i=0;i<output.length;i++){
@@ -26,7 +31,30 @@
     }
     const sample_input=ref(serialize_output(param.output,param.parameter));
     const buttons=ref(param.parameter);
-    function parse_expr(){
+    async function mark_solved() {
+        if(param.problem_status!="solved"){
+            const r=useAuth0();
+            if(!r || !r.isAuthenticated.value){
+                solved("solved");
+                return show_dialog("success","please login to save your progress");
+            }
+            try{
+                await mark_problem_status(param.problem_id,"solved");
+            }catch{
+                show_dialog("error","can't mark problem as completed");
+                return;
+            }
+        }
+        solved("solved");
+        show_dialog("passed","all test passed");
+    }
+    function undo_status(i){
+        i++;
+        for(;i<sample_input.value.length;i++){
+            delete sample_input.value[i].status;
+        }
+    }
+    async function parse_expr(){
         const exp=expr.value;
         const base_object={"pi":Math.PI};
         for(let i=0;i<param.output.length;i++){
@@ -35,25 +63,17 @@
             try{
                 if(calculate(exp,total)!=val.output){
                     sample_input.value[i].status="fail";
-                    i++;
-                    for(;i<sample_input.value.length;i++){
-                        delete sample_input.value[i].status;
-                    }
-                    show_dialog(`wrong answer`,'your answer is wrong');
-                    return;
+                    undo_status(i);
+                    return show_dialog(`wrong answer`,'your answer is wrong');
                 };
             }catch(e){
                 sample_input.value[i].status="fail";
-                i++;
-                for(;i<sample_input.value.length;i++){
-                    delete sample_input.value[i].status;
-                }
-                show_dialog("error",e.message);
-                return;
+                undo_status(i);
+                return show_dialog("error",e.message);
             }
             sample_input.value[i].status="pass";
         }
-        show_dialog("passed","all test passed");
+        await mark_solved();
     }
     function add_key(key){
         expr.value=expr.value+key;

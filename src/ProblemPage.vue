@@ -32,11 +32,11 @@ import { show_dialog } from './notificationdaemon.js';
             return;
         }
         if(detail.reaction){
-            detail.reaction++;
+            detail.reaction+=status.reaction=="disliked"?2:1;
         }
         status.reaction="liked";
     };
-    async function  handle_dislike() {
+    async function handle_dislike() {
         if(isLoading.value || status.reaction=="disliked"){return;}
         if(!isAuthenticated.value){
             return show_dialog("error","please login to dislike");
@@ -44,11 +44,10 @@ import { show_dialog } from './notificationdaemon.js';
         try{
             await dislike_problem(prop.id);
         }catch{
-            show_dialog("error","can't dislike this problem");
-            return;
+            return show_dialog("error","can't dislike this problem");
         }
         if(detail.reaction){
-            detail.reaction--;
+            detail.reaction-=status.reaction=='liked'?2:1;
         }
         status.reaction="disliked";
     }
@@ -77,8 +76,8 @@ import { show_dialog } from './notificationdaemon.js';
             Object.assign(status,pstatus);
         }catch{return;}
     },{immediate:true});
-    const like_src=computed(()=>{return status.reaction=='liked'?like_filled:like});
-    const dislike_src=computed(()=>{return status.reaction=='disliked'?dislike_filled:dislike});
+    const like_src=computed(()=> status.reaction=='liked'?like_filled:like);
+    const dislike_src=computed(()=>status.reaction=='disliked'?dislike_filled:dislike);
 </script>
 <style scoped>
     @import "./index.css";
@@ -108,7 +107,8 @@ import { show_dialog } from './notificationdaemon.js';
             </div>
         </div>
         <div id="run-panel">
-            <Solver :parameter="detail.parameter" :output="detail.output"/>
+            <Solver :parameter="detail.parameter" @solved="status.status='solved'"
+            :output="detail.output" :problem_id="prop.id" :problem_status="status.status"/>
         </div>
     </div>
 </template>

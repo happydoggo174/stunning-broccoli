@@ -51,3 +51,16 @@ export async function get_problem_status(problem_id){
     if(!resp.ok){throw 0;}
     return resp.json();
 }
+export async function mark_problem_status(problem_id,result){
+    const headers=await make_auth_header();
+    if(!Object.hasOwn(headers,"Authorization")){
+        throw 0;
+    }
+    const url=new URL(`${BASE_ADDR}/problem/complete`);
+    url.searchParams.set("problem_id",problem_id);
+    url.searchParams.set("result",result);
+    const resp=await fetch(url,{method:"POST",headers:headers});
+    if(!resp.ok){
+        throw 0;
+    }
+}
