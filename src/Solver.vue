@@ -31,10 +31,10 @@
     }
     const sample_input=ref(serialize_output(param.output,param.parameter));
     const buttons=ref(param.parameter);
+    const auth=useAuth0();
     async function mark_solved() {
         if(param.problem_status!="solved"){
-            const r=useAuth0();
-            if(!r || !r.isAuthenticated.value){
+            if(!auth || !auth.isAuthenticated.value){
                 solved("solved");
                 return show_dialog("success","please login to save your progress");
             }
