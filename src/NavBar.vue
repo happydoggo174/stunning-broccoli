@@ -30,15 +30,11 @@
         height: 30px;
         margin-left: 8px;
     }
-    .row{
-        display: flex;
-    }
 </style>
 <script setup>
     import AuthCorner from './AuthCorner.vue';
     import router from './router';
     function home(){router.push("/");}
-    function login(){window.location.href="/login";}
 </script>
 <template>
     <nav id="nav-bar">

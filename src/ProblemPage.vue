@@ -13,6 +13,7 @@ import dislike_filled from "@/assets/dislike_filled.svg";
 import done_gray from "@/assets/done_gray.svg";
 import { show_dialog } from './notificationdaemon.js';
 import { is_problem_completed } from './completion.js';
+import Comment from './Comment.vue';
     const err=ref(null);
     const resolved=ref(false);
     const prop=defineProps({
@@ -90,7 +91,7 @@ import { is_problem_completed } from './completion.js';
         if(status.status=='solved'){
             return done;
         }
-        return "";
+        return 0;
     });
 </script>
 <style scoped>
@@ -103,9 +104,10 @@ import { is_problem_completed } from './completion.js';
     <div id="top-panel" v-else>
         <div id="info-panel">
             <div id="info-padding">
-                <div style="display: flex;flex-direction: row;justify-content: center;">
+                <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
                     <h1 class="problem-tilte">{{detail.title}}</h1>
-                    <img :src="done_src" style="margin-left: 12px;">
+                    <img :src="done_src" style="margin-left: 12px;" v-if="done_src!=0" 
+                    :title="status.status=='solved-offline'?'please login to save progess into your account':'solved'">
                 </div>
                 <h2 class="problem-author">{{detail.author}}</h2>
                 <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>
@@ -115,10 +117,10 @@ import { is_problem_completed } from './completion.js';
                     </button>
                     <span style="margin-left: 12px;">{{ detail.reaction }}</span>
                     <button style="margin-left: 12px;border: none;" @click="handle_dislike">
-                        <img :src="dislike_src" 
-                        :title="status.status=='solved-offline'?'please login to save progess into your account':''">
+                        <img :src="dislike_src">
                     </button>
                 </div>
+                <Comment :problem_id="prop.id" :comment_count="detail.comment_count"/>
             </div>
         </div>
         <div id="run-panel">

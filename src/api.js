@@ -7,32 +7,35 @@ let auth0=null;
 export function init_auth0(auth_obj){
     auth0=auth_obj;
 }
-async function make_auth_header(){
-    if(!auth0 || !auth0.isAuthenticated){return {};}
+async function make_auth_header(required=false){
+    if(!auth0 || !auth0.isAuthenticated){
+        if(required){throw 0;}
+        return {};
+    }
     try{
         const token=await auth0.getAccessTokenSilently();
         return {"Authorization":`Bearer ${token}`}; 
     }catch{
+        if(required){throw 0;}
         return {};
     }
+}
+function json_or_err(resp){
+    if(resp.ok){return resp.json();}
+    throw 0;
 }
 export async function get_problem_detail(problem_id){
     const headers=await make_auth_header();
     const resp=await fetch(`${BASE_ADDR}/problem/detail?problem_id=${problem_id}`,{headers:headers});
-    if(!resp.ok){throw 0;}
-    return resp.json();
+    return json_or_err(resp);
 }
 export async function get_problems(page){
     const headers=await make_auth_header();
     const resp=await fetch(`${BASE_ADDR}/problem/home`,{headers:headers});
-    if(!resp.ok){throw 0;}
-    return resp.json();
+    return json_or_err(resp);
 }
 async function react_problem(problem_id,reaction){
-    const headers=await make_auth_header();
-    if(!Object.hasOwn(headers,"Authorization")){
-        throw 0;
-    }
+    const headers=await make_auth_header(true);
     const resp=await fetch(`${BASE_ADDR}/problem/${reaction}?problem_id=${problem_id}`,{method:"post",headers:headers});
     if(!resp.ok){throw 0;}
 }
@@ -43,19 +46,12 @@ export async function dislike_problem(problem_id){
     return await react_problem(problem_id,"dislike");
 }
 export async function get_problem_status(problem_id){
-    const headers=await make_auth_header();
-    if(!Object.hasOwn(headers,"Authorization")){
-        throw 0;
-    }
+    const headers=await make_auth_header(true);
     const resp=await fetch(`${BASE_ADDR}/problem/status?problem_id=${problem_id}`,{headers:headers});
-    if(!resp.ok){throw 0;}
-    return resp.json();
+    return json_or_err(resp);
 }
 export async function mark_problem_status(problem_id,result){
-    const headers=await make_auth_header();
-    if(!Object.hasOwn(headers,"Authorization")){
-        throw 0;
-    }
+    const headers=await make_auth_header(true);
     const url=new URL(`${BASE_ADDR}/problem/complete`);
     url.searchParams.set("problem_id",problem_id);
     url.searchParams.set("result",result);
@@ -63,4 +59,22 @@ export async function mark_problem_status(problem_id,result){
     if(!resp.ok){
         throw resp.status;
     }
+}
+export async function get_comment(problem_id,last_uid){
+    const url=new URL(`${BASE_ADDR}/comment`);
+    url.searchParams.set("problem_id",problem_id);
+    if(last_uid){
+        url.searchParams.set("first_uid",last_uid);
+    }
+    const resp=await fetch(url);
+    return json_or_err(resp);
+}
+export async function make_comment(problem_id,content) {
+    const header=await make_auth_header(true);
+    const data=new FormData();
+    data.append("problem_id",problem_id);
+    data.append("content",content);
+    const resp=await fetch(`${BASE_ADDR}/comment/make`,{method:"POST",headers:header,body:data});
+    if(!resp.ok){throw 0;}
+    return resp.json();
 }
