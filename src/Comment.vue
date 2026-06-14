@@ -8,7 +8,7 @@
         problem_id:Number,
         comment_count:Number
     });
-    const data=ref([{content:"what a great problem",username:"phuc",profile:""},]);
+    const data=ref([]);
     const show_comment=ref(false);
     const more_src=computed(()=>show_comment.value?less:more);
     onMounted(async()=>{
