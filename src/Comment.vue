@@ -26,7 +26,7 @@
     function add_comment(content){
         prop.comment_count++;
         const claim=auth.idTokenClaims.value;
-        data.value.push({username:claim.name|| claim.nickname,profile:claim.profile,content:content});
+        data.value.push({username:claim.name|| claim.nickname,profile:claim.profile || claim.picture,content:content});
     }
     function validate_comment(content){
         if(auth.isLoading.value){
