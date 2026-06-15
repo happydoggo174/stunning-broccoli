@@ -65,7 +65,7 @@ import Comment from './Comment.vue';
         }
         try{
             data=await get_problem_detail(newid);
-        }catch(e){
+        }catch{
             if(cnt==count){
                 err.value="failed to load problem";
             }

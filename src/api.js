@@ -9,20 +9,20 @@ export function init_auth0(auth_obj){
 }
 async function make_auth_header(required=false){
     if(!auth0 || !auth0.isAuthenticated){
-        if(required){throw 0;}
+        if(required){throw new Error("missing auth");}
         return {};
     }
     try{
         const token=await auth0.getAccessTokenSilently();
         return {"Authorization":`Bearer ${token}`}; 
     }catch{
-        if(required){throw 0;}
+        if(required){throw new Error("missing auth");}
         return {};
     }
 }
 function json_or_err(resp){
     if(resp.ok){return resp.json();}
-    throw 0;
+    throw new Error("status error");
 }
 export async function get_problem_detail(problem_id){
     const headers=await make_auth_header();
@@ -55,7 +55,12 @@ export async function mark_problem_status(problem_id,result){
     const url=new URL(`${BASE_ADDR}/problem/complete`);
     url.searchParams.set("problem_id",problem_id);
     url.searchParams.set("result",result);
-    const resp=await fetch(url,{method:"POST",headers:headers});
+    let resp=null;
+    try{
+        resp=await fetch(url,{method:"POST",headers:headers});
+    }catch{
+        throw 0;
+    }
     if(!resp.ok){
         throw resp.status;
     }
@@ -76,5 +81,4 @@ export async function make_comment(problem_id,content) {
     data.append("content",content);
     const resp=await fetch(`${BASE_ADDR}/comment/make`,{method:"POST",headers:header,body:data});
     if(!resp.ok){throw 0;}
-    return resp.json();
 }

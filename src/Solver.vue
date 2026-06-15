@@ -100,8 +100,8 @@
         padding: 8px;
         border-radius: 14px;
         margin-top: 12px;
-        margin-left: 12px;
-        margin-right: 12px;
+        margin-left: 18px;
+        margin-right: 18px;
         transition: 0.27s ease-in-out background-color;
         &:hover{
             background-color: rgb(0, 217, 255);
@@ -142,6 +142,8 @@
     #sample-list{
         display: flex;
         flex-direction: column;
+        margin-left: 12px;
+        margin-right: 12px;
     }
 </style>
 <template>

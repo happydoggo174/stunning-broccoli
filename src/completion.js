@@ -19,7 +19,7 @@ export async function sync_completion(){
         try{
             await mark_problem_status(completed.problem_id,completed.status);
         }catch(e){
-            if(!Number.isFinite(e)){
+            if(e===0){
                 //catch network error
                 left.push(completed);
             }
