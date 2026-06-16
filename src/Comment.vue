@@ -14,6 +14,7 @@
     const data=ref([]);
     const show_comment=ref(false);
     const more_src=computed(()=>show_comment.value?less:more);
+    const comment_cnt=ref(prop.comment_count)
     const comment_placeholder=computed(
     ()=>auth.isAuthenticated.value?"your comment here":auth.isLoading.value?"loading...":"please login to comment");
     onMounted(async()=>{
@@ -24,7 +25,7 @@
     let is_commenting=false;
     const auth=useAuth0();
     function add_comment(content){
-        prop.comment_count++;
+        comment_cnt.value++;
         const claim=auth.idTokenClaims.value;
         data.value.push({username:claim.name|| claim.nickname,profile:claim.profile || claim.picture,content:content});
     }
@@ -54,6 +55,7 @@
             }catch{
                 return show_dialog("error",`error adding comment`);
             }
+            comment.value="";
             add_comment(content);
         }finally{
             is_commenting=false;
@@ -89,7 +91,7 @@
 </style>
 <template>
     <div class="row" style="justify-content: space-between;align-items: center;">
-        <span class="comment-banner">comments({{ comment_count }})</span>
+        <span class="comment-banner">comments({{ comment_cnt }})</span>
         <button class="more-btn" @click="toggle_comment">
             <img :src="more_src" alt="show comments">
         </button>
