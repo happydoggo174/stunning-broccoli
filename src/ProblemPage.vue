@@ -4,7 +4,6 @@ import { get_problem_detail,get_problem_status,like_problem,dislike_problem } fr
 import Loading from './Loading.vue';
 import NavBar from './NavBar.vue';
 import Solver from './Solver.vue';
-import { useAuth0 } from '@auth0/auth0-vue';
 import done from "@/assets/done.svg";
 import like from "@/assets/like.svg";
 import dislike from "@/assets/dislike.svg";
@@ -14,6 +13,7 @@ import done_gray from "@/assets/done_gray.svg";
 import { show_dialog } from './notificationdaemon.js';
 import { is_problem_completed } from './completion.js';
 import Comment from './Comment.vue';
+import { isAuthenticated,isLoading } from './auth.js';
     const err=ref(null);
     const resolved=ref(false);
     const prop=defineProps({
@@ -22,7 +22,6 @@ import Comment from './Comment.vue';
     let detail=reactive({});
     let status=reactive({});
     let count=0;
-    const {isAuthenticated,isLoading}=useAuth0();
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
         if(!isAuthenticated.value){

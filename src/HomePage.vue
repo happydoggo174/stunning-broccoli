@@ -4,13 +4,12 @@
   import NavBar from './NavBar.vue';
   import { get_problems } from './api.js';
   import Loading from './Loading.vue';
-  import { useAuth0 } from '@auth0/auth0-vue';
   import { sync_completion } from './completion';
   import { show_dialog } from './notificationdaemon';
+  import { isAuthenticated } from './auth';
   const err=ref(null);
   const resolved=ref(false);
   const problems=ref([]);
-  const {isAuthenticated}=useAuth0();
   onMounted(async()=>{
     watch(()=>isAuthenticated.value,async()=>{
       resolved.value=false;

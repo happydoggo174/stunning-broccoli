@@ -1,13 +1,7 @@
 const BASE_ADDR=window.location.href.includes("localhost")?"http://localhost:3000":`https://probable-giggle-k0p1.onrender.com`;
-import { useAuth0 } from "@auth0/auth0-vue";
-/**
- * @type {null|ReturnType<useAuth0>}
- */
-let auth0=null;
-export function init_auth0(auth_obj){
-    auth0=auth_obj;
-}
+import { get_auth_object } from "./auth";
 async function make_auth_header(required=false){
+    const auth0=await get_auth_object();
     if(!auth0 || !auth0.isAuthenticated){
         if(required){throw new Error("missing auth");}
         return {};

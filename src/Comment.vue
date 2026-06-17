@@ -6,7 +6,7 @@
     import less from "@/assets/less.svg";
     import send from "@/assets/send.svg";
     import { show_dialog } from './notificationdaemon';
-    import { useAuth0 } from '@auth0/auth0-vue';
+    import { get_auth_object,isAuthenticated,isLoading } from './auth';
     const prop=defineProps({
         problem_id:Number,
         comment_count:Number
@@ -16,25 +16,25 @@
     const more_src=computed(()=>show_comment.value?less:more);
     const comment_cnt=ref(prop.comment_count)
     const comment_placeholder=computed(
-    ()=>auth.isAuthenticated.value?"your comment here":auth.isLoading.value?"loading...":"please login to comment");
+    ()=>isAuthenticated.value?"your comment here":isLoading.value?"loading...":"please login to comment");
     onMounted(async()=>{
         data.value=await get_comment(prop.problem_id);
     });
     const toggle_comment=()=>show_comment.value=!show_comment.value;
     const comment=ref("");
     let is_commenting=false;
-    const auth=useAuth0();
-    function add_comment(content){
+    async function add_comment(content){
+        const auth=await get_auth_object();
         comment_cnt.value++;
         const claim=auth.idTokenClaims.value;
         data.value.push({username:claim.name|| claim.nickname,profile:claim.profile || claim.picture,content:content});
     }
     function validate_comment(content){
-        if(auth.isLoading.value){
+        if(isLoading.value){
             show_dialog("error","loading account info,please wait");
             return false;
         }
-        if(!auth.isAuthenticated.value){
+        if(!isAuthenticated.value){
             show_dialog("error","please login to comment");
             return false;
         }
@@ -56,7 +56,7 @@
                 return show_dialog("error",`error adding comment`);
             }
             comment.value="";
-            add_comment(content);
+            await add_comment(content);
         }finally{
             is_commenting=false;
         }
@@ -99,7 +99,7 @@
     <div class="comment-section" v-if="show_comment">
         <div class="row" style="width:100%;margin-top: 14px;margin-bottom: 12px;">
             <textarea id="comment-field" :placeholder="comment_placeholder" v-model="comment" 
-            :readonly="!auth.isAuthenticated.value" maxlength="250"></textarea>
+            :readonly="!isAuthenticated" maxlength="250"></textarea>
             <button style="background-color: green;" @click="handle_make_comment">
                 <img :src="send" alt="send comment">
             </button>

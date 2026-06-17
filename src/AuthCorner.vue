@@ -9,11 +9,11 @@
 <template>
   <div v-if="isLoading">Loading...</div>
 
-  <div v-else-if="isAuthenticated && user" style="display: flex;flex-direction: row;">
+  <div v-else-if="isAuthenticated && auth!=null" style="display: flex;flex-direction: row;">
     <div style="display: flex;flex-direction: column;justify-content: center;">
-      <p style="color: black;margin-right: 12px;">{{ user.nickname }}</p>
+      <p style="color: black;margin-right: 12px;">{{ auth.user?.nickname }}</p>
     </div>
-    <img :src="user.picture" alt="profile picture" width="32px" height="32px" style="border-radius: 50%;">
+    <img :src="auth.user?.picture" alt="profile picture" width="32px" height="32px" style="border-radius: 50%;">
   </div>
 
   <div v-else style="display: flex;flex-direction: row;">
@@ -26,28 +26,24 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth0 } from '@auth0/auth0-vue'
-import { computed } from 'vue';
-
-const {
-  isLoading,
-  isAuthenticated,
-  error,
-  loginWithRedirect,
-  logout: auth0Logout,
-  user
-} = useAuth0()
+import { get_auth_object,isAuthenticated,isLoading } from './auth';
+import { computed,onMounted,ref,Ref } from 'vue';
+import { useAuth0 } from '@auth0/auth0-vue';
+const auth:Ref<null|ReturnType< typeof useAuth0>>=ref(null);
+onMounted(async()=>{
+  auth.value=await get_auth_object();
+});
 const error_msg=computed(()=>{
-  if(!isAuthenticated.value && error.value?.message=="Login required"){
+  if(!isAuthenticated.value && auth.value?.error?.value?.message=="Login required"){
     return null;
   }
-  return error.value?.message;
+  return auth.value?.error?.value?.message;
 });
 const signup = () =>
-  loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
+  auth.value?.loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
 
-const login = () => loginWithRedirect()
+const login = () => auth.value?.loginWithRedirect()
 
 const logout = () =>
-  auth0Logout({ logoutParams: { returnTo: window.location.origin } })
+  auth.value?.logout({ logoutParams: { returnTo: window.location.origin } })
 </script>

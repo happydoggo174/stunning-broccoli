@@ -4,8 +4,8 @@
     import Sample from "./Sample.vue";
     import { show_dialog } from './notificationdaemon.js';
     import { mark_problem_status } from "./api";
-    import { useAuth0 } from "@auth0/auth0-vue";
     import { save_completion_local } from "./completion";
+    import { isAuthenticated } from "./auth";
     let expr=ref("");
     const expr_field=ref(null);
     const param=defineProps({
@@ -32,10 +32,9 @@
     }
     const sample_input=ref(serialize_output(param.output,param.parameter));
     const buttons=ref(param.parameter);
-    const auth=useAuth0();
     async function mark_solved() {
         if(param.problem_status!="solved"){
-            if(!auth || !auth.isAuthenticated.value){
+            if(!isAuthenticated.value){
                 solved("solved-offline");
                 save_completion_local(param.problem_id,"solved");
                 return show_dialog("success","please login to save your progress");
