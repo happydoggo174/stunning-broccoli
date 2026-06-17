@@ -8,15 +8,16 @@ export const auth=ref(null);
 export const isAuthenticated=ref(false);
 export const isLoading=ref(true);
 async function load_auth0(){
-    await new Promise(resolve => setTimeout(resolve, 0));
-    return createAuth0({
-        domain: import.meta.env.VITE_AUTH0_DOMAIN,
-        clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
-        authorizationParams: {
-            redirect_uri: window.location.origin+`/${import.meta.env.VITE_BASE}/`,
-            audience:"mathapi"
-        },
-        cacheLocation:'localstorage'
+    return await new Promise((resolve)=>{
+        setTimeout(resolve(createAuth0({
+            domain: import.meta.env.VITE_AUTH0_DOMAIN,
+            clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
+            authorizationParams: {
+                redirect_uri: window.location.origin+`/${import.meta.env.VITE_BASE}/`,
+                audience:"mathapi"
+            },
+            cacheLocation:'localstorage'
+        })),0);
     });
 }
 export async function init_auth(app){
