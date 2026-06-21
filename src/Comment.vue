@@ -61,6 +61,11 @@
             is_commenting=false;
         }
     }
+    function resize_comment(e){
+        const field=e.target;
+        field.style.height="auto";
+        field.style.height=field.scrollHeight+'px';
+    }
 </script>
 <style scoped>
     .comment-banner{
@@ -99,7 +104,7 @@
     <div class="comment-section" v-if="show_comment">
         <div class="row" style="width:100%;margin-top: 14px;margin-bottom: 12px;">
             <textarea id="comment-field" :placeholder="comment_placeholder" v-model="comment" 
-            :readonly="!isAuthenticated" maxlength="250"></textarea>
+            :readonly="!isAuthenticated" maxlength="250" @input="resize_comment"></textarea>
             <button style="background-color: green;" @click="handle_make_comment">
                 <img :src="send" alt="send comment">
             </button>
