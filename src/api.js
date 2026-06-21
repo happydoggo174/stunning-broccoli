@@ -76,3 +76,15 @@ export async function make_comment(problem_id,content) {
     const resp=await fetch(`${BASE_ADDR}/comment/make`,{method:"POST",headers:header,body:data});
     if(!resp.ok){throw 0;}
 }
+export async function make_problem(title,description,difficulty,expr,parameter,test_case) {
+    const heders=await make_auth_header(true);
+    const data=new FormData();
+    data.set("title",title);
+    data.set("description",description);
+    data.set("difficulty",difficulty);
+    data.set("function",expr);
+    data.set("parameter",parameter);
+    data.set("test_case",test_case);
+    const resp=await fetch(`${BASE_ADDR}/problem/make`,{method:"POST",headers:heders,body:body});
+    if(!resp.ok){throw 0;}
+}

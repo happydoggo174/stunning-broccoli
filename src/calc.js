@@ -342,7 +342,7 @@ function calculate_internal(itr,param,options){
             }
             exp.push(new operation(token,pri));
         }else{
-            if(!Object.hasOwn(param,token)){
+            if(!param.token){
                 throw new Error(`unknown parameter ${token}`);
             }
             val.push(param[token]);

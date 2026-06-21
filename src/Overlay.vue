@@ -30,20 +30,20 @@
         padding: 20px;
         border-radius: 28px;
         color: black;
-        .title{
-            font-size: 18px;
-            display: block;
-            text-align: center;
-        }
-        .msg{
-            display: flex;
-            text-align: center;
-            margin-top: 4px;
-            margin-bottom: 14px;
-        }
-        button{
-            padding: 4px;
-        }
+    }
+    #notification-box .title{
+        font-size: 18px;
+        display: block;
+        text-align: center;
+    }
+    #notification-box .msg{
+        display: flex;
+        text-align: center;
+        margin-top: 4px;
+        margin-bottom: 14px;
+    }
+    #notification-box button{
+        padding: 4px;
     }
 </style>
 <template>

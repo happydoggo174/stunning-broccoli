@@ -1,6 +1,6 @@
 <script setup>
     import { ref} from "vue"
-    import {calculate,parse} from "./calc";
+    import {calculate} from "./calc";
     import Sample from "./Sample.vue";
     import { show_dialog } from './notificationdaemon.js';
     import { mark_problem_status } from "./api";
@@ -102,17 +102,17 @@
         margin-left: 18px;
         margin-right: 18px;
         transition: 0.27s ease-in-out background-color;
-        &:hover{
-            background-color: rgb(0, 217, 255);
-        }
+    }
+    #submit-btn:hover{
+        background-color: rgb(0, 217, 255);
     }
     #data-key{
         display: grid;
         grid-template-columns: repeat(6,1fr);
-        button{
-            padding: 8px;
-            font-size: 20px;
-        }
+    }
+    #data-key:button{
+        padding: 8px;
+        font-size: 20px;
     }
     .var-btn{
         flex-grow: 1;

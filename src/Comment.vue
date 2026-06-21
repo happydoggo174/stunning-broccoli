@@ -74,9 +74,9 @@
         background-color: unset;
         border-radius: 8px;
         padding: 0px;
-        &:hover{
-            background-color: aqua;
-        }
+    }
+    .more-btn:hover{
+        background-color: aqua;
     }
     .comment-section{
         display: flex;

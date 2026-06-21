@@ -19,10 +19,10 @@
         font-size: 16px;
         align-items: center;
         display: flex;
-        &:hover{
-            box-shadow: -2px 2px 16px 3px;
-            background-color: rgb(12, 138, 235);
-        }
+    }
+    .nav-btn:hover{
+        box-shadow: -2px 2px 16px 3px;
+        background-color: rgb(12, 138, 235);
     }
     #profile-btn{
         border-radius: 50%;

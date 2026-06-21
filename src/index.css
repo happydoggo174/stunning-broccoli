@@ -49,26 +49,24 @@ body{
     transition: box-shadow 0.15s ease-in-out;
     transition-delay: 84ms;
     word-wrap: break-word;
-    .tilte{
-        font-size: 20px;
-        color: white;
-        font-weight: bold;
-        display: block;   
-    }
-    .difficult-cover{
-        background-color: blue;
-        width:36%;
-        margin:-6px;
-        display: flex;
-        border-radius: 12px;
-        justify-content: center;
-        align-items: center;
-        transition: 0.15s width ease-in-out;
-        transition-delay: 84ms;
-    }
-    &:hover{
-        .difficult-cover{
-            width: 50%;
-        }
-    }
+}
+.math-problem .tilte{
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    display: block;  
+}
+.math-problem .difficult-cover{
+    background-color: blue;
+    width:36%;
+    margin:-6px;
+    display: flex;
+    border-radius: 12px;
+    justify-content: center;
+    align-items: center;
+    transition: 0.15s width ease-in-out;
+    transition-delay: 84ms;
+}
+.math-problem:hover .difficult-cover{
+    width: 50%;
 }
