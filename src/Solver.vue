@@ -110,7 +110,7 @@
         display: grid;
         grid-template-columns: repeat(6,1fr);
     }
-    #data-key:button{
+    #data-key button{
         padding: 8px;
         font-size: 20px;
     }
