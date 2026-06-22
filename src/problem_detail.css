@@ -9,7 +9,7 @@
     background-color: rgb(176,224,230);
 }
 #run-panel{
-    background-color: green;
+    border-left: 1px solid black;
     grid-column-start: 4;
     grid-column-end: 6;
 }

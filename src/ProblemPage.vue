@@ -103,21 +103,24 @@ import { isAuthenticated,isLoading } from './auth.js';
     <div id="top-panel" v-else>
         <div id="info-panel">
             <div id="info-padding">
-                <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+                <div style="justify-content: center;align-items: center;" class="row">
                     <h1 class="problem-tilte">{{detail.title}}</h1>
                     <img :src="done_src" style="margin-left: 12px;" v-if="done_src!=0" 
                     :title="status.status=='solved-offline'?'please login to save progess into your account':'solved'">
                 </div>
                 <h2 class="problem-author">{{detail.author}}</h2>
                 <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>
-                <div class="row" style="margin-top: 16px;">
-                    <button style="border: none;" @click="handle_like">
-                        <img :src="like_src" alt="">
-                    </button>
-                    <span style="margin-left: 12px;">{{ detail.reaction }}</span>
-                    <button style="margin-left: 12px;border: none;" @click="handle_dislike">
-                        <img :src="dislike_src">
-                    </button>
+                <div class="row">
+                    <div class="row" style="margin-top: 16px;border: 1px solid black;padding: 4px;border-radius: 12px;">
+                        <button style="border: none;background-color: unset;" @click="handle_like">
+                            <img :src="like_src">
+                        </button>
+                        <span style="margin-left: 12px;">{{ detail.reaction }}</span>
+                        <button style="margin-left: 12px;border: none;background-color: unset;" @click="handle_dislike">
+                            <img :src="dislike_src" >
+                        </button>
+                    </div>
+                    <div class="spacer"></div>
                 </div>
                 <Comment :problem_id="prop.id" :comment_count="detail.comment_count"/>
             </div>

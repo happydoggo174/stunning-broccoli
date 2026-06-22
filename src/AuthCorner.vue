@@ -9,14 +9,14 @@
 <template>
   <div v-if="isLoading">Loading...</div>
 
-  <div v-else-if="isAuthenticated && auth!=null" style="display: flex;flex-direction: row;">
-    <div style="display: flex;flex-direction: column;justify-content: center;">
+  <div v-else-if="isAuthenticated && auth!=null" class="row">
+    <div style="justify-content: center;" class="column">
       <p style="color: black;margin-right: 12px;">{{ auth.user?.nickname }}</p>
     </div>
     <img :src="auth.user?.picture" alt="profile picture" width="32px" height="32px" style="border-radius: 50%;">
   </div>
 
-  <div v-else style="display: flex;flex-direction: row;">
+  <div v-else class="row">
     <p v-if="error_msg" style="color: red;margin-right: 12px;">Error: {{ error_msg }}</p>
 
     <button @click="signup" class="auth-btn">Signup</button>

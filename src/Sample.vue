@@ -14,8 +14,6 @@
 </script>
 <style>
     .sample-item{
-        display: flex;
-        flex-direction: row;
         text-align: center;
         margin-top: 8px;
         background-color: white;
@@ -24,8 +22,8 @@
     }
 </style>
 <template>
-    <div class="sample-item">
-        <div style="display: flex;flex-direction:row;justify-content: center;flex-grow: 1;">
+    <div class="sample-item row">
+        <div style="justify-content: center;" class="row spacer">
             <span>{{ text }}</span>
         </div>
         <img :src="status">

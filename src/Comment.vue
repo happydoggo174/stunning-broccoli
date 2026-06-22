@@ -71,8 +71,6 @@
     .comment-banner{
         font-size: 18px;
         margin-top: 14px;
-        display: flex;
-        flex-direction: column;
         justify-content: center;
     }
     .more-btn{
@@ -84,8 +82,6 @@
         background-color: aqua;
     }
     .comment-section{
-        display: flex;
-        flex-direction: column;
         padding-left: 14px;
         padding-right: 14px;
     }
@@ -96,12 +92,12 @@
 </style>
 <template>
     <div class="row" style="justify-content: space-between;align-items: center;">
-        <span class="comment-banner">comments({{ comment_cnt }})</span>
+        <span class="comment-banner column">comments({{ comment_cnt }})</span>
         <button class="more-btn" @click="toggle_comment">
             <img :src="more_src" alt="show comments">
         </button>
     </div>
-    <div class="comment-section" v-if="show_comment">
+    <div class="comment-section column" v-if="show_comment">
         <div class="row" style="width:100%;margin-top: 14px;margin-bottom: 12px;">
             <textarea id="comment-field" :placeholder="comment_placeholder" v-model="comment" 
             :readonly="!isAuthenticated" maxlength="250" @input="resize_comment"></textarea>

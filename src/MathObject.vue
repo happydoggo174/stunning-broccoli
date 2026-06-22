@@ -33,7 +33,7 @@
 <template>
     <RouterLink :to="`/problem/${id}`" :class="'math-problem '+`${bg_colors[difficulty]}-shadow`">
         <div class="difficult-cover">
-            <div style="display: flex;flex-direction: column;margin-right: 14px;align-items: center;width: 62px;">
+            <div style="margin-right: 14px;align-items: center;width: 62px;" class="column">
                 <img :src="circle_img" width="24px" height="24px">
                 <span>{{ difficulty }}</span>
             </div>

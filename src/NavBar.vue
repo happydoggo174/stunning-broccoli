@@ -5,8 +5,6 @@
         padding-top: 4px;
         padding-bottom: 4px;
         padding-right: 8px;
-        display: flex;
-        flex-direction: row;
         justify-content: space-between;
     }
     .nav-btn{
@@ -37,7 +35,7 @@
     function home(){router.push("/");}
 </script>
 <template>
-    <nav id="nav-bar">
+    <nav id="nav-bar" class="row">
         <div class="row">
             <button class="nav-btn" @click="home">home</button>
             <button class="nav-btn">favorite</button>

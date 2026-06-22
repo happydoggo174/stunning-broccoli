@@ -3,7 +3,7 @@
 </script>
 <template>
   <div class="spinner-container" v-if="!resolved">
-    <div style="display: flex;flex-direction: column;justify-content: center;height: calc(100vh - 36px);">
+    <div style="justify-content: center;height: calc(100vh - 36px);" class="column">
         <p style="color: red;font-size: 24px;" v-if="err">error:{{ err }}</p>
         <div class="loading-wheel" v-else></div>
     </div>

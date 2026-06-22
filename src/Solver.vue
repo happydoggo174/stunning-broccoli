@@ -120,8 +120,6 @@
         padding: 8px;
     }
     .formula-field{
-        display: flex;
-        flex-direction: row;
         align-items: center;
     }
     #formula-label{
@@ -129,8 +127,6 @@
         font-size: 18px;
     }
     .sample-area{
-        display: flex;
-        flex-direction: column;
         color: black;
     }
     #sample-title{
@@ -139,15 +135,13 @@
         text-align: center;
     }
     #sample-list{
-        display: flex;
-        flex-direction: column;
         margin-left: 12px;
         margin-right: 12px;
     }
 </style>
 <template>
-    <div style="display: flex;flex-direction: column;">
-        <div class="formula-field">
+    <div class="column">
+        <div class="formula-field row">
             <span id="formula-label">{{ `f(${buttons.join(",")})=` }}</span>
             <textarea id="expr-field" type="text" v-model="expr" autofocus ref="expr_field" @input="resize_field"></textarea>
         </div>    
@@ -174,9 +168,9 @@
             <button @click="add_key('acos()')">acos</button>
             <button @click="add_key('atan()')">atan</button>
         </div>
-        <div class="sample-area">
+        <div class="sample-area column">
             <span id="sample-title">sample input</span>
-            <div id="sample-list">
+            <div id="sample-list" class="column">
                 <Sample v-for="sample in sample_input" :text="sample.display" :test_status="sample.status"/>
             </div>
         </div>

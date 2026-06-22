@@ -12,6 +12,10 @@ const routes = [
       id: Number(route.params.id)
     })
   },
+  {
+    path:'/make_problem',
+    component:()=>import("@/MakeProblem.vue")
+  }
 ]
 
 const router = createRouter({

@@ -6,8 +6,6 @@
 </script>
 <style scoped>
     #notification-outer-padding{
-        display: flex; 
-        flex-direction: row;
         justify-content: center;
         position: fixed;
         top:0px;
@@ -17,14 +15,10 @@
         background-color: rgba(0, 0, 0, 0.6);
     }
     #notification-inner-padding{
-        display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
     }
     #notification-box{
-        display: flex;
-        flex-direction: column;
         z-index: 1;
         background-color: white;
         padding: 20px;
@@ -47,9 +41,9 @@
     }
 </style>
 <template>
-    <div id="notification-outer-padding" v-if="event_bridge.type">
-        <div id="notification-inner-padding" v-if="event_bridge.type=='alert'">
-            <div id="notification-box" >
+    <div id="notification-outer-padding" class="row" v-if="event_bridge.type">
+        <div id="notification-inner-padding" class="column" v-if="event_bridge.type=='alert'">
+            <div id="notification-box" class="column">
                 <span class="title">{{ event_bridge.title }}</span>
                 <span class="msg">{{ event_bridge.msg }}</span>
                 <button @click="close_dialog">ok</button>
