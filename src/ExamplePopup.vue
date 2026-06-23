@@ -10,6 +10,7 @@
     function handle_add(){
         const params={};
         const elem=param_list.value;
+        const blacklist=["__proto__","__constructor__","prototype","output","is_err"];
         try{
             Array.from(elem).forEach(ele=>{
                 const name=ele.querySelector("span").innerText;
@@ -18,7 +19,7 @@
                     show_dialog("error",`invalid value for input ${name}`);
                     throw 1;
                 }
-                if(name=="__proto__" || name=="__constructor__" || name=="prototype"){
+                if(blacklist.find(v=>v==name)){
                     show_dialog("error",`invalid name ${name}`);
                     throw 0;
                 }

@@ -1,6 +1,7 @@
 <script setup>
     import { computed } from 'vue';
     import delete_img from "@/assets/delete.svg";
+    import warning from "@/assets/warning.svg";
     const prop=defineProps({
         parameter:Array,
         value:Object
@@ -33,6 +34,7 @@
         <div style="justify-content: center;" class="row spacer">
             <span>{{ msg }}</span>
         </div>
+        <img v-if="value.is_err===true" :src="warning" alt="" style="margin-right: 12px;">
         <button @click="emits('delete',value.id)">
             <img :src="delete_img" alt="delete">
         </button>

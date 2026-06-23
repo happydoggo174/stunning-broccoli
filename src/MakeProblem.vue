@@ -22,6 +22,7 @@
     const title=ref("");
     const description=ref("");
     const difficulty=ref("easy");
+    let refresh_handle=null;
     let expression="";
     function resize_field(e){
         const field=e.target;
@@ -58,6 +59,38 @@
         }catch(e){
             show_dialog("error",e);
         }
+    }
+    function refresh_example(){
+        example.value.forEach((exp)=>{ 
+            try{
+                exp.output=calculate(expression,exp);
+                exp.is_err=false;
+            }catch(e){
+                exp.is_err=true;
+                console.log(e);
+            }
+        });
+    }
+    function edit_expression(new_expr){
+        expression=new_expr;
+        if(!refresh_handle){
+            refresh_handle=setTimeout(refresh_example,1000);
+        }else{
+            clearTimeout(refresh_handle);
+            refresh_handle=setTimeout(refresh_example,1000);
+        }
+    }
+    function show_example_dialog(){
+        const blacklist=["__proto__","__constructor__","prototype","output","is_err"];
+        let valid=true;
+        display_parameter.value.forEach((pr)=>{
+            if(blacklist.find(v=>v==pr.name)){
+                show_dialog("error",`invalid parameter name ${pr.name}`);
+                valid=false;
+            }
+        });
+        if(!valid){return;}
+        is_example.value=true;
     }
 </script>
 <style scoped>
@@ -163,7 +196,7 @@
                     <img :src="add" v-once alt="" @click="add_parameter">
                 </button>
             </div>
-            <Calculator :buttons="display_parameter.map((v)=>v.name)" @input="(v)=>expression=v"/>
+            <Calculator :buttons="display_parameter.map((v)=>v.name)" @input="edit_expression"/>
             <div class="row" style="justify-content: space-between;margin-top: 14px;">
                 <button @click="page=0" class="page-btn">
                     <img :src="back" alt="previous page">
@@ -174,7 +207,7 @@
             <div class="column">
                 <div class="row example-row">
                     <span class="example-banner">example</span>
-                    <button style="margin-left: 12px;" @click="is_example=true">add example</button>
+                    <button style="margin-left: 12px;" @click="show_example_dialog">add example</button>
                 </div>
                 <TestSample  v-for="exp in example" :parameter="display_parameter" :value="exp" @delete="
                     (id)=>example=example.filter((v)=>v.id!=id)
