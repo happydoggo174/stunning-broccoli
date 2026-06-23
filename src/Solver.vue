@@ -6,8 +6,8 @@
     import { mark_problem_status } from "./api";
     import { save_completion_local } from "./completion";
     import { isAuthenticated } from "./auth";
+    import Calculator from "./Calculator.vue";
     let expr=ref("");
-    const expr_field=ref(null);
     const param=defineProps({
         parameter:Array,
         output:Array,
@@ -37,7 +37,7 @@
             if(!isAuthenticated.value){
                 solved("solved-offline");
                 save_completion_local(param.problem_id,"solved");
-                return show_dialog("success","please login to save your progress");
+                return show_dialog("success","please login to save your progress",false);
             }
             try{
                 await mark_problem_status(param.problem_id,"solved");
@@ -48,7 +48,7 @@
             }
         }
         solved("solved");
-        show_dialog("passed","all test passed");
+        show_dialog("passed","all test passed",false);
     }
     function undo_status(i){
         i++;
@@ -77,23 +77,8 @@
         }
         await mark_solved();
     }
-    function add_key(key){
-        expr.value=expr.value+key;
-        expr_field.value.focus();
-    }
-    function resize_field(){
-        const field=expr_field.value;
-        field.style.height="auto";
-        field.style.height=`${field.scrollHeight}px`;
-    }
 </script>
 <style scoped>
-    #expr-field{
-        padding: 4px;
-        align-items: baseline;
-        font-size: 18px;
-        flex-grow: 1;
-    }
     #submit-btn{
         background-color: blue;
         padding: 8px;
@@ -105,26 +90,6 @@
     }
     #submit-btn:hover{
         background-color: rgb(0, 217, 255);
-    }
-    #data-key{
-        display: grid;
-        grid-template-columns: repeat(6,1fr);
-    }
-    #data-key button{
-        padding: 8px;
-        font-size: 20px;
-    }
-    .var-btn{
-        flex-grow: 1;
-        font-size: 20px;
-        padding: 8px;
-    }
-    .formula-field{
-        align-items: center;
-    }
-    #formula-label{
-        color: black;
-        font-size: 18px;
     }
     .sample-area{
         color: black;
@@ -141,35 +106,9 @@
 </style>
 <template>
     <div class="column">
-        <div class="formula-field row">
-            <span id="formula-label">{{ `f(${buttons.join(",")})=` }}</span>
-            <textarea id="expr-field" type="text" v-model="expr" autofocus ref="expr_field" @input="resize_field"></textarea>
-        </div>    
-        <div class="row">
-            <button v-for="btn in buttons" @click="add_key(btn)" class="var-btn">{{ btn }}</button>
-        </div>
-        <div id="data-key">
-            <button @click="add_key('+')">+</button>
-            <button @click="add_key('-')">-</button>
-            <button @click="add_key('*')">*</button>
-            <button @click="add_key('/')">/</button>
-            <button @click="add_key('^()')">x<sup>y</sup></button>
-            <button @click="add_key('√')">√</button>
-            <button @click="add_key('!')">!</button>
-            <button @click="add_key('%')">%</button>
-            <button @click="add_key('||')">|x|</button>
-            <button @click="add_key('log()')">log</button>
-            <button @click="add_key('ln()')">ln</button>
-            <button @click="add_key('min()')">min</button>
-            <button @click="add_key('sin()')">sin</button>
-            <button @click="add_key('cos()')">cos</button>
-            <button @click="add_key('tan')">tan</button>
-            <button @click="add_key('asin()')">asin</button>
-            <button @click="add_key('acos()')">acos</button>
-            <button @click="add_key('atan()')">atan</button>
-        </div>
+        <Calculator :buttons="buttons" @input="(v)=>expr=v"/>
         <div class="sample-area column">
-            <span id="sample-title">sample input</span>
+            <span id="sample-title">example</span>
             <div id="sample-list" class="column">
                 <Sample v-for="sample in sample_input" :text="sample.display" :test_status="sample.status"/>
             </div>

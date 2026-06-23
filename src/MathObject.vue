@@ -30,6 +30,14 @@
         hard:"red"
     }
 </script>
+<style scoped>
+    .solved-img{
+        background-color: white;
+        border:1px solid black;
+        margin-left: 12px;
+        border-radius: 50%;
+    }
+</style>
 <template>
     <RouterLink :to="`/problem/${id}`" :class="'math-problem '+`${bg_colors[difficulty]}-shadow`">
         <div class="difficult-cover">
@@ -38,11 +46,11 @@
                 <span>{{ difficulty }}</span>
             </div>
             <h2 class="tilte" style="color: black;">{{title}}</h2>
-            <img :src="done" alt="completed" v-if='problem_status=="solved"' style='background-color: white;border:1px solid black;margin-left: 12px;border-radius: 50%;'>
+            <img :src="done" alt="completed" v-if='problem_status=="solved"' class="solved-img">
         </div>
         <div class="stat">
             <div class="row" style="align-items: center;">
-                <img :src="react_image" :alt="react_alt" style="margin-right: 8px;">
+                <img :src="react_image" v-once :alt="react_alt" style="margin-right: 8px;">
                 <span>{{reaction}}</span>
             </div>
         </div>

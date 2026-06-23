@@ -1,8 +1,4 @@
 import { createAuth0 } from "@auth0/auth0-vue";
-/**
- * @type {null|ReturnType<useAuth0>}
- */
-let auth0=null;
 import {ref,watch} from "vue";
 export const auth=ref(null);
 export const isAuthenticated=ref(false);

@@ -32,11 +32,15 @@
 <script setup>
     import AuthCorner from './AuthCorner.vue';
     import router from './router';
+    import add from "@/assets/add.svg";
     function home(){router.push("/");}
 </script>
 <template>
     <nav id="nav-bar" class="row">
         <div class="row">
+            <button class="nav-btn" @click="router.push('/make_problem')">
+                <img :src="add" alt="menu">
+            </button>
             <button class="nav-btn" @click="home">home</button>
             <button class="nav-btn">favorite</button>
         </div>

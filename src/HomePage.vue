@@ -23,7 +23,7 @@
       if(isAuthenticated.value){
         sync_completion().then((sync_count)=>{
           if(sync_count){
-            show_dialog("done","completed problem saved");
+            show_dialog("done","completed problem saved",false);
           }
         }).catch(()=>{
           show_dialog("error","can't save completed problem");

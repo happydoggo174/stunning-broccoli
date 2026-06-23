@@ -96,6 +96,15 @@ import { isAuthenticated,isLoading } from './auth.js';
 <style scoped>
     @import "./index.css";
     @import "./problem_detail.css";
+    .react-btn{
+        border: none;
+        background-color: unset;
+        border-radius: 10px;
+        transition: 0.12s background-color ease-in-out;
+    }
+    .react-btn:hover{
+        background-color: rgb(46, 134, 139);
+    }
 </style>
 <template>
     <NavBar/>
@@ -112,11 +121,11 @@ import { isAuthenticated,isLoading } from './auth.js';
                 <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>
                 <div class="row">
                     <div class="row" style="margin-top: 16px;border: 1px solid black;padding: 4px;border-radius: 12px;">
-                        <button style="border: none;background-color: unset;" @click="handle_like">
+                        <button @click="handle_like" class="react-btn">
                             <img :src="like_src">
                         </button>
                         <span style="margin-left: 12px;">{{ detail.reaction }}</span>
-                        <button style="margin-left: 12px;border: none;background-color: unset;" @click="handle_dislike">
+                        <button style="margin-left: 12px;" @click="handle_dislike" class="react-btn">
                             <img :src="dislike_src" >
                         </button>
                     </div>

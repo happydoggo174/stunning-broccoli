@@ -102,7 +102,7 @@
             <textarea id="comment-field" :placeholder="comment_placeholder" v-model="comment" 
             :readonly="!isAuthenticated" maxlength="250" @input="resize_comment"></textarea>
             <button style="background-color: green;" @click="handle_make_comment">
-                <img :src="send" alt="send comment">
+                <img :src="send" v-once alt="send comment">
             </button>
         </div>
         <CommentWidget v-for="comment in data" :content="comment.content" 

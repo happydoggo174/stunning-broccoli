@@ -1,5 +1,6 @@
 <script setup>
     import { event_bridge } from './notificationdaemon';
+    import error from "@/assets/error.svg";
     function close_dialog(){
         event_bridge.type=undefined;
     }
@@ -44,7 +45,10 @@
     <div id="notification-outer-padding" class="row" v-if="event_bridge.type">
         <div id="notification-inner-padding" class="column" v-if="event_bridge.type=='alert'">
             <div id="notification-box" class="column">
-                <span class="title">{{ event_bridge.title }}</span>
+                <div class="row" style="justify-content: center;align-items: center;">
+                    <img :src="error" width="24px" height="24px" style="margin-right: 6px;" v-show="event_bridge.is_err">
+                    <span class="title">{{ event_bridge.title }}</span>
+                </div>
                 <span class="msg">{{ event_bridge.msg }}</span>
                 <button @click="close_dialog">ok</button>
             </div>

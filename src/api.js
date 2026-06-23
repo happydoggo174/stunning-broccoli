@@ -77,14 +77,22 @@ export async function make_comment(problem_id,content) {
     if(!resp.ok){throw 0;}
 }
 export async function make_problem(title,description,difficulty,expr,parameter,test_case) {
-    const heders=await make_auth_header(true);
+    const headers=await make_auth_header(true);
     const data=new FormData();
+    const send_case=[];
+    test_case.forEach((test)=>{
+        const r=[];
+        for(let name of parameter){
+            r.push(test[name]);
+        }
+        send_case.push(r);
+    });
     data.set("title",title);
     data.set("description",description);
     data.set("difficulty",difficulty);
     data.set("function",expr);
-    data.set("parameter",parameter);
-    data.set("test_case",test_case);
-    const resp=await fetch(`${BASE_ADDR}/problem/make`,{method:"POST",headers:heders,body:body});
-    if(!resp.ok){throw 0;}
+    data.set("parameter",JSON.stringify(parameter));
+    data.set("test_case",JSON.stringify(send_case));
+    const resp=await fetch(`${BASE_ADDR}/problem/make`,{method:"POST",headers:headers,body:data});
+    if(!resp.ok){throw resp.body;}
 }
