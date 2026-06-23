@@ -33,12 +33,13 @@
     import AuthCorner from './AuthCorner.vue';
     import router from './router';
     import add from "@/assets/add.svg";
+    import { isAuthenticated } from './auth.js';
     function home(){router.push("/");}
 </script>
 <template>
     <nav id="nav-bar" class="row">
         <div class="row">
-            <button class="nav-btn" @click="router.push('/make_problem')">
+            <button class="nav-btn" @click="router.push('/make_problem')" v-if="isAuthenticated">
                 <img :src="add" alt="menu">
             </button>
             <button class="nav-btn" @click="home">home</button>
