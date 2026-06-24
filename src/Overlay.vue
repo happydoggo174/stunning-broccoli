@@ -79,7 +79,7 @@
                 <button @click="close_dialog">ok</button>
             </div>
         </div>
-        <div v-if="event_bridge.type='confirm'" id="notification-inner-padding" class="column">
+        <div v-else-if="event_bridge.type='confirm'" id="notification-inner-padding" class="column">
             <div id="notification-box" class="column">
                 <div class="row" style="justify-content: center;align-items: center;">
                     <span class="title">{{ event_bridge.title }}</span>
