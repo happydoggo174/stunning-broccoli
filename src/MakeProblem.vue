@@ -65,9 +65,8 @@
             try{
                 exp.output=calculate(expression,exp);
                 exp.is_err=false;
-            }catch(e){
+            }catch{
                 exp.is_err=true;
-                console.log(e);
             }
         });
     }
@@ -94,67 +93,7 @@
     }
 </script>
 <style scoped>
-    span{
-        color: black;
-    }
-    .action-btn{
-        flex-grow: 1;
-        padding: 4px;
-        border-radius: 10px;
-        margin-left: 6px;
-        margin-right: 6px;
-        margin-top: 8px;
-    }
-    #title{
-        margin-top: 8px;
-        font-size: 24px;
-        width: 30vw;
-        word-wrap: break-word;
-        text-align: center;
-    }
-    #cancel-btn{
-        color: red;
-        border: 1px solid red;
-        font-size: 18px;
-        transition: 0.12s background-color ease-in-out,0.12s color ease-in-out;
-        width: 100%;
-    }
-    #cancel-btn:hover{
-        color: white;
-        background-color: red;
-    }
-    @media (max-width:600px) {
-        #title{
-            width: 40vw;
-        }
-    }
-    .page-btn{
-        display: flex;
-        align-items: center;
-        padding: 4px;
-        border-radius: 12px;
-    }
-    .example-row{
-        justify-content: center;
-        align-items: center;
-        margin-top: 14px;
-    }
-    .example-banner{
-        display: block;
-        text-align: center;
-        font-size: 18px;
-    }
-    .example-bg{
-        width: 100vw;
-        height: 100vh;
-        z-index: 1;
-        position: absolute;
-        left: 0;
-        top: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+    @import './MakeProblem.css';
 </style>
 <template>
     <NavBar/>
@@ -169,7 +108,7 @@
             <div class="column" style="margin-top: 14px;">
                 <span style="display: block;text-align: center;">description</span>
                 <textarea placeholder="your description here" @input="resize_field" v-model="description"
-                style="font-size: 15px;scrollbar-width: none;"></textarea>
+                style="font-size: 15px;scrollbar-width: none" ></textarea>
             </div>
             <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">
                 <span>difficulty</span>
@@ -181,9 +120,9 @@
             </div>
             <div class="row">
                 <div class="spacer"></div>
-                <button class="page-btn" @click="page=1">
+                <button class="page-btn hover-shadow" @click="page=1">
                     next
-                    <img v-once :src="next" alt="next page">
+                    <img v-once :src="next" alt="next page" style="margin-left: 8px;">
                 </button>
             </div>
         </div>
@@ -192,22 +131,25 @@
                 <span>input</span>
                 <Parameter v-for="param in parameter" :key="param.id" :name="param.name" :idx="param.id" 
                 @remove="remove_parameter" @update="handle_update"/>
-                <button style="margin-left: 14px;">
+                <button style="margin-left: 14px;border-radius: 40%;padding: 4px;">
                     <img :src="add" v-once alt="" @click="add_parameter">
                 </button>
             </div>
             <Calculator :buttons="display_parameter.map((v)=>v.name)" @input="edit_expression"/>
             <div class="row" style="justify-content: space-between;margin-top: 14px;">
-                <button @click="page=0" class="page-btn">
-                    <img :src="back" alt="previous page">
+                <button @click="page=0" class="page-btn hover-shadow">
+                    <img :src="back" alt="previous page" style="margin-right: 8px;">
                     prev
                 </button>
-                <button style="padding: 6px;border-radius: 8px;" @click="handle_submit">submit</button>
+                <button @click="handle_submit" class=" submit-btn hover-shadow">submit</button>
             </div>
             <div class="column">
                 <div class="row example-row">
                     <span class="example-banner">example</span>
-                    <button style="margin-left: 12px;" @click="show_example_dialog">add example</button>
+                    <button class="show-example-btn hover-shadow" @click="show_example_dialog">
+                        <img :src="add" alt="add example" v-once style="margin-right: 8px;">
+                        add example
+                    </button>
                 </div>
                 <TestSample  v-for="exp in example" :parameter="display_parameter" :value="exp" @delete="
                     (id)=>example=example.filter((v)=>v.id!=id)

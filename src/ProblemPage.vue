@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, watch,ref,computed } from 'vue';
-import { get_problem_detail,get_problem_status,like_problem,dislike_problem } from './api.js';
+import { get_problem_detail,get_problem_status,like_problem,dislike_problem,remove_problem } from './api.js';
 import Loading from './Loading.vue';
 import NavBar from './NavBar.vue';
 import Solver from './Solver.vue';
@@ -10,15 +10,19 @@ import dislike from "@/assets/dislike.svg";
 import like_filled from "@/assets/like_filled.svg";
 import dislike_filled from "@/assets/dislike_filled.svg";
 import done_gray from "@/assets/done_gray.svg";
-import { show_dialog } from './notificationdaemon.js';
+import delete_img from "@/assets/delete.svg";
+import { show_dialog,show_confirm } from './notificationdaemon.js';
 import { is_problem_completed } from './completion.js';
 import Comment from './Comment.vue';
-import { isAuthenticated,isLoading } from './auth.js';
+import { isAuthenticated,isLoading,uid } from './auth.js';
+import options from "@/assets/options.svg";
+import router from "./router"
     const err=ref(null);
     const resolved=ref(false);
     const prop=defineProps({
         id:Number
     });
+    const show_menu=ref(false);
     let detail=reactive({});
     let status=reactive({});
     let count=0;
@@ -92,6 +96,12 @@ import { isAuthenticated,isLoading } from './auth.js';
         }
         return 0;
     });
+    function delete_problem(){
+        let confirmed=false;
+        show_confirm("warning",`are you sure you want to delete problem ${detail.title}?`,r=>confirmed=r);
+        if(!confirmed){return;}
+        remove_problem(id).then(()=>{router.push('/')},()=>{show_dialog('error','unable to remove problem')})
+    }
 </script>
 <style scoped>
     @import "./index.css";
@@ -105,6 +115,21 @@ import { isAuthenticated,isLoading } from './auth.js';
     .react-btn:hover{
         background-color: rgb(46, 134, 139);
     }
+    .options-btn{
+        background-color: unset;
+        border: none;
+    }
+    .menu{
+        background-color: white;
+        padding: 8px;
+        border-radius: 12px;
+        position: absolute;
+        right: 20px;
+        width:150px;
+    }
+    .delete-btn{
+        align-items: center;
+    }
 </style>
 <template>
     <NavBar/>
@@ -112,10 +137,24 @@ import { isAuthenticated,isLoading } from './auth.js';
     <div id="top-panel" v-else>
         <div id="info-panel">
             <div id="info-padding">
-                <div style="justify-content: center;align-items: center;" class="row">
-                    <h1 class="problem-tilte">{{detail.title}}</h1>
-                    <img :src="done_src" style="margin-left: 12px;" v-if="done_src!=0" 
-                    :title="status.status=='solved-offline'?'please login to save progess into your account':'solved'">
+                <div class="row" style="justify-content: space-between;">
+                    <div></div>
+                    <div style="justify-content: center;align-items: center;" class="row">
+                        <h1 class="problem-tilte">{{detail.title}}</h1>
+                        <img :src="done_src" style="margin-left: 12px;" v-if="done_src!=0" 
+                        :title="status.status=='solved-offline'?'please login to save progess into your account':'solved'">
+                    </div>
+                    <div class="row" style="position: relative;">    
+                        <div class="menu column" v-if="show_menu">
+                            <button class="delete-btn row" v-if="uid==detail.author_id" @click="delete_problem">
+                                remove problem
+                                <img :src="delete_img" alt="">   
+                            </button>
+                        </div>
+                        <button class="options-btn" v-if="isAuthenticated" @click="show_menu=!show_menu">
+                            <img :src="options" alt="more option">
+                        </button>
+                    </div>
                 </div>
                 <h2 class="problem-author">{{detail.author}}</h2>
                 <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>

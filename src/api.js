@@ -96,3 +96,10 @@ export async function make_problem(title,description,difficulty,expr,parameter,t
     const resp=await fetch(`${BASE_ADDR}/problem/make`,{method:"POST",headers:headers,body:data});
     if(!resp.ok){throw resp.body;}
 }
+export async function remove_problem(problem_id){
+    const header=await make_auth_header(true);
+    const resp=await fetch(`${BASE_ADDR}/problem/remove?problem_id=${problem_id}`,{headers:header,method:"DELETE"});
+    if(!resp.ok){
+        throw 0;
+    }
+}
