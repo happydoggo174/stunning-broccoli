@@ -97,10 +97,10 @@ import router from "./router"
         return 0;
     });
     function delete_problem(){
-        let confirmed=false;
-        show_confirm("warning",`are you sure you want to delete problem ${detail.title}?`,r=>confirmed=r);
-        if(!confirmed){return;}
-        remove_problem(id).then(()=>{router.push('/')},()=>{show_dialog('error','unable to remove problem')})
+        show_confirm("warning",`are you sure you want to delete problem ${detail.title}?`,r=>{
+            if(!r){return;}
+            remove_problem(prop.id).then(()=>{router.push('/')},()=>{show_dialog('error','unable to remove problem')});
+        });
     }
 </script>
 <style scoped>

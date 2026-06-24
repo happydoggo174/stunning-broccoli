@@ -5,10 +5,10 @@
         event_bridge.type=undefined;
     }
     function accept(){
-        push_response(event_bridge.id,'yes');
+        push_response(event_bridge.id,true);
     }
     function reject(){
-        push_response(event_bridge.id,'no');
+        push_response(event_bridge.id,false);
         close_dialog();
     }
 </script>
