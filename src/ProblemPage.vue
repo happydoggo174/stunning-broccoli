@@ -37,7 +37,7 @@ import router from "./router"
             show_dialog("error","can't like this problem");
             return;
         }
-        if(detail.reaction){
+        if(detail.reaction!=undefined){
             detail.reaction+=status.reaction=="disliked"?2:1;
         }
         status.reaction="liked";
@@ -52,7 +52,7 @@ import router from "./router"
         }catch{
             return show_dialog("error","can't dislike this problem");
         }
-        if(detail.reaction){
+        if(detail.reaction!=undefined){
             detail.reaction-=status.reaction=='liked'?2:1;
         }
         status.reaction="disliked";
