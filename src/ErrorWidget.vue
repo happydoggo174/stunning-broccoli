@@ -1,4 +1,5 @@
 <script setup>
+    import close from "@/assets/close.svg";
     const prop=defineProps({
         params:Array,
         correct:Number,
@@ -17,7 +18,13 @@
 </style>
 <template>
     <div class="column" style="color: black;margin-left: 18px;margin-right: 18px;">
-        <h2 style="display: block;text-align: center;color: red;">wrong answer</h2>
+        <div class="row" style="justify-content: space-between;align-items: center;">
+            <div></div>
+            <h2 style="display: block;text-align: center;color: red;">wrong answer</h2>
+            <button @click="emit('closed')" style="border: none;background-color: unset;">
+                <img :src="close" alt="close">
+            </button>
+        </div>
         <div class="row" style="align-items: center;">
             <span style="width: 80px;">function</span>
             <span class="answer">f({{ params.join(",") }})=</span>
@@ -30,6 +37,5 @@
             <span style="width: 80px;">result</span>
             <span class="answer">{{ output }}</span>
         </div>
-        <button style="padding: 6px;border-radius: 12px;margin-top: 12px;" @click="emit('closed')">close</button>
     </div>
 </template>

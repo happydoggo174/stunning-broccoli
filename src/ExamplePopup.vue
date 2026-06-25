@@ -40,10 +40,14 @@
         text-align: center;
         margin-top: 12px;
     }
+    .action-btn{
+        padding: 4px;
+        border-radius: 12px;
+    }
 </style>
 <template>
     <div class="column" style="background-color: white;padding: 12px;border-radius: 16px;border: 1px solid black;color: black;">
-        <h2>add an example</h2>
+        <h2 style="display: block;text-align: center;">add an example</h2>
         <div v-for="param in parameter" ref="param-list" class="column">
             <div class="row" style="margin-top: 14px;">
                 <span>{{ param.name }}</span>
@@ -52,8 +56,8 @@
         </div>
         <span v-if="has_added" id="example-added-banner">example added successfully</span>
         <div class="row" style="margin-top: 14px;width: 100%;">
-            <button @click="emits('close')" class="spacer">close</button>
-            <button @click="handle_add" class="spacer" style="margin-left: 8px;">add</button>
+            <button @click="emits('close')" class="spacer action-btn hover-shadow">close</button>
+            <button @click="handle_add" class="spacer action-btn hover-shadow" style="margin-left: 8px;">add</button>
         </div>
     </div>
 </template>
