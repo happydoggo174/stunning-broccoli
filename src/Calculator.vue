@@ -73,6 +73,8 @@
             <button @click="add_key('%')">%</button>
             <button @click="add_key('||')">|x|</button>
             <button v-for="fn in functions" @click="add_key(fn+'()')" v-once>{{ fn }}</button>
+            <button @click="add_key('pi')">pi</button>
+            <button @click="add_key('e')">e</button>
         </div>
     </div>
 </template>

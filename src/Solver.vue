@@ -69,12 +69,10 @@
     }
     async function parse_expr(){
         const exp=expr.value;
-        const base_object={"pi":Math.PI};
         for(let i=0;i<param.output.length;i++){
             const val=param.output[i];
-            const total=Object.assign(val,base_object);
             try{
-                const res=calculate(exp,total);
+                const res=calculate(exp,val);
                 if(res!=val.output){
                     const params=[];
                     param.parameter.forEach((pr)=>{
