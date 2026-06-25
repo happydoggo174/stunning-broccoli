@@ -86,10 +86,12 @@
         margin-top: 12px;
         margin-left: 18px;
         margin-right: 18px;
-        transition: 0.27s ease-in-out background-color;
+        transition: 0.27s ease-in-out background-color,0.27s ease-in-out color;
+        color: white;
     }
     #submit-btn:hover{
         background-color: rgb(0, 217, 255);
+        color: black;
     }
     .sample-area{
         color: black;

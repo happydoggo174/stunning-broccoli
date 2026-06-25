@@ -6,8 +6,9 @@ let is_pushing=false;
 export function show_dialog(title,msg,is_err=true){
     Object.assign(event_bridge,{"title":title,"msg":msg,"is_err":is_err,"type":"alert"});
 }
-export function show_custom(widget,data){
-    Object.assign(event_bridge,{"type":custom,"object":widget,"data":data});
+export function show_custom(widget,data,fn){
+    Object.assign(event_bridge,{"type":custom,"object":widget,"data":data,"id":++idx});
+    return poll_output(idx,fn);
 }
 export function poll_output(handle,fn){
     const hd=watch(output_bridge,()=>{

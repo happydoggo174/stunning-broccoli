@@ -32,15 +32,16 @@
 <script setup>
     import AuthCorner from './AuthCorner.vue';
     import router from './router';
-    import add from "@/assets/add.svg";
+    import menu_thick from "@/assets/menu_thick.svg";
     import { isAuthenticated } from './auth.js';
+    const emit=defineEmits(["menu"]);
     function home(){router.push("/");}
 </script>
 <template>
     <nav id="nav-bar" class="row">
         <div class="row">
-            <button class="nav-btn" @click="router.push('/make_problem')" v-if="isAuthenticated">
-                <img :src="add" alt="menu">
+            <button class="nav-btn" @click="emit('menu')" v-if="isAuthenticated">
+                <img :src="menu_thick" alt="menu">
             </button>
             <button class="nav-btn" @click="home">home</button>
             <button class="nav-btn">favorite</button>

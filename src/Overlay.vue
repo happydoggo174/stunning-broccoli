@@ -23,28 +23,28 @@
         height: 100vh;
         background-color: rgba(0, 0, 0, 0.6);
     }
-    #notification-inner-padding{
+    .notification-inner-padding{
         align-items: center;
         justify-content: center;
     }
-    #notification-box{
+    .notification-box{
         background-color: white;
         padding: 20px;
         border-radius: 28px;
         color: black;
     }
-    #notification-box .title{
+    .notification-box .title{
         font-size: 18px;
         display: block;
         text-align: center;
     }
-    #notification-box .msg{
+    .notification-box .msg{
         display: flex;
         text-align: center;
         margin-top: 4px;
         margin-bottom: 14px;
     }
-    #notification-box button{
+    .notification-box button{
         padding: 4px;
     }
     .yes-btn{
@@ -69,8 +69,8 @@
 </style>
 <template>
     <div id="notification-outer-padding" class="row" v-if="event_bridge.type">
-        <div id="notification-inner-padding" class="column" v-if="event_bridge.type=='alert'">
-            <div id="notification-box" class="column">
+        <div class="notification-inner-padding column"  v-if="event_bridge.type=='alert'">
+            <div class="notification-box column">
                 <div class="row" style="justify-content: center;align-items: center;">
                     <img :src="error" width="24px" height="24px" style="margin-right: 6px;" v-show="event_bridge.is_err">
                     <span class="title">{{ event_bridge.title }}</span>
@@ -79,8 +79,8 @@
                 <button @click="close_dialog">ok</button>
             </div>
         </div>
-        <div v-else-if="event_bridge.type='confirm'" id="notification-inner-padding" class="column">
-            <div id="notification-box" class="column">
+        <div class="notification-inner-padding column" v-else-if="event_bridge.type='confirm'" >
+            <div class="notification-box column">
                 <div class="row" style="justify-content: center;align-items: center;">
                     <span class="title">{{ event_bridge.title }}</span>
                 </div>
@@ -91,6 +91,10 @@
                 </div>
             </div>
         </div>
-        <component v-else :is="event_bridge.object" :data="event_bridge.data"/>
+        <div class="notification-inner-padding column" v-else>
+            <div class="notification-box column">
+                <component :is="event_bridge.object" :data="event_bridge.data"/>
+            </div>
+        </div>
     </div>
 </template>

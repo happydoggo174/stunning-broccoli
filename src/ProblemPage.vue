@@ -2,7 +2,7 @@
 import { reactive, watch,ref,computed } from 'vue';
 import { get_problem_detail,get_problem_status,like_problem,dislike_problem,remove_problem } from './api.js';
 import Loading from './Loading.vue';
-import NavBar from './NavBar.vue';
+import Menu from './menu.vue';
 import Solver from './Solver.vue';
 import done from "@/assets/done.svg";
 import like from "@/assets/like.svg";
@@ -118,6 +118,11 @@ import router from "./router"
     .options-btn{
         background-color: unset;
         border: none;
+        border-radius: 40%;
+        padding: 2px;
+    }
+    .options-btn:hover{
+        background-color: rgb(42, 163, 163);
     }
     .menu{
         background-color: white;
@@ -127,56 +132,66 @@ import router from "./router"
         right: 20px;
         width:150px;
     }
+    .menu button{
+        border: none;
+        background-color: unset;
+        border-radius: 4px;
+        padding: 8px;
+    }
+    .menu button:hover{
+        background-color: rgb(184, 169, 166);
+    }
     .delete-btn{
         align-items: center;
     }
 </style>
 <template>
-    <NavBar/>
-    <Loading v-if="!resolved" :resolved="resolved" :err="err"/>
-    <div id="top-panel" v-else>
-        <div id="info-panel">
-            <div id="info-padding">
-                <div class="row" style="justify-content: space-between;">
-                    <div></div>
-                    <div style="justify-content: center;align-items: center;" class="row">
-                        <h1 class="problem-tilte">{{detail.title}}</h1>
-                        <img :src="done_src" style="margin-left: 12px;" v-if="done_src!=0" 
-                        :title="status.status=='solved-offline'?'please login to save progess into your account':'solved'">
-                    </div>
-                    <div class="row" style="position: relative;">    
-                        <div class="menu column" v-if="show_menu">
-                            <button class="delete-btn row" v-if="uid==detail.author_id" @click="delete_problem">
-                                remove problem
-                                <img :src="delete_img" alt="">   
+    <Menu>
+        <Loading v-if="!resolved" :resolved="resolved" :err="err"/>
+        <div id="top-panel" v-else>
+            <div id="info-panel">
+                <div id="info-padding">
+                    <div class="row" style="justify-content: space-between;">
+                        <div></div>
+                        <div style="justify-content: center;align-items: center;" class="row">
+                            <h1 class="problem-tilte">{{detail.title}}</h1>
+                            <img :src="done_src" style="margin-left: 12px;" v-if="done_src!=0" 
+                            :title="status.status=='solved-offline'?'please login to save progess into your account':'solved'">
+                        </div>
+                        <div class="row" style="position: relative;">    
+                            <div class="menu column" v-if="show_menu && uid==detail.author_id">
+                                <button class="delete-btn row" @click="delete_problem">
+                                    remove problem
+                                    <img :src="delete_img" alt="">   
+                                </button>
+                            </div>
+                            <button class="options-btn" v-if="isAuthenticated" @click="show_menu=!show_menu">
+                                <img :src="options" alt="more option">
                             </button>
                         </div>
-                        <button class="options-btn" v-if="isAuthenticated" @click="show_menu=!show_menu">
-                            <img :src="options" alt="more option">
-                        </button>
                     </div>
-                </div>
-                <h2 class="problem-author">{{detail.author}}</h2>
-                <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>
-                <div class="row">
-                    <div class="row" style="margin-top: 16px;border: 1px solid black;padding: 4px;border-radius: 12px;">
-                        <button @click="handle_like" class="react-btn">
-                            <img :src="like_src">
-                        </button>
-                        <span style="margin-left: 12px;">{{ detail.reaction }}</span>
-                        <button style="margin-left: 12px;" @click="handle_dislike" class="react-btn">
-                            <img :src="dislike_src" >
-                        </button>
+                    <h2 class="problem-author">{{detail.author}}</h2>
+                    <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>
+                    <div class="row">
+                        <div class="row" style="margin-top: 16px;border: 1px solid black;padding: 4px;border-radius: 12px;">
+                            <button @click="handle_like" class="react-btn">
+                                <img :src="like_src">
+                            </button>
+                            <span style="margin-left: 12px;">{{ detail.reaction }}</span>
+                            <button style="margin-left: 12px;" @click="handle_dislike" class="react-btn">
+                                <img :src="dislike_src" >
+                            </button>
+                        </div>
+                        <div class="spacer"></div>
                     </div>
-                    <div class="spacer"></div>
+                    <Comment :problem_id="prop.id" :comment_count="detail.comment_count"/>
                 </div>
-                <Comment :problem_id="prop.id" :comment_count="detail.comment_count"/>
+            </div>
+            <div id="run-panel">
+                <Solver :parameter="detail.parameter" @solved="status.status='solved'" 
+                @solved-offline="status.status='solved-offline'":output="detail.output" 
+                :problem_id="prop.id" :problem_status="status.status"/>
             </div>
         </div>
-        <div id="run-panel">
-            <Solver :parameter="detail.parameter" @solved="status.status='solved'" 
-            @solved-offline="status.status='solved-offline'":output="detail.output" 
-            :problem_id="prop.id" :problem_status="status.status"/>
-        </div>
-    </div>
+    </Menu>
 </template>

@@ -75,9 +75,6 @@ span{
     padding: 6px;
     border-radius: 12px;
 }
-.hover-shadow:hover{
-    box-shadow: -2px 1px 4px 1px;
-}
 .submit-btn{
     padding: 6px;
     border-radius: 8px;

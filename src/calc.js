@@ -53,7 +53,7 @@ export function* parse(expr){
             br++;
         }
         if(expr[i]==")"){
-            assert_fail((--br)<0,"a closing parenthesis is missing");
+            assert_fail((--br)<0,"extra closing parenthesis detected");
         }
         if(expr[i]=="."){
             is_frac=true;

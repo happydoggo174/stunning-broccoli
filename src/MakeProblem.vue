@@ -4,7 +4,7 @@
     import ExamplePopup from './ExamplePopup.vue';
     import add from "@/assets/add.svg"
     import router from "./router"
-    import NavBar from './NavBar.vue';
+    import Menu from './menu.vue';
     import next from "@/assets/next.svg";
     import back from "@/assets/back.svg";
     import Parameter from './Parameter.vue';
@@ -96,66 +96,67 @@
     @import './MakeProblem.css';
 </style>
 <template>
-    <NavBar/>
-    <div class="example-bg" v-if="is_example">
-        <ExamplePopup :parameter="display_parameter" @close="is_example=false" @added="handle_add_example"/>
-    </div>
-    <div style="margin-left: 14px;margin-right: 14px;">
-        <div v-if="!page">
-            <div class="row" style="justify-content: center;">
-                <input type="text" placeholder="problem title here" id="title" v-model="title">
-            </div>
-            <div class="column" style="margin-top: 14px;">
-                <span style="display: block;text-align: center;">description</span>
-                <textarea placeholder="your description here" @input="resize_field" v-model="description"
-                style="font-size: 15px;scrollbar-width: none" ></textarea>
-            </div>
-            <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">
-                <span>difficulty</span>
-                <select name="" id="" style="flex-grow: 1;margin-left: 12px;" v-model="difficulty">
-                    <option value="easy">easy</option>
-                    <option value="medium">medium</option>
-                    <option value="hard">hard</option>
-                </select>
-            </div>
-            <div class="row">
-                <div class="spacer"></div>
-                <button class="page-btn hover-shadow" @click="page=1">
-                    next
-                    <img v-once :src="next" alt="next page" style="margin-left: 8px;">
-                </button>
-            </div>
+    <Menu>
+        <div class="example-bg" v-if="is_example">
+            <ExamplePopup :parameter="display_parameter" @close="is_example=false" @added="handle_add_example"/>
         </div>
-        <div v-else>
-            <div class="row" style="align-items: center;margin-bottom: 14px;margin-top: 12px;">
-                <span>input</span>
-                <Parameter v-for="param in parameter" :key="param.id" :name="param.name" :idx="param.id" 
-                @remove="remove_parameter" @update="handle_update"/>
-                <button style="margin-left: 14px;border-radius: 40%;padding: 4px;">
-                    <img :src="add" v-once alt="" @click="add_parameter">
-                </button>
-            </div>
-            <Calculator :buttons="display_parameter.map((v)=>v.name)" @input="edit_expression"/>
-            <div class="row" style="justify-content: space-between;margin-top: 14px;">
-                <button @click="page=0" class="page-btn hover-shadow">
-                    <img :src="back" alt="previous page" style="margin-right: 8px;">
-                    prev
-                </button>
-                <button @click="handle_submit" class=" submit-btn hover-shadow">submit</button>
-            </div>
-            <div class="column">
-                <div class="row example-row">
-                    <span class="example-banner">example</span>
-                    <button class="show-example-btn hover-shadow" @click="show_example_dialog">
-                        <img :src="add" alt="add example" v-once style="margin-right: 8px;">
-                        add example
+        <div style="margin-left: 14px;margin-right: 14px;">
+            <div v-if="!page">
+                <div class="row" style="justify-content: center;">
+                    <input type="text" placeholder="problem title here" id="title" v-model="title">
+                </div>
+                <div class="column" style="margin-top: 14px;">
+                    <span style="display: block;text-align: center;">description</span>
+                    <textarea placeholder="your description here" @input="resize_field" v-model="description"
+                    style="font-size: 15px;scrollbar-width: none" ></textarea>
+                </div>
+                <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">
+                    <span>difficulty</span>
+                    <select name="" id="" style="flex-grow: 1;margin-left: 12px;" v-model="difficulty">
+                        <option value="easy">easy</option>
+                        <option value="medium">medium</option>
+                        <option value="hard">hard</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="spacer"></div>
+                    <button class="page-btn hover-shadow" @click="page=1">
+                        next
+                        <img v-once :src="next" alt="next page" style="margin-left: 8px;">
                     </button>
                 </div>
-                <TestSample  v-for="exp in example" :parameter="display_parameter" :value="exp" @delete="
-                    (id)=>example=example.filter((v)=>v.id!=id)
-                "/>
             </div>
+            <div v-else>
+                <div class="row" style="align-items: center;margin-bottom: 14px;margin-top: 12px;">
+                    <span>input</span>
+                    <Parameter v-for="param in parameter" :key="param.id" :name="param.name" :idx="param.id" 
+                    @remove="remove_parameter" @update="handle_update"/>
+                    <button style="margin-left: 14px;border-radius: 40%;padding: 4px;">
+                        <img :src="add" v-once alt="" @click="add_parameter">
+                    </button>
+                </div>
+                <Calculator :buttons="display_parameter.map((v)=>v.name)" @input="edit_expression"/>
+                <div class="row" style="justify-content: space-between;margin-top: 14px;">
+                    <button @click="page=0" class="page-btn hover-shadow">
+                        <img :src="back" alt="previous page" style="margin-right: 8px;">
+                        prev
+                    </button>
+                    <button @click="handle_submit" class=" submit-btn hover-shadow">submit</button>
+                </div>
+                <div class="column">
+                    <div class="row example-row">
+                        <span class="example-banner">example</span>
+                        <button class="show-example-btn hover-shadow" @click="show_example_dialog">
+                            <img :src="add" alt="add example" v-once style="margin-right: 8px;">
+                            add example
+                        </button>
+                    </div>
+                    <TestSample  v-for="exp in example" :parameter="display_parameter" :value="exp" @delete="
+                        (id)=>example=example.filter((v)=>v.id!=id)
+                    "/>
+                </div>
+            </div>
+            <button class="action-btn" id="cancel-btn" @click="router.push('/')">cancel</button>
         </div>
-        <button class="action-btn" id="cancel-btn" @click="router.push('/')">cancel</button>
-    </div>
+    </Menu>
 </template>

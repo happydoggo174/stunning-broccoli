@@ -6,6 +6,7 @@
     .row{display: flex;flex-direction: row;}
     .spacer{flex-grow: 1;}
     .column{display: flex;flex-direction: column;}
+    .hover-shadow:hover{box-shadow: -2px 1px 4px 1px;}
 </style>
 <template>
     <Overlay/>
