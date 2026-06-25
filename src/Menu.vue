@@ -7,13 +7,12 @@
 <style>
     #main{
         width: 100%;
-        height: 100vh;
+        height: calc(100vh - 36px);
         margin: 0;
         padding: 0;
         display: flex;
         flex-direction: column;
         max-width: none;
-        overflow: hidden;
     }
 </style>
 <template>

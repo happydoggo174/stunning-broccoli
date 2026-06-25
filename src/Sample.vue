@@ -4,7 +4,9 @@
     import fail from "@/assets/fail.svg";
     const param=defineProps({
         text:String,
-        test_status:String
+        test_status:String,
+        correct:Number,
+        result:Number|String,
     });
     const status=computed(()=>{
         if(param.test_status=="pass"){return done;}
@@ -22,7 +24,7 @@
     }
 </style>
 <template>
-    <div class="sample-item row">
+    <div class="sample-item row" :title="test_status=='fail'?`expected ${correct},got ${result}`:``">
         <div style="justify-content: center;" class="row spacer">
             <span>{{ text }}</span>
         </div>

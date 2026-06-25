@@ -1,13 +1,17 @@
 <script setup>
-    import { ref} from "vue"
+    import { ref,reactive} from "vue"
     import {calculate} from "./calc";
     import Sample from "./Sample.vue";
     import { show_dialog } from './notificationdaemon.js';
     import { mark_problem_status } from "./api";
     import { save_completion_local } from "./completion";
     import { isAuthenticated } from "./auth";
+    import run from "@/assets/run.svg";
     import Calculator from "./Calculator.vue";
-    let expr=ref("");
+    import ErrorWidget from "./ErrorWidget.vue";
+    const expr=ref("");
+    const is_fail=ref(false);
+    const fail_detail=reactive({});
     const param=defineProps({
         parameter:Array,
         output:Array,
@@ -26,7 +30,7 @@
                 output_string=output_string.slice(0,output_string.length-1);
             }
             output_string+=`)=${output[i]["output"]}`;
-            out.push({display:output_string});
+            out.push({display:output_string,correct:output[i]["output"]});
         }
         return out;
     }
@@ -56,6 +60,13 @@
             delete sample_input.value[i].status;
         }
     }
+    function show_failure(idx,err,title,msg){
+        sample_input.value[idx].status="fail";
+        sample_input.value[idx].result=err;
+        undo_status(idx);
+        is_fail.value=true;
+        show_dialog(title,msg);
+    }
     async function parse_expr(){
         const exp=expr.value;
         const base_object={"pi":Math.PI};
@@ -63,18 +74,26 @@
             const val=param.output[i];
             const total=Object.assign(val,base_object);
             try{
-                if(calculate(exp,total)!=val.output){
-                    sample_input.value[i].status="fail";
-                    undo_status(i);
-                    return show_dialog(`wrong answer`,'your answer is wrong');
+                const res=calculate(exp,total);
+                if(res!=val.output){
+                    const params=[];
+                    param.parameter.forEach((pr)=>{
+                        params.push(val[pr]);
+                    });
+                    Object.assign(fail_detail,{param:params,correct:val.output,output:res});
+                    return show_failure(i,res,'wrong answer','your answer is wrong');
                 };
             }catch(e){
-                sample_input.value[i].status="fail";
-                undo_status(i);
-                return show_dialog("error",e.message);
+                const params=[];
+                param.parameter.forEach((pr)=>{
+                    params.push(val[pr]);
+                });
+                Object.assign(fail_detail,{param:params,correct:val.output,output:e.message});
+                return show_failure(i,e.message,'error',e.message);
             }
             sample_input.value[i].status="pass";
         }
+        is_fail.value=false
         await mark_solved();
     }
 </script>
@@ -88,6 +107,11 @@
         margin-right: 18px;
         transition: 0.27s ease-in-out background-color,0.27s ease-in-out color;
         color: white;
+        display: flex;
+        justify-content: center;
+        font-size: 18px;
+        overflow: hidden;
+        align-items: center;
     }
     #submit-btn:hover{
         background-color: rgb(0, 217, 255);
@@ -105,6 +129,13 @@
         margin-left: 12px;
         margin-right: 12px;
     }
+    .run-img{
+        transform: translateY(200%);
+        transition: 0.27s ease-in-out transform;
+    }
+    #submit-btn:hover .run-img{
+        transform: translateY(0);
+    }
 </style>
 <template>
     <div class="column">
@@ -112,9 +143,15 @@
         <div class="sample-area column">
             <span id="sample-title">example</span>
             <div id="sample-list" class="column">
-                <Sample v-for="sample in sample_input" :text="sample.display" :test_status="sample.status"/>
+                <Sample v-for="sample in sample_input" :text="sample.display" :test_status="sample.status" 
+                :correct="sample.correct" :result="sample.result" />
             </div>
+            <ErrorWidget :params="fail_detail.param" :correct="fail_detail.correct" :output="fail_detail.output" 
+            v-if="is_fail" @closed="is_fail=false;"/>
         </div>
-        <button id="submit-btn" @click="parse_expr">submit</button> 
+        <button id="submit-btn" @click="parse_expr">
+            run
+            <img :src="run" class="run-img">    
+        </button> 
     </div>
 </template>
