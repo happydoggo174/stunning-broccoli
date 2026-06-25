@@ -1,7 +1,7 @@
 <script setup>
   import { onMounted,ref,watch } from 'vue';
   import MathObject from './MathObject.vue';
-  import Menu from './menu.vue';
+  import Menu from './Menu.vue';
   import { get_problems } from './api.js';
   import Loading from './Loading.vue';
   import { sync_completion } from './completion';

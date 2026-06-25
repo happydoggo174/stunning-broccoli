@@ -2,7 +2,7 @@
 import { reactive, watch,ref,computed } from 'vue';
 import { get_problem_detail,get_problem_status,like_problem,dislike_problem,remove_problem } from './api.js';
 import Loading from './Loading.vue';
-import Menu from './menu.vue';
+import Menu from './Menu.vue';
 import Solver from './Solver.vue';
 import done from "@/assets/done.svg";
 import like from "@/assets/like.svg";

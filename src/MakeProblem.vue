@@ -4,7 +4,7 @@
     import ExamplePopup from './ExamplePopup.vue';
     import add from "@/assets/add.svg"
     import router from "./router"
-    import Menu from './menu.vue';
+    import Menu from './Menu.vue';
     import next from "@/assets/next.svg";
     import back from "@/assets/back.svg";
     import Parameter from './Parameter.vue';
