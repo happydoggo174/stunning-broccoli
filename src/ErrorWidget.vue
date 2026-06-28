@@ -1,11 +1,13 @@
 <script setup>
     import close from "@/assets/close.svg";
+    import { computed } from "vue";
     const prop=defineProps({
         params:Array,
         correct:Number,
         output:Number|String,
     });
     const emit=defineEmits(["closed"]);
+    const content=computed(()=>`f(${prop.params.join(',')})=`);
 </script>
 <style scoped>
     .answer{
@@ -27,7 +29,7 @@
         </div>
         <div class="row" style="align-items: center;">
             <span style="width: 80px;">function</span>
-            <span class="answer">f({{ params.join(",") }})=</span>
+            <span class="answer row" v-html='content' style="align-items: center;"></span>
         </div>
         <div class="row" style="align-items: center;">
             <span style="width: 80px;">expected</span>

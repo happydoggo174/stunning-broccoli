@@ -29,25 +29,28 @@
         }
         return o+(s.length>v.length?s[s.length-1]:"");
     }
-    function serialize_display(output){
-        return output.map(ln=>ln.map(n=>{
-            console.log(n);
+    function serialize_output_row(output){
+        return output.map(n=>{
             if(n.indexOf('|')==-1){
                 return n;
             }
-            const pr=n.split('|');
+            const pr=n.split('|').map(n=>parseFloat(n));
             if(pr.length==2){
-                return html`<div class="column"><span style="border-bottom:1px solid black;">${pr[0]}</span>
+                return html`<div class="column" style="align-items:center">
+                    <span style="border-bottom:1px solid black">${pr[0]}</span>
                     <span>${pr[1]}</span>
                 </div>`;
             }
             return html`<div class="row" style="align-items: center;">
                 <span style="margin-right: 4px;">${pr[0]}</span>
-                <div class="column"><span style="border-bottom:1px solid black;">${pr[1]}</span>
+                <div class="column" style="align-items:center"><span style="border-bottom:1px solid black">${pr[1]}</span>
                     <span>${pr[2]}</span>
                 </div>
             </div>`;
-        }));
+        });
+    }
+    function serialize_display(output){
+        return output.map(row=>serialize_output_row(row));
     }
     function serialize_output(output,param,example_name){
         const out=[];
@@ -105,10 +108,7 @@
             try{
                 const res=calculate(exp,val);
                 if(res!=val.output){
-                    const params=[];
-                    param.parameter.forEach((pr)=>{
-                        params.push(val[pr]);
-                    });
+                    const params=serialize_output_row(param.example_name[i]);
                     Object.assign(fail_detail,{param:params,correct:val.output,output:res});
                     return show_failure(i,res,'wrong answer','your answer is wrong');
                 };
