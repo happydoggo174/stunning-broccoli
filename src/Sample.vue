@@ -7,6 +7,7 @@
         test_status:String,
         correct:Number,
         result:Number|String,
+        param_name:String
     });
     const status=computed(()=>{
         if(param.test_status=="pass"){return done;}
@@ -26,7 +27,7 @@
 <template>
     <div class="sample-item row" :title="test_status=='fail'?`expected ${correct},got ${result}`:``">
         <div style="justify-content: center;" class="row spacer">
-            <span>{{ text }}</span>
+            <span v-html="text" class="row" style="align-items: center;"></span>
         </div>
         <img :src="status">
     </div>

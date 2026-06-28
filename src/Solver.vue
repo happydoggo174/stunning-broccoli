@@ -19,7 +19,6 @@
         problem_status:String,
         example_name:Array
     });
-    const display=ref(serialize_display(param.example_name));
     const solved=defineEmits(["solved","solved-offline"]);
     function html(s,...v){
         let o="";
@@ -31,7 +30,8 @@
         return o+(s.length>v.length?s[s.length-1]:"");
     }
     function serialize_display(output){
-        return output.map(name=>name.map((n)=>{
+        return output.map(ln=>ln.map(n=>{
+            console.log(n);
             if(n.indexOf('|')==-1){
                 return n;
             }
@@ -49,12 +49,13 @@
             </div>`;
         }));
     }
-    function serialize_output(output,param){
+    function serialize_output(output,param,example_name){
         const out=[];
+        const display=serialize_display(example_name);
         for(let i=0;i<output.length;i++){
             let output_string="f(";
-            for(let name of param){
-                output_string+=output[i][name]+",";
+            for(let name of display[i]){
+                output_string+=name+",";
             }
             if(output_string.endsWith(",")){
                 output_string=output_string.slice(0,output_string.length-1);
@@ -64,7 +65,7 @@
         }
         return out;
     }
-    const sample_input=ref(serialize_output(param.output,param.parameter));
+    const sample_input=ref(serialize_output(param.output,param.parameter,param.example_name));
     const buttons=ref(param.parameter);
     async function mark_solved() {
         if(param.problem_status!="solved"){
@@ -172,7 +173,7 @@
             <span id="sample-title">example</span>
             <div id="sample-list" class="column">
                 <Sample v-for="sample in sample_input" :text="sample.display" :test_status="sample.status" 
-                :correct="sample.correct" :result="sample.result" />
+                :correct="sample.correct" :result="sample.result"/>
             </div>
             <ErrorWidget :params="fail_detail.param" :correct="fail_detail.correct" :output="fail_detail.output" 
             v-if="is_fail" @closed="is_fail=false;"/>
