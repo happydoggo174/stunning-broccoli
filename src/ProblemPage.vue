@@ -25,6 +25,7 @@ import router from "./router"
     const show_menu=ref(false);
     let detail=reactive({});
     let status=reactive({});
+    const display=ref([]);
     let count=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
@@ -190,7 +191,7 @@ import router from "./router"
             <div id="run-panel">
                 <Solver :parameter="detail.parameter" @solved="status.status='solved'" 
                 @solved-offline="status.status='solved-offline'":output="detail.output" 
-                :problem_id="prop.id" :problem_status="status.status"/>
+                :problem_id="prop.id" :problem_status="status.status" :example_name="detail.display_name"/>
             </div>
         </div>
     </Menu>
