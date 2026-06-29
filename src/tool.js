@@ -7,12 +7,20 @@ export function html(s,...v){
     }
     return o+(s.length>v.length?s[s.length-1]:"");
 }
+export function parse_percentage(n){
+    if(n===null || n===undefined){return undefined;}
+    return n.endsWith('%')?parseFloat(n.slice(0,n.length-1))+'%':parseFloat(n);
+}
+export function serialize_percentage(n){
+    if(n===null || n===undefined){return undefined;}
+    return n.endsWith('%')?parseFloat(n.slice(0,n.length-1))/100:parseFloat(n);
+}
 export function serialize_display_row(output){
     return output.map(n=>{
         if(n.indexOf('|')==-1){
             return n;
         }
-        const pr=n.split('|').map(n=>parseFloat(n));
+        const pr=n.split('|').map(n=>parse_percentage(n));
         if(pr.length==2){
             return html`<div class="column" style="align-items:center">
                 <span style="border-bottom:1px solid black">${pr[0]}</span>

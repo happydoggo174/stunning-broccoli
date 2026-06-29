@@ -1,20 +1,24 @@
 <script setup>
     import { ref,watch} from 'vue';
     import { show_dialog } from './notificationdaemon';
+    import { serialize_percentage} from './tool';
     const prop=defineProps({
         name:String,
     });
     const emit=defineEmits(["value",]);
-    const content=ref(0);
+    const content=ref("");
     const is_frac=ref(false);
-    const top=ref(0);
-    const bottom=ref(0);
-    const side=ref(0);
+    const top=ref("");
+    const bottom=ref("");
+    const side=ref("");
     function save_value(){
-        if(is_frac.value && bottom.value==0){
+        if(is_frac.value && serialize_percentage(bottom.value)==0){
             return show_dialog("error",`denominator can't be 0 for parameter ${prop.name}`);
         }
-        const value=is_frac.value?side.value+top.value/bottom.value:content.value;
+        const vtop=serialize_percentage(top.value);
+        const vbottom=serialize_percentage(bottom.value);
+        const vside=serialize_percentage(side.value);
+        const value=is_frac.value?vside+vtop/vbottom:serialize_percentage(content.value);
         let display="";
         if(is_frac.value){
             if(!side.value){
@@ -23,9 +27,15 @@
                 display=`${side.value}|${top.value}|${bottom.value}`
             }
         }else{
-            display=value.toString();
+            if(content.value.endsWith('%')){
+                display=content.value;
+            }else{
+                display=value.toString();
+            }
         }
         return {name:prop.name,value:value,display:display};
+    }
+    function handle_input(e){
     }
     watch(is_frac,(v)=>{
         if(v && content.value && !top.value){
@@ -46,12 +56,12 @@
 <template>
     <div class="row" style="margin-top: 14px;align-items: center;">
         <span>{{ prop.name }}</span>
-        <input type="number" style="margin-left: 12px;" v-model="content" v-if="!is_frac">
+        <input type="text" style="margin-left: 12px;" v-model="content" v-if="!is_frac" @input="handle_input">
         <div class="row" v-else style="align-items: center;margin-left: 12px;" >
-            <input type="number" class="spacer" v-model="side" style="border: none;text-align: right;">
+            <input type="text" class="spacer" v-model="side" style="border: none;text-align: right;" @input="handle_input">
             <div class="column spacer" style="margin-left: 4px;">
-                <input type="number" v-model="top" class="frac-cell" style="border-bottom: 1px solid black">
-                <input type="number" v-model="bottom" class="frac-cell">
+                <input type="text" v-model="top" class="frac-cell" style="border-bottom: 1px solid black" @input="handle_input">
+                <input type="text" v-model="bottom" class="frac-cell" @input="handle_input">
             </div>
         </div>
         <div class="row" style="margin-left: 6px;align-items: center;">
