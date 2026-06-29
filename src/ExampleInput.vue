@@ -36,11 +36,6 @@
         return {name:prop.name,value:value,display:display};
     }
     function handle_input(e){
-        const data=e.data;
-        const white=['+','-','.',',','e','%'];
-        if((data<'0' || data>'9') && !white.find(v=>v==data)){
-            content.value=content.value.replace(data,'');
-        }
     }
     watch(is_frac,(v)=>{
         if(v && content.value && !top.value){
