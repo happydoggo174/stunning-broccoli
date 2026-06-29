@@ -103,7 +103,7 @@ export async function make_problem(title,description,difficulty,expr,parameter,t
     data.set("test_case",JSON.stringify(send_case));
     data.set("display_name",JSON.stringify(send_name));
     const resp=await fetch(`${BASE_ADDR}/problem/make`,{method:"POST",headers:headers,body:data});
-    if(!resp.ok){throw resp.body;}
+    if(!resp.ok){throw await resp.text();}
 }
 export async function remove_problem(problem_id){
     const header=await make_auth_header(true);

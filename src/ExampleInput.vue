@@ -36,6 +36,11 @@
         return {name:prop.name,value:value,display:display};
     }
     function handle_input(e){
+        const data=e.data;
+        const white=['+','-','.',',','e','%'];
+        if((data<'0' || data>'9') && !white.find(v=>v==data)){
+            content.value=content.value.replace(data,'');
+        }
     }
     watch(is_frac,(v)=>{
         if(v && content.value && !top.value){
@@ -52,16 +57,24 @@
         display: block;
         text-align: center;
     }
+    .side-cell{
+        border: none;
+        text-align: right;
+    }
+    .side-cell:hover{
+        border: 1px solid black;
+    }
 </style>
 <template>
     <div class="row" style="margin-top: 14px;align-items: center;">
         <span>{{ prop.name }}</span>
         <input type="text" style="margin-left: 12px;" v-model="content" v-if="!is_frac" @input="handle_input">
         <div class="row" v-else style="align-items: center;margin-left: 12px;" >
-            <input type="text" class="spacer" v-model="side" style="border: none;text-align: right;" @input="handle_input">
+            <input type="text" class="spacer side-cell" v-model="side" @input="handle_input" placeholder="0">
             <div class="column spacer" style="margin-left: 4px;">
-                <input type="text" v-model="top" class="frac-cell" style="border-bottom: 1px solid black" @input="handle_input">
-                <input type="text" v-model="bottom" class="frac-cell" @input="handle_input">
+                <input type="text" v-model="top" class="frac-cell" style="border-bottom: 1px solid black" 
+                @input="handle_input" placeholder="0">
+                <input type="text" v-model="bottom" class="frac-cell" @input="handle_input" placeholder="1">
             </div>
         </div>
         <div class="row" style="margin-left: 6px;align-items: center;">

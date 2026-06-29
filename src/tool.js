@@ -13,6 +13,7 @@ export function parse_percentage(n){
 }
 export function serialize_percentage(n){
     if(n===null || n===undefined){return undefined;}
+    if(n==""){return 0;}
     return n.endsWith('%')?parseFloat(n.slice(0,n.length-1))/100:parseFloat(n);
 }
 export function serialize_display_row(output){
