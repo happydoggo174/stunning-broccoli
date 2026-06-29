@@ -6,6 +6,7 @@
     }
     function accept(){
         push_response(event_bridge.id,true);
+        close_dialog();
     }
     function reject(){
         push_response(event_bridge.id,false);
