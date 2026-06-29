@@ -15,5 +15,5 @@ export function push_response(handle,resp){
 }
 export function show_confirm(title,msg,fn){
     Object.assign(event_bridge,{"title":title,"msg":msg,"type":"confirm","id":++idx});
-    poll_output(idx,fn);
+    output_callback[idx]=fn;
 }
