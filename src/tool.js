@@ -1,0 +1,32 @@
+export function html(s,...v){
+    let o="";
+    let n=document.createElement("a");
+    for(let i=0;i<v.length;i++){
+        n.innerText=v[i];
+        o+=s[i]+n.innerHTML;
+    }
+    return o+(s.length>v.length?s[s.length-1]:"");
+}
+export function serialize_display_row(output){
+    return output.map(n=>{
+        if(n.indexOf('|')==-1){
+            return n;
+        }
+        const pr=n.split('|').map(n=>parseFloat(n));
+        if(pr.length==2){
+            return html`<div class="column" style="align-items:center">
+                <span style="border-bottom:1px solid black">${pr[0]}</span>
+                <span>${pr[1]}</span>
+            </div>`;
+        }
+        return html`<div class="row" style="align-items: center;">
+            <span style="margin-right: 4px;">${pr[0]}</span>
+            <div class="column" style="align-items:center"><span style="border-bottom:1px solid black">${pr[1]}</span>
+                <span>${pr[2]}</span>
+            </div>
+        </div>`;
+    });
+}
+export function serialize_display(output){
+    return output.map(row=>serialize_display_row(row));
+}

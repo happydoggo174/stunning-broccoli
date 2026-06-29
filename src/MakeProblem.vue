@@ -44,9 +44,10 @@
         parameter.value.push({name:'z',id:idx});
         display_parameter.value.push({name:'z',id:idx})
     }
-    function handle_add_example(param){
+    function handle_add_example(param,display_name){
         try{
             const out=Object.assign({},{output:calculate(expression,param),id:++count},param);
+            out['display_name']=display_name;
             example.value.push(out);
         }catch(e){
             show_dialog("error",e);
@@ -54,8 +55,9 @@
     }
     async function handle_submit(){
         try{   
+            example.value.forEach((v)=>{delete v.output;delete v.id});
             await make_problem(title.value,description.value,difficulty.value,expression,
-            display_parameter.value.map(v=>v.name),example.value.map((v)=>{delete v.output;delete v.id;return v;}));
+            display_parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name));
         }catch(e){
             show_dialog("error",e);
         }

@@ -9,6 +9,7 @@
     import run from "@/assets/run.svg";
     import Calculator from "./Calculator.vue";
     import ErrorWidget from "./ErrorWidget.vue";
+    import { serialize_display,serialize_display_row } from "./tool";
     const expr=ref("");
     const is_fail=ref(false);
     const fail_detail=reactive({});
@@ -20,38 +21,6 @@
         example_name:Array
     });
     const solved=defineEmits(["solved","solved-offline"]);
-    function html(s,...v){
-        let o="";
-        let n=document.createElement("a");
-        for(let i=0;i<v.length;i++){
-            n.innerText=v[i];
-            o+=s[i]+n.innerHTML;
-        }
-        return o+(s.length>v.length?s[s.length-1]:"");
-    }
-    function serialize_output_row(output){
-        return output.map(n=>{
-            if(n.indexOf('|')==-1){
-                return n;
-            }
-            const pr=n.split('|').map(n=>parseFloat(n));
-            if(pr.length==2){
-                return html`<div class="column" style="align-items:center">
-                    <span style="border-bottom:1px solid black">${pr[0]}</span>
-                    <span>${pr[1]}</span>
-                </div>`;
-            }
-            return html`<div class="row" style="align-items: center;">
-                <span style="margin-right: 4px;">${pr[0]}</span>
-                <div class="column" style="align-items:center"><span style="border-bottom:1px solid black">${pr[1]}</span>
-                    <span>${pr[2]}</span>
-                </div>
-            </div>`;
-        });
-    }
-    function serialize_display(output){
-        return output.map(row=>serialize_output_row(row));
-    }
     function serialize_output(output,param,example_name){
         const out=[];
         const display=serialize_display(example_name);
@@ -108,7 +77,7 @@
             try{
                 const res=calculate(exp,val);
                 if(res!=val.output){
-                    const params=serialize_output_row(param.example_name[i]);
+                    const params=serialize_display_row(param.example_name[i]);
                     Object.assign(fail_detail,{param:params,correct:val.output,output:res});
                     return show_failure(i,res,'wrong answer','your answer is wrong');
                 };

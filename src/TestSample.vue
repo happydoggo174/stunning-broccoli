@@ -2,6 +2,7 @@
     import { computed } from 'vue';
     import delete_img from "@/assets/delete.svg";
     import warning from "@/assets/warning.svg";
+    import { serialize_display_row } from './tool';
     const prop=defineProps({
         parameter:Array,
         value:Object
@@ -9,7 +10,7 @@
     const msg=computed(()=>{
         let out="f(";
         for(let name of prop.parameter){
-            out+=prop.value[name.name]+",";
+            out+=serialize_display_row([prop.value.display_name[name.name]])[0]+",";
         }
         if(out.endsWith(",")){
             out=out.slice(0,out.length-1);
@@ -32,7 +33,7 @@
 <template>
     <div class="sample-item row">
         <div style="justify-content: center;" class="row spacer">
-            <span>{{ msg }}</span>
+            <span v-html="msg" class="row" style="align-items: center;"></span>
         </div>
         <img v-if="value.is_err===true" :src="warning" alt="" style="margin-right: 12px;">
         <button @click="emits('delete',value.id)">
