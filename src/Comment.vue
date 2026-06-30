@@ -26,7 +26,7 @@
     async function add_comment(content){
         const auth=await get_auth_object();
         comment_cnt.value++;
-        const claim=auth.idTokenClaims.value;
+        const claim=auth.idTokenClaims;
         data.value.push({username:claim.name|| claim.nickname,profile:claim.profile || claim.picture,content:content});
     }
     function validate_comment(content){
