@@ -21,7 +21,7 @@ export function serialize_display_row(output){
         if(n.indexOf('|')==-1){
             return n;
         }
-        const pr=n.split('|').map(n=>parse_percentage(n));
+        let pr=n.split('|').map(n=>parse_percentage(n));
         if(pr.length==2 || (pr.length==3 && !pr[0])){
             if(pr.length==3){
                 pr=pr.slice(1,pr.length);
