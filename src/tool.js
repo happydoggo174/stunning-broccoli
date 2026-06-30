@@ -22,7 +22,10 @@ export function serialize_display_row(output){
             return n;
         }
         const pr=n.split('|').map(n=>parse_percentage(n));
-        if(pr.length==2){
+        if(pr.length==2 || (pr.length==3 && !pr[0])){
+            if(pr.length==3){
+                pr=pr.slice(1,pr.length);
+            }
             return html`<div class="column" style="align-items:center">
                 <span style="border-bottom:1px solid black">${pr[0]}</span>
                 <span>${pr[1]}</span>

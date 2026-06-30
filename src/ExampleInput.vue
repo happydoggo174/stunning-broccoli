@@ -21,7 +21,7 @@
         const value=is_frac.value?vside+vtop/vbottom:serialize_percentage(content.value);
         let display="";
         if(is_frac.value){
-            if(!side.value){
+            if(!side.value || !vside){
                 display=`${top.value}|${bottom.value}`;
             }else{
                 display=`${side.value}|${top.value}|${bottom.value}`
