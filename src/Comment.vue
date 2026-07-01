@@ -38,6 +38,10 @@
             show_dialog("error","please login to comment");
             return false;
         }
+        if(!content.length){
+            show_dialog('error',"can't send an empty comment");
+            return false;
+        }
         if(content.length>250){
             show_dialog("error",`comment too long.${content.length} out of 250 characters used`);
             return false;
@@ -66,6 +70,7 @@
         field.style.height="auto";
         field.style.height=field.scrollHeight+'px';
     }
+    const send_style=computed(()=>comment.value.length && isAuthenticated.value?"":"opacity:0.4");
 </script>
 <style scoped>
     .comment-banner{
@@ -88,6 +93,10 @@
     #comment-field{
         flex-grow: 1;
         font-size: 16px;
+        resize: none;
+    }
+    .make-comment-btn{
+        background-color: green;
     }
 </style>
 <template>
@@ -101,11 +110,11 @@
         <div class="row" style="width:100%;margin-top: 14px;margin-bottom: 12px;">
             <textarea id="comment-field" :placeholder="comment_placeholder" v-model="comment" 
             :readonly="!isAuthenticated" maxlength="250" @input="resize_comment"></textarea>
-            <button style="background-color: green;" @click="handle_make_comment">
+            <button class="make-comment-btn"  @click="handle_make_comment" :style="send_style">
                 <img :src="send" v-once alt="send comment">
             </button>
         </div>
         <CommentWidget v-for="comment in data" :content="comment.content" 
-        :profile="comment.profile" :username="comment.username"/>
+        :profile="comment.profile" :username="comment.username" :problem_id="problem_id" :cid="comment.user_id"/>
     </div>
 </template>

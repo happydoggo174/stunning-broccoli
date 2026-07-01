@@ -2,21 +2,28 @@
   import { onMounted,ref,watch } from 'vue';
   import MathObject from './MathObject.vue';
   import Menu from './Menu.vue';
-  import { get_problems,get_favorite_problem,get_completed } from './api.js';
+  import { get_search } from './api.js';
   import Loading from './Loading.vue';
-  import filter_img from '@/assets/filter.svg';
   import { sync_completion } from './completion';
   import { show_dialog } from './notificationdaemon';
   import { isAuthenticated } from './auth';
+  import close from '@/assets/close.svg';
   const err=ref(null);
   const resolved=ref(false);
   const problems=ref([]);
-  const filter=ref('all');
+  const show_banner=ref(true);
+  const prop=defineProps({
+    query:String
+  });
   onMounted(async()=>{
+    if(prop.query===undefined || prop.query===null){
+        err.value='invalid url';
+        return;
+    }
     watch(()=>isAuthenticated.value,async()=>{
       resolved.value=false;
       try{
-        problems.value=await get_problems();
+        problems.value=await get_search(prop.query);
       }catch{
         err.value="can't load problem";
         return;
@@ -32,41 +39,33 @@
         });
       }
     },{immediate:true});
-    watch(filter,async(v)=>{
-      try{  
-        if(v=='all' || v==''){
-          problems.value=await get_problems();
-        }else{
-          if(v=='favorite'){
-            problems.value=await get_favorite_problem();
-          }else{
-            if(v=='completed'){
-              problems.value=await get_completed();
-            }
-          }
-        }
-      }catch{
-
-      }
-    });
   });
 </script>
 <style>
   @import './index.css';
+  #search-row{
+    margin-top: 12px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #search-header{
+    display: block;
+    text-align: center;
+    color: black;
+  }
 </style>
 <template>
   <Menu>
     <Loading :err="err" :resolved="resolved"/>
     <div class="column" v-if="resolved && !err">
-      <div class="row" style="color: black;margin-left: 14px;margin-top: 12px;" v-if="isAuthenticated">
-        <div class="row" style="align-items: center;"><img :src="filter_img" alt="" style="margin-left: 4px;">filter</div>
-        <select name="" id="" style="margin-left: 6px;border-radius: 8px;" v-model="filter">
-          <option value="all">all</option>
-          <option value="favorite">favorite</option>
-          <option value="completed">completed</option>
-        </select>
-      </div>
-      <MathObject
+        <div class="row" id="search-row" v-if="show_banner">
+          <div></div>
+          <h2 id="search-header">search reesult for {{ query }}</h2>
+          <button @click="show_banner=false" style="border: none;background-color: unset;">
+            <img :src="close" alt="">
+          </button>
+        </div>
+        <MathObject
         v-for="prob in problems"
         :key="prob.id"
         :title="prob.title"
@@ -74,7 +73,7 @@
         :reaction="prob.reaction"
         :id="prob.id"
         :problem_status="prob.status" 
-      />
-    </div>
+        />
+        </div>
   </Menu>
 </template>

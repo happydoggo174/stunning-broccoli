@@ -2,12 +2,13 @@
     import {ref} from "vue";
     import NavBar from "./NavBar.vue";
     import Sidebar from "./Sidebar.vue";
+    import Footer from "./Footer.vue";
     const is_sidebar=ref(false);
 </script>
 <style>
     #main{
         width: 100%;
-        height: calc(100vh - 36px);
+        height: calc(100vh - 40px);
         margin: 0;
         padding: 0;
         display: flex;
@@ -23,4 +24,5 @@
             <slot></slot>
         </div>
     </div>
+    <Footer></Footer>
 </template>

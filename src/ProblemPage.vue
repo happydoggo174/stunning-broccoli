@@ -17,6 +17,7 @@ import Comment from './Comment.vue';
 import { isAuthenticated,isLoading,uid } from './auth.js';
 import options from "@/assets/options.svg";
 import router from "./router"
+import HintWidget from './HintWidget.vue';
     const err=ref(null);
     const resolved=ref(false);
     const prop=defineProps({
@@ -107,44 +108,6 @@ import router from "./router"
 <style scoped>
     @import "./index.css";
     @import "./problem_detail.css";
-    .react-btn{
-        border: none;
-        background-color: unset;
-        border-radius: 10px;
-        transition: 0.12s background-color ease-in-out;
-    }
-    .react-btn:hover{
-        background-color: rgb(46, 134, 139);
-    }
-    .options-btn{
-        background-color: unset;
-        border: none;
-        border-radius: 40%;
-        padding: 2px;
-    }
-    .options-btn:hover{
-        background-color: rgb(42, 163, 163);
-    }
-    .menu{
-        background-color: white;
-        padding: 8px;
-        border-radius: 12px;
-        position: absolute;
-        right: 20px;
-        width:150px;
-    }
-    .menu button{
-        border: none;
-        background-color: unset;
-        border-radius: 4px;
-        padding: 8px;
-    }
-    .menu button:hover{
-        background-color: rgb(184, 169, 166);
-    }
-    .delete-btn{
-        align-items: center;
-    }
 </style>
 <template>
     <Menu>
@@ -171,7 +134,10 @@ import router from "./router"
                             </button>
                         </div>
                     </div>
-                    <h2 class="problem-author">{{detail.author}}</h2>
+                    <div class="row" style="justify-content: center;align-items: center;">
+                        <h2 class="problem-author">{{detail.author}}</h2>
+                        <img :src="detail.profile" alt="author profile" width="24px" height="24px" class="author-profile">
+                    </div>
                     <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>
                     <div class="row">
                         <div class="row" style="margin-top: 16px;border: 1px solid black;padding: 4px;border-radius: 12px;">
@@ -185,6 +151,7 @@ import router from "./router"
                         </div>
                         <div class="spacer"></div>
                     </div>
+                    <HintWidget :hint="detail.hint"></HintWidget>
                     <Comment :problem_id="prop.id" :comment_count="detail.comment_count"/>
                 </div>
             </div>

@@ -31,6 +31,7 @@
         align-items: baseline;
         font-size: 18px;
         flex-grow: 1;
+        resize: none;
     }
     #data-key{
         display: grid;

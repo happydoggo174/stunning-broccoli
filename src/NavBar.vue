@@ -1,6 +1,6 @@
 <style>
     #nav-bar{
-        height:36px;
+        height:40px;
         background-color: rgb(65, 105, 225);
         padding-top: 4px;
         padding-bottom: 4px;
@@ -28,14 +28,37 @@
         height: 30px;
         margin-left: 8px;
     }
+    #main-search-row{
+        margin-left: 18px;
+        margin-right: 18px;
+        position: relative;
+        background-color: white;
+        border-radius: 12px;
+    }
+    #main-search-bar{
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+    }
+    #main-search-bar:focus,#main-search-bar:focus-visible{
+        border: none;
+        outline: 0px solid white !important;
+    }
 </style>
 <script setup>
     import AuthCorner from './AuthCorner.vue';
     import router from './router';
     import menu_thick from "@/assets/menu_thick.svg";
+    import search from '@/assets/search.svg';
     import { isAuthenticated } from './auth.js';
+    import { ref } from 'vue';
+    const query=ref("");
     const emit=defineEmits(["menu"]);
     function home(){router.push("/");}
+    function handle_search(){
+        if(query.value=="" || 1==1){return;}
+        router.push(`/search/${encodeURIComponent(query.value)}`)
+    }
 </script>
 <template>
     <nav id="nav-bar" class="row">
@@ -44,7 +67,10 @@
                 <img :src="menu_thick" alt="menu">
             </button>
             <button class="nav-btn" @click="home">home</button>
-            <button class="nav-btn">favorite</button>
+        </div>
+        <div class="row spacer" id="main-search-row" @keypress.enter="handle_search">
+            <img :src="search" alt="">
+            <input type="text" class="spacer"  placeholder="search..." id="main-search-bar" v-model="query">
         </div>
         <AuthCorner/>
         </nav>

@@ -15,6 +15,17 @@ const routes = [
   {
     path:'/make_problem',
     component:()=>import("@/MakeProblem.vue")
+  },
+  {
+    path:'/favorite',
+    component:()=>import('@/LikePage.vue')
+  },
+  {
+    path:'/search/:query',
+    component:()=>import('@/SearchPage.vue'),
+    props:route=>({
+      query:route.params.query
+    })
   }
 ]
 

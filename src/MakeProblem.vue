@@ -3,6 +3,8 @@
     import { ref } from 'vue';
     import ExamplePopup from './ExamplePopup.vue';
     import add from "@/assets/add.svg"
+    import add_mini from '@/assets/add_mini.svg';
+    import HintInputWidget from './HintInputWidget.vue';
     import router from "./router"
     import Menu from './Menu.vue';
     import next from "@/assets/next.svg";
@@ -22,6 +24,7 @@
     const title=ref("");
     const description=ref("");
     const difficulty=ref("easy");
+    const hint=ref([]);
     let refresh_handle=null;
     let expression="";
     function resize_field(e){
@@ -55,9 +58,14 @@
     }
     async function handle_submit(){
         try{   
+            if(!title.value.length){
+                return show_dialog("error","a title is required for submission");
+            }
             example.value.forEach((v)=>{delete v.output;delete v.id});
             await make_problem(title.value,description.value,difficulty.value,expression,
-            display_parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name));
+            display_parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name),
+            hint.value.map(v=>v.content));
+            router.push('/');
         }catch(e){
             show_dialog("error",e);
         }
@@ -93,6 +101,13 @@
         if(!valid){return;}
         is_example.value=true;
     }
+    function update_hint(idx,content){hint.value.forEach(v=>{
+        if(v.idx==idx){
+            v.content=content;
+        }
+    })}
+    function remove_hint(idx){hint.value=hint.value.filter(v=>v.idx!=idx);}
+    function add_hint(){hint.value.push({content:'',idx:++count})};
 </script>
 <style scoped>
     @import './MakeProblem.css';
@@ -110,7 +125,7 @@
                 <div class="column" style="margin-top: 14px;">
                     <span style="display: block;text-align: center;">description</span>
                     <textarea placeholder="your description here" @input="resize_field" v-model="description"
-                    style="font-size: 15px;scrollbar-width: none" ></textarea>
+                    style="font-size: 15px;scrollbar-width: none;resize: none;" ></textarea>
                 </div>
                 <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">
                     <span>difficulty</span>
@@ -119,6 +134,17 @@
                         <option value="medium">medium</option>
                         <option value="hard">hard</option>
                     </select>
+                </div>
+                <div class="column" style="margin-bottom: 12px;align-items: center;">
+                    <div class="row" style="align-items: center;">
+                        <span style="display: block;text-align: center;font-size: 18px;">hints</span>
+                        <button class="add-hint-btn hover-shadow" @click="add_hint">
+                            <img :src="add_mini" alt="">
+                        </button>
+                    </div>
+                    <HintInputWidget v-for="h in hint" @update="update_hint" style="margin-top: 8px;" @remove="remove_hint" 
+                    :idx="h.idx" :key="h.idx">
+                    </HintInputWidget>
                 </div>
                 <div class="row">
                     <div class="spacer"></div>

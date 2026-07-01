@@ -76,7 +76,7 @@ export async function make_comment(problem_id,content) {
     const resp=await fetch(`${BASE_ADDR}/comment/make`,{method:"POST",headers:header,body:data});
     if(!resp.ok){throw 0;}
 }
-export async function make_problem(title,description,difficulty,expr,parameter,test_case,display_name) {
+export async function make_problem(title,description,difficulty,expr,parameter,test_case,display_name,hint) {
     const headers=await make_auth_header(true);
     const data=new FormData();
     const send_case=[];
@@ -102,6 +102,7 @@ export async function make_problem(title,description,difficulty,expr,parameter,t
     data.set("parameter",JSON.stringify(parameter));
     data.set("test_case",JSON.stringify(send_case));
     data.set("display_name",JSON.stringify(send_name));
+    data.set("hint",JSON.stringify(hint));
     const resp=await fetch(`${BASE_ADDR}/problem/make`,{method:"POST",headers:headers,body:data});
     if(!resp.ok){throw await resp.text();}
 }
@@ -111,4 +112,32 @@ export async function remove_problem(problem_id){
     if(!resp.ok){
         throw 0;
     }
+}
+export async function get_favorite_problem(last_id) {
+    const url=new URL(`${BASE_ADDR}/problem/favorite`);
+    const header=await make_auth_header(true);
+    if(last_id!=undefined){
+        url.searchParams.set('last_id',last_id);
+    }
+    const resp=await fetch(url,{headers:header});
+    return json_or_err(resp);
+}
+export async function remove_comment(problem_id){
+    const header=await make_auth_header(true);
+    const resp=await fetch(`${BASE_ADDR}/comment/remove?problem_id=${problem_id}`,{method:"DELETE",headers:header});
+    if(!resp.ok){
+        throw 0;
+    }
+}
+export async function get_search(term,last_id){
+    return await get_problems();
+}
+export async function get_completed(last_id) {
+    const url=new URL(`${BASE_ADDR}/problem/completed`);
+    const header=await make_auth_header(true);
+    if(last_id!=undefined){
+        url.searchParams.set('last_id',last_id);
+    }
+    const resp=await fetch(url,{headers:header});
+    return json_or_err(resp);
 }

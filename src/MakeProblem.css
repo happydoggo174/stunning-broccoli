@@ -89,3 +89,12 @@ span{
     padding-left: 14px;
     padding-right: 14px;
 }
+.hint-widget{
+    color: black;
+    margin-top: 4px;
+}
+.add-hint-btn{
+    border-radius: 12px;
+    background-color: white;
+    margin-left: 8px;
+}
