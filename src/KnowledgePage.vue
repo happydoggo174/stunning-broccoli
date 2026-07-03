@@ -19,7 +19,6 @@
 <style scoped>
     .content{
         margin-top: 14px;
-        word-break: break-all;
         word-wrap: break-word;
     }
 </style>
