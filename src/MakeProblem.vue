@@ -65,7 +65,7 @@
             await make_problem(title.value,description.value,difficulty.value,expression,
             display_parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name),
             hint.value.map(v=>v.content));
-            router.push('/');
+            router.push('/').then();
         }catch(e){
             show_dialog("error",e);
         }
@@ -110,7 +110,7 @@
     function add_hint(){hint.value.push({content:'',idx:++count})};
 </script>
 <style scoped>
-    @import './MakeProblem.css';
+    @import './css/MakeProblem.css';
 </style>
 <template>
     <Menu>
@@ -184,7 +184,7 @@
                     "/>
                 </div>
             </div>
-            <button class="action-btn" id="cancel-btn" @click="router.push('/')">cancel</button>
+            <button class="action-btn" id="cancel-btn" @click="router.push('/').then()">cancel</button>
         </div>
     </Menu>
 </template>

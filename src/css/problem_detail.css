@@ -1,0 +1,71 @@
+#top-panel{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    height: calc(100vh - 28px);
+}
+#info-panel{
+    grid-column-start: 1;
+    grid-column-end: 4;
+    background-color: rgb(176,224,230);
+}
+#run-panel{
+    border-left: 1px solid black;
+    grid-column-start: 4;
+    grid-column-end: 6;
+}
+.problem-tilte{
+    text-align: center;
+    word-wrap: break-word;
+}
+.problem-author{
+    text-align: center;
+    margin-top: 4px;
+    word-wrap: break-word;
+}
+#info-padding{
+    margin-left: 16px;
+    margin-right: 12px;
+    color: black;
+}
+.author-profile{
+    margin-left: 6px;
+    border-radius: 50%;
+}
+.react-btn{
+    border: none;
+    background-color: unset;
+    border-radius: 10px;
+    transition: 0.12s background-color ease-in-out;
+}
+.react-btn:hover{
+    background-color: rgb(46, 134, 139);
+}
+.options-btn{
+    background-color: unset;
+    border: none;
+    border-radius: 40%;
+    padding: 2px;
+}
+.options-btn:hover{
+    background-color: rgb(42, 163, 163);
+}
+.menu{
+    background-color: white;
+    padding: 8px;
+    border-radius: 12px;
+    position: absolute;
+    right: 20px;
+    width:150px;
+}
+.menu button{
+    border: none;
+    background-color: unset;
+    border-radius: 4px;
+    padding: 8px;
+}
+.menu button:hover{
+    background-color: rgb(184, 169, 166);
+}
+.delete-btn{
+    align-items: center;
+}

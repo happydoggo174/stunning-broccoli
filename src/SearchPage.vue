@@ -42,7 +42,7 @@
   });
 </script>
 <style>
-  @import './index.css';
+  @import './css/index.css';
   #search-row{
     margin-top: 12px;
     justify-content: space-between;

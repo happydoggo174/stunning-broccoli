@@ -141,3 +141,15 @@ export async function get_completed(last_id) {
     const resp=await fetch(url,{headers:header});
     return json_or_err(resp);
 }
+export async function get_knowledge_home(last_id) {
+    const url=new URL(`${BASE_ADDR}/knowledge/home`);
+    if(last_id!==undefined){
+        url.searchParams.set("last_id",last_id);
+    }
+    return json_or_err(await fetch(url));
+}
+export async function get_knowledge_detail(knowledge_id) {
+    const url=new URL(`${BASE_ADDR}/knowledge/detail`);
+    url.searchParams.set("knowledge_id",knowledge_id);
+    return json_or_err(await fetch(url));
+}

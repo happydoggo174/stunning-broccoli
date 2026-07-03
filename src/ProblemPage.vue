@@ -101,13 +101,14 @@ import HintWidget from './HintWidget.vue';
     function delete_problem(){
         show_confirm("warning",`are you sure you want to delete problem ${detail.title}?`,r=>{
             if(!r){return;}
-            remove_problem(prop.id).then(()=>{router.push('/')},()=>{show_dialog('error','unable to remove problem')});
+            remove_problem(prop.id).then(()=>{router.push('/').then()},
+            ()=>{show_dialog('error','unable to remove problem')});
         });
     }
 </script>
 <style scoped>
-    @import "./index.css";
-    @import "./problem_detail.css";
+    @import "./css/index.css";
+    @import "./css/problem_detail.css";
 </style>
 <template>
     <Menu>

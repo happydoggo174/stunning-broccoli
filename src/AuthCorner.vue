@@ -13,7 +13,7 @@
     <div style="justify-content: center;" class="column">
       <p style="color: black;margin-right: 12px;">{{ auth.user?.nickname }}</p>
     </div>
-    <img :src="auth.user?.picture" alt="profile picture" width="32px" height="32px" style="border-radius: 50%;">
+    <img :src="auth.user?.picture" alt="profile picture" width="32px" height="32px" class="circle">
   </div>
 
   <div v-else class="row">

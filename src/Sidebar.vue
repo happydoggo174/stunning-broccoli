@@ -11,7 +11,7 @@ import router from "./router";
 </style>
 <template>
     <div class="column" style="background-color: white;border-right: 1px solid black;padding: 8px;width: 30vh;">
-        <button @click="router.push('/make_problem')" class="row side-nav-btn hover-shadow">
+        <button @click="router.push('/make_problem').then()" class="row side-nav-btn hover-shadow">
             <img :src="add_mini" alt="" style="margin-right: 8px;">post problem
         </button>
     </div>

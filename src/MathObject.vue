@@ -35,7 +35,6 @@
         background-color: white;
         border:1px solid black;
         margin-left: 12px;
-        border-radius: 50%;
     }
 </style>
 <template>
@@ -46,7 +45,7 @@
                 <span>{{ difficulty }}</span>
             </div>
             <h2 class="tilte" style="color: black;">{{title}}</h2>
-            <img :src="done" alt="completed" v-if='problem_status=="solved"' class="solved-img">
+            <img :src="done" alt="completed" v-if='problem_status=="solved"' class="solved-img circle">
         </div>
         <div class="stat">
             <div class="row" style="align-items: center;">

@@ -7,6 +7,7 @@
     .spacer{flex-grow: 1;}
     .column{display: flex;flex-direction: column;}
     .hover-shadow:hover{box-shadow: -2px 1px 4px 1px;}
+    .circle{border-radius: 50%;}
 </style>
 <template>
     <Overlay/>

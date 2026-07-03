@@ -33,7 +33,7 @@
   });
 </script>
 <style>
-  @import './index.css';
+  @import './css/index.css';
 </style>
 <template>
   <Menu>

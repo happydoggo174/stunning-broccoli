@@ -47,7 +47,7 @@
     <div class="comment">
         <div class="row" style="justify-content: space-between;">
             <div class="row">      
-                <img :src="profile" :alt="`profile picture`" width="24px" height="24px" style="border-radius: 50%;">
+                <img :src="profile" :alt="`profile picture`" width="24px" height="24px" class="circle">
                 <span style="margin-left: 14px;">{{ username }}</span>
             </div>
             <div class="row" style="position: relative;">  

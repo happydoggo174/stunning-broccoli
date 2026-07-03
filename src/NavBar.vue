@@ -54,10 +54,11 @@
     import { ref } from 'vue';
     const query=ref("");
     const emit=defineEmits(["menu"]);
-    function home(){router.push("/");}
+    async function home(){router.push("/").then();}
+    async function learn(){router.push("/learn").then();}
     function handle_search(){
         if(query.value=="" || 1==1){return;}
-        router.push(`/search/${encodeURIComponent(query.value)}`)
+        router.push(`/search/${encodeURIComponent(query.value)}`).then();
     }
 </script>
 <template>
@@ -67,6 +68,7 @@
                 <img :src="menu_thick" alt="menu">
             </button>
             <button class="nav-btn" @click="home">home</button>
+            <button class="nav-btn" @click="learn">learn</button>
         </div>
         <div class="row spacer" id="main-search-row" @keypress.enter="handle_search">
             <img :src="search" alt="">

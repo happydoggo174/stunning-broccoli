@@ -26,6 +26,17 @@ const routes = [
     props:route=>({
       query:route.params.query
     })
+  },
+  {
+    path:'/learn',
+    component:()=>import("@/KnowledgeTab.vue")
+  },
+  {
+    path:'/learn/detail/:id',
+    component:()=>import("@/KnowledgePage.vue"),
+    props:route=>({
+      id:Number(route.params.id)
+    })
   }
 ]
 
