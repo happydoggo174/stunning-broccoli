@@ -10,7 +10,7 @@
     watch(()=>prop.id,async(id)=>{
         console.log(id);
         try{
-            Object.assign(data,await get_knowledge_detail(prop.id));
+            Object.assign(data,await get_knowledge_detail(prop.id));  
         }catch(e){
             console.log(e);
         }   
