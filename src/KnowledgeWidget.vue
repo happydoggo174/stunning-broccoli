@@ -47,6 +47,7 @@
         align-items: center;
         border-right: 1px solid black;
         padding-right: 8px;
+        width: 100px;
     }
 </style>
 <template>
