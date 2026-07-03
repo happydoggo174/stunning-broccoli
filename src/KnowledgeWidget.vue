@@ -38,6 +38,10 @@
         padding: 6px;
         border-radius: 12px;
         margin-top: 8px;
+        transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) transform,0.3s cubic-bezier(0.25, 0.8, 0.25, 1) box-shadow;
+    }
+    .widget:hover{
+        transform: translateY(-6px);
     }
     .title{
         line-height: 1.4;

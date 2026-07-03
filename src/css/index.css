@@ -15,7 +15,7 @@ body{
     max-width: none;
 }
 body{
-    background-color: rgb(176,224,230);
+    background-color: rgb(197, 240, 246);
 }
 .green-shadow:hover{
     box-shadow: -2px 3px 7px 3px green;
@@ -37,20 +37,23 @@ body{
     box-sizing: border-box;
     background-color: inherit;
     color: black;
-    padding: 6px;
+    padding: 8px;
     border-radius: 12px;
     display: flex;
     justify-content: space-between;
-    margin-top: 12px;
-    margin-left: 14px;
-    margin-right: 14px;
+    margin-top: 16px;
+    margin-left: 16px;
+    margin-right: 16px;
     overflow: hidden;
-    transition: box-shadow 0.15s ease-in-out,background-color 0.15s ease-in-out;
+    transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     transition-delay: 84ms;
     word-wrap: break-word;
 }
 .math-problem:hover{
     background-color: rgb(209, 238, 243);
+    transform: translateY(-6px);
 }
 .math-problem .tilte{
     font-size: 20px;

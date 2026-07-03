@@ -19,8 +19,7 @@
         display: flex;
     }
     .nav-btn:hover{
-        box-shadow: -2px 2px 16px 3px;
-        background-color: rgb(12, 138, 235);
+        text-decoration: 1px underline white;
     }
     #profile-btn{
         border-radius: 50%;
