@@ -37,6 +37,10 @@ const routes = [
     props:route=>({
       id:Number(route.params.id)
     })
+  },
+  {
+    path:'/latex',
+    component:()=>import("@/latex.vue")
   }
 ]
 

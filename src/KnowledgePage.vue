@@ -26,6 +26,9 @@
     }
 </style>
 <template>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
+    integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" 
+    crossorigin="anonymous">
     <Menu>
         <div class="column" style="color: black;margin-left: 12vw;margin-right: 12vw;margin-top: 12px;">
             <h2 style="font-weight: bold;font-size: 24px;">{{ data.title }}</h2>
