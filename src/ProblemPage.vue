@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch,ref,computed } from 'vue';
+import { reactive, watch,ref,computed,useTemplateRef } from 'vue';
 import { get_problem_detail,get_problem_status,like_problem,dislike_problem,remove_problem } from './api.js';
 import Loading from './Loading.vue';
 import Menu from './Menu.vue';
@@ -18,6 +18,9 @@ import { isAuthenticated,isLoading,uid } from './auth.js';
 import options from "@/assets/options.svg";
 import router from "./router"
 import HintWidget from './HintWidget.vue';
+import {renderToString} from "katex";
+import dompurify from 'dompurify';
+import { serialize_expression,html } from './tool.js';
     const err=ref(null);
     const resolved=ref(false);
     const prop=defineProps({
@@ -27,6 +30,8 @@ import HintWidget from './HintWidget.vue';
     let detail=reactive({});
     let status=reactive({});
     const display=ref([]);
+    const description=ref("");
+    const description_tag=useTemplateRef("description");
     let count=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
@@ -78,6 +83,15 @@ import HintWidget from './HintWidget.vue';
         }
         if(cnt!=count || data==null){return;}
         Object.assign(detail,data);
+        try{
+            description.value=dompurify.sanitize(renderToString(serialize_expression(detail.description)),
+            {
+                ADD_TAGS: ['math', 'annotation', 'semantics', 'mtext', 'mn', 'mo', 'mi', 'mspace', 'mover', 'elements'],
+                ADD_ATTR: ['target'],
+            });
+        }catch(e){
+            description.value=html`${detail.description}`;
+        }
         resolved.value=true;
     },{immediate:true});
     watch(()=>[isAuthenticated,prop.id],async()=>{
@@ -105,6 +119,8 @@ import HintWidget from './HintWidget.vue';
             ()=>{show_dialog('error','unable to remove problem')});
         });
     }
+    const solved_title=computed(()=>
+    status.status=='solved-offline'?'please login to save progess into your account':'solved');
 </script>
 <style scoped>
     @import "./css/index.css";
@@ -112,6 +128,9 @@ import HintWidget from './HintWidget.vue';
 </style>
 <template>
     <Menu>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
+        integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" 
+        crossorigin="anonymous">
         <Loading v-if="!resolved" :resolved="resolved" :err="err"/>
         <div id="top-panel" v-else>
             <div id="info-panel">
@@ -120,8 +139,7 @@ import HintWidget from './HintWidget.vue';
                         <div></div>
                         <div style="justify-content: center;align-items: center;" class="row">
                             <h1 class="problem-tilte">{{detail.title}}</h1>
-                            <img :src="done_src" style="margin-left: 12px;" v-if="done_src!=0" 
-                            :title="status.status=='solved-offline'?'please login to save progess into your account':'solved'">
+                            <img :src="done_src" style="margin-left: 12px;" v-if="done_src!=0" :title="solved_title">
                         </div>
                         <div class="row" style="position: relative;">    
                             <div class="menu column" v-if="show_menu && uid==detail.author_id">
@@ -137,11 +155,12 @@ import HintWidget from './HintWidget.vue';
                     </div>
                     <div class="row" style="justify-content: center;align-items: center;">
                         <h2 class="problem-author">{{detail.author}}</h2>
-                        <img :src="detail.profile" alt="author profile" width="24px" height="24px" class="author-profile">
+                        <img :src="detail.profile" alt="author profile" 
+                        width="24px" height="24px" class="author-profile">
                     </div>
-                    <div style="margin-top: 16px;word-wrap: break-word;">{{detail.description}}</div>
+                    <div style="margin-top: 16px;word-wrap: break-word;" v-html="description"></div>
                     <div class="row">
-                        <div class="row" style="margin-top: 16px;border: 1px solid black;padding: 4px;border-radius: 12px;">
+                        <div class="row react-wrapper">
                             <button @click="handle_like" class="react-btn">
                                 <img :src="like_src">
                             </button>

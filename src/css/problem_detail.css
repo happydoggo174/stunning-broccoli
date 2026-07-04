@@ -70,3 +70,9 @@
 .delete-btn{
     align-items: center;
 }
+.react-wrapper{
+    margin-top: 16px;
+    border: 1px solid black;
+    padding: 4px;
+    border-radius: 12px;
+}

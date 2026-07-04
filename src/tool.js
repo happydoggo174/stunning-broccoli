@@ -42,3 +42,27 @@ export function serialize_display_row(output){
 export function serialize_display(output){
     return output.map(row=>serialize_display_row(row));
 }
+export function serialize_expression(text){
+    let out="\\text{";
+    let is_text=true;
+    for(let i=0;i<text.length;i++){
+        if(text[i]=='$'){
+            if(is_text){
+                out+='}'
+                console.log("closed,out=",out);
+            }else{
+                out+="\\text{";
+            }
+            is_text=!is_text;
+        }else{
+            if((text[i]=='\\' || text[i]=='}') && is_text){
+                out+='\\';
+            }
+            out+=text[i];
+        }
+    }
+    if(is_text){
+        out+='}';
+    }
+    return out;    
+}

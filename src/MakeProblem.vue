@@ -126,6 +126,8 @@
                     <span style="display: block;text-align: center;">description</span>
                     <textarea placeholder="your description here" @input="resize_field" v-model="description"
                     style="font-size: 15px;scrollbar-width: none;resize: none;" ></textarea>
+                    <span style="display: block;text-align: center;">tip:use $ latex expression $ 
+                    to input latex math expression</span>
                 </div>
                 <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">
                     <span>difficulty</span>
