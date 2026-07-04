@@ -84,7 +84,7 @@ import { serialize_expression,html } from './tool.js';
         if(cnt!=count || data==null){return;}
         Object.assign(detail,data);
         try{
-            description.value=dompurify.sanitize(renderToString(serialize_expression(detail.description)),
+            description.value=dompurify.sanitize(serialize_expression(detail.description),
             {
                 ADD_TAGS: ['math', 'annotation', 'semantics', 'mtext', 'mn', 'mo', 'mi', 'mspace', 'mover', 'elements'],
                 ADD_ATTR: ['target'],
