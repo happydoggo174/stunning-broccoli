@@ -1,16 +1,19 @@
 <script setup>
-    import { watch,reactive } from 'vue';
+    import { watch,reactive,ref } from 'vue';
     import { get_knowledge_detail } from './api';
     import Menu from './Menu.vue';
     import CategoryLabel from './CategoryLabel.vue';
+    import { serialize_expression } from './tool';
     const prop=defineProps({
         id:Number
     });
     const data=reactive({});
+    const content=ref("");
     watch(()=>prop.id,async(id)=>{
         console.log(id);
         try{
             Object.assign(data,await get_knowledge_detail(prop.id));  
+            content.value=serialize_expression(data.content);
         }catch(e){
             console.log(e);
         }   
@@ -33,7 +36,7 @@
             <div class="row" style="border-bottom: 1px solid black;padding-bottom: 4px;margin-top: 8px;">
                 <CategoryLabel v-for="tag in data.category" :tag="tag"></CategoryLabel>
             </div>
-            <div class="content">{{ data.content }}</div>
+            <div class="content" v-html="content"></div>
         </div>
     </Menu>
 </template>

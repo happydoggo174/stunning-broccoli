@@ -1,4 +1,5 @@
 import { renderToString } from "katex";
+import dompurify from "dompurify";
 export function html(s,...v){
     let o="";
     let n=document.createElement("a");
@@ -43,7 +44,7 @@ export function serialize_display_row(output){
 export function serialize_display(output){
     return output.map(row=>serialize_display_row(row));
 }
-export function serialize_expression(text) {
+export function serialize_expression(text,unsafe=false) {
     let out = "";
     for(let i=0;i<text.length;i++){
         if(text[i]=='$'){
@@ -65,5 +66,11 @@ export function serialize_expression(text) {
             out+=text[i];
         }
     }
-    return out;
+    if(unsafe===true){
+        return out;
+    }
+    return dompurify.sanitize(out,{
+        ADD_TAGS: ['math', 'annotation', 'semantics', 'mtext', 'mn', 'mo', 'mi', 'mspace', 'mover', 'elements'],
+        ADD_ATTR: ['target'],
+    });
 }
