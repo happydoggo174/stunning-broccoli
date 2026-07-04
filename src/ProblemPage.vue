@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch,ref,computed,useTemplateRef } from 'vue';
+import { reactive, watch,ref,computed,nextTick,useTemplateRef} from 'vue';
 import { get_problem_detail,get_problem_status,like_problem,dislike_problem,remove_problem } from './api.js';
 import Loading from './Loading.vue';
 import Menu from './Menu.vue';
@@ -18,8 +18,7 @@ import { isAuthenticated,isLoading,uid } from './auth.js';
 import options from "@/assets/options.svg";
 import router from "./router"
 import HintWidget from './HintWidget.vue';
-import {renderToString} from "katex";
-import dompurify from 'dompurify';
+import LatexDisplay from './LatexDisplay.vue';
 import { serialize_expression,html } from './tool.js';
     const err=ref(null);
     const resolved=ref(false);
@@ -29,9 +28,7 @@ import { serialize_expression,html } from './tool.js';
     const show_menu=ref(false);
     let detail=reactive({});
     let status=reactive({});
-    const display=ref([]);
     const description=ref("");
-    const description_tag=useTemplateRef("description");
     let count=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
@@ -83,11 +80,6 @@ import { serialize_expression,html } from './tool.js';
         }
         if(cnt!=count || data==null){return;}
         Object.assign(detail,data);
-        try{
-            description.value=serialize_expression(detail.description);
-        }catch(e){
-            description.value=html`${detail.description}`;
-        }
         resolved.value=true;
     },{immediate:true});
     watch(()=>[isAuthenticated,prop.id],async()=>{
@@ -127,7 +119,7 @@ import { serialize_expression,html } from './tool.js';
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
         integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" 
         crossorigin="anonymous">
-        <Loading v-if="!resolved" :resolved="resolved" :err="err"/>
+        <Loading v-if="!resolved" :resolved="resolved" :err="err" key="loader"/>
         <div id="top-panel" v-else>
             <div id="info-panel">
                 <div id="info-padding">
@@ -154,7 +146,8 @@ import { serialize_expression,html } from './tool.js';
                         <img :src="detail.profile" alt="author profile" 
                         width="24px" height="24px" class="author-profile">
                     </div>
-                    <div style="margin-top: 16px;word-wrap: break-word;overflow-x:auto;" v-html="description"></div>
+                    <LatexDisplay class="description" :content="detail.description">
+                    </LatexDisplay>
                     <div class="row">
                         <div class="row react-wrapper">
                             <button @click="handle_like" class="react-btn">

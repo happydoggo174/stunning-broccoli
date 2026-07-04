@@ -1,9 +1,17 @@
 <script setup>
-    import { watch,ref,useTemplateRef } from 'vue';
-    const prop=defineProps({buttons:Array});    
+    import { watch,ref,onMounted } from 'vue';
+    const prop=defineProps({
+        buttons:Array,
+        init_content:String
+    });    
     const expr_field=ref(null);
     const content=ref("");
     const emits=defineEmits(["input"]);
+    onMounted(()=>{
+        if(prop.init_content!==undefined){
+            content.value=prop.init_content;
+        }
+    });
     watch(content,(val)=>{
         emits("input",val);
     });

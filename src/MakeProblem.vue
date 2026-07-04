@@ -165,7 +165,8 @@
                         <img :src="add" v-once alt="" @click="add_parameter">
                     </button>
                 </div>
-                <Calculator :buttons="display_parameter.map((v)=>v.name)" @input="edit_expression"/>
+                <Calculator :buttons="display_parameter.map((v)=>v.name)" @input="edit_expression"
+                :init_content="expression"/>
                 <div class="row" style="justify-content: space-between;margin-top: 14px;">
                     <button @click="page=0" class="page-btn hover-shadow">
                         <img :src="back" alt="previous page" style="margin-right: 8px;">

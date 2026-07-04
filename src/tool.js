@@ -44,7 +44,7 @@ export function serialize_display_row(output){
 export function serialize_display(output){
     return output.map(row=>serialize_display_row(row));
 }
-export function serialize_expression(text,unsafe=false) {
+export function serialize_expression(text,return_dom=false) {
     let out = "";
     for(let i=0;i<text.length;i++){
         if(text[i]=='$'){
@@ -66,11 +66,9 @@ export function serialize_expression(text,unsafe=false) {
             out+=text[i];
         }
     }
-    if(unsafe===true){
-        return out;
-    }
     return dompurify.sanitize(out,{
         ADD_TAGS: ['math', 'annotation', 'semantics', 'mtext', 'mn', 'mo', 'mi', 'mspace', 'mover', 'elements'],
         ADD_ATTR: ['target'],
+        RETURN_DOM_FRAGMENT:return_dom
     });
 }

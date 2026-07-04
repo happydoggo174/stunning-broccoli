@@ -3,17 +3,15 @@
     import { get_knowledge_detail } from './api';
     import Menu from './Menu.vue';
     import CategoryLabel from './CategoryLabel.vue';
-    import { serialize_expression } from './tool';
+    import LatexDisplay from './LatexDisplay.vue';
     const prop=defineProps({
         id:Number
     });
     const data=reactive({});
-    const content=ref("");
     watch(()=>prop.id,async(id)=>{
         console.log(id);
         try{
             Object.assign(data,await get_knowledge_detail(prop.id));  
-            content.value=serialize_expression(data.content);
         }catch(e){
             console.log(e);
         }   
@@ -39,7 +37,7 @@
             <div class="row" style="border-bottom: 1px solid black;padding-bottom: 4px;margin-top: 8px;">
                 <CategoryLabel v-for="tag in data.category" :tag="tag"></CategoryLabel>
             </div>
-            <div class="content" v-html="content"></div>
+            <LatexDisplay class="content" :content="data.content"></LatexDisplay>
         </div>
     </Menu>
 </template>
