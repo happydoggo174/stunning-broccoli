@@ -18,13 +18,13 @@ body{
     background-color: rgb(197, 240, 246);
 }
 .green-shadow:hover{
-    box-shadow: -2px 3px 7px 3px green;
+    box-shadow: 0 12px 24px rgba(34, 197, 94, 0.5);
 }
 .yellow-shadow:hover{
-    box-shadow: -2px 3px 7px 3px yellow;
+    box-shadow: 0 12px 24px rgba(165, 165, 32, 0.5);
 }
 .red-shadow:hover{
-    box-shadow: -2px 3px 7px 3px rgb(229, 47, 47);
+    box-shadow: 0 12px 24px rgba(155, 49, 49, 0.5);
 }
 .text-center{
     display: flex;
