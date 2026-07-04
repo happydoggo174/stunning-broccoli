@@ -58,7 +58,7 @@ export function serialize_expression(text) {
             is_text = !is_text;
         } else {
             // 2. If it exceeds 100 chars inside text mode, break the line cleanly
-            if ((++cnt) > 100 && is_text) {
+            if (((++cnt) > 98 && is_text) && (cnt>105 || text[i]==' ')) {
                 cnt = 0;
                 out += "}\\\\ \\text{"; // Closes text, adds newline, opens new text block
             }
