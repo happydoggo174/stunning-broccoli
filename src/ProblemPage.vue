@@ -158,7 +158,7 @@ import { serialize_expression,html } from './tool.js';
                         <img :src="detail.profile" alt="author profile" 
                         width="24px" height="24px" class="author-profile">
                     </div>
-                    <div style="margin-top: 16px;word-wrap: break-word;overflow-x: auto;" v-html="description"></div>
+                    <div style="margin-top: 16px;word-wrap: break-word;overflow-x:auto;" v-html="description"></div>
                     <div class="row">
                         <div class="row react-wrapper">
                             <button @click="handle_like" class="react-btn">

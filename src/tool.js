@@ -42,27 +42,39 @@ export function serialize_display_row(output){
 export function serialize_display(output){
     return output.map(row=>serialize_display_row(row));
 }
-export function serialize_expression(text){
-    let out="\\text{";
-    let is_text=true;
-    for(let i=0;i<text.length;i++){
-        if(text[i]=='$'){
-            if(is_text){
-                out+='}'
-                console.log("closed,out=",out);
-            }else{
-                out+="\\text{";
+export function serialize_expression(text) {
+    // 1. Wrap everything in a gathered environment so KaTeX respects \\ line breaks
+    let out = "\\begin{gathered}\\text{";
+    let is_text = true;
+    let cnt = 0;
+
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] == '$') {
+            if (is_text) {
+                out += '}';
+            } else {
+                out += "\\text{";
             }
-            is_text=!is_text;
-        }else{
-            if((text[i]=='\\' || text[i]=='}') && is_text){
-                out+='\\';
+            is_text = !is_text;
+        } else {
+            // 2. If it exceeds 100 chars inside text mode, break the line cleanly
+            if ((++cnt) > 100 && is_text) {
+                cnt = 0;
+                out += "}\\\\ \\text{"; // Closes text, adds newline, opens new text block
             }
-            out+=text[i];
+            
+            if ((text[i] == '\\' || text[i] == '}') && is_text) {
+                out += '\\';
+            }
+            out += text[i];
         }
     }
-    if(is_text){
-        out+='}';
+    
+    if (is_text) {
+        out += '}';
     }
-    return out;    
+    
+    // 3. Close the gathered environment
+    out += "\\end{gathered}";
+    return out;
 }
