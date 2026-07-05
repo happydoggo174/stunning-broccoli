@@ -69,6 +69,7 @@ export function serialize_expression(text,return_dom=false) {
     return dompurify.sanitize(out,{
         ADD_TAGS: ['math', 'annotation', 'semantics', 'mtext', 'mn', 'mo', 'mi', 'mspace', 'mover', 'elements'],
         ADD_ATTR: ['target'],
+        FORBID_ATTR:["id"],
         RETURN_DOM_FRAGMENT:return_dom
     });
 }
