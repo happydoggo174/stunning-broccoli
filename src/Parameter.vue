@@ -5,15 +5,16 @@
         idx:Number
     });
     let content=prop.name;
-    const emits=defineEmits(["remove","update"]);
+    const emits=defineEmits(["remove"]);
     /**
      * 
      * @param {InputEvent} e
      */
     function handle_input(e){
-        emits("update",prop.idx,e.target.innerText);
+        model.value=e.target.innerText;
         e.target.focus();
     }
+    const model=defineModel();
 </script>
 <style scoped>
     .parameter{

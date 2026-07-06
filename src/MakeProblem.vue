@@ -11,14 +11,13 @@
     import back from "@/assets/back.svg";
     import Parameter from './Parameter.vue';
     import Calculator from './Calculator.vue';
-    const page=ref(0);
     import { calculate } from './calc';
     import { show_dialog } from './notificationdaemon';
     import TestSample from './TestSample.vue';
+    import LatexInput from './LatexInput.vue';
+    const page=ref(0);
     let count=3;
-    const data=[{name:"x",id:0},{name:"y",id:1}]
-    const parameter=ref(data.map(v=>v));
-    const display_parameter=ref(data.map(v=>v));
+    const parameter=ref([{name:"x",id:0},{name:"y",id:1}]);
     const example=ref([]);
     const is_example=ref(false);
     const title=ref("");
@@ -27,25 +26,11 @@
     const hint=ref([]);
     let refresh_handle=null;
     let expression="";
-    function resize_field(e){
-        const field=e.target;
-        field.style.height="auto";
-        field.style.height=field.scrollHeight+'px';
-    }
     function remove_parameter(id){
         parameter.value=parameter.value.filter((n)=>n.id!=id);
-        display_parameter.value=display_parameter.value.filter((n)=>n.id!=id);
-    }
-    function handle_update(old_id,next){
-        //don't write back to parameter or it'll cascade into an infinitive loop
-        display_parameter.value=display_parameter.value.map((v)=>{
-            return v.id==old_id?{name:next,id:old_id}:v;
-        });
     }
     function add_parameter(){
-        const idx=++count;
-        parameter.value.push({name:'z',id:idx});
-        display_parameter.value.push({name:'z',id:idx})
+        parameter.value.push({name:'z',id:++count});
     }
     function handle_add_example(param,display_name){
         try{
@@ -61,8 +46,9 @@
             if(!title.value.length){
                 return show_dialog("error","a title is required for submission");
             }
+            const desc=description.value;
             example.value.forEach((v)=>{delete v.output;delete v.id});
-            await make_problem(title.value,description.value,difficulty.value,expression,
+            await make_problem(title.value,desc,difficulty.value,expression,
             display_parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name),
             hint.value.map(v=>v.content));
             router.push('/').then();
@@ -82,12 +68,10 @@
     }
     function edit_expression(new_expr){
         expression=new_expr;
-        if(!refresh_handle){
-            refresh_handle=setTimeout(refresh_example,1000);
-        }else{
+        if(refresh_handle){
             clearTimeout(refresh_handle);
-            refresh_handle=setTimeout(refresh_example,1000);
         }
+        refresh_handle=setTimeout(refresh_example,1000);
     }
     function show_example_dialog(){
         const blacklist=["__proto__","__constructor__","prototype","output","is_err"];
@@ -101,11 +85,6 @@
         if(!valid){return;}
         is_example.value=true;
     }
-    function update_hint(idx,content){hint.value.forEach(v=>{
-        if(v.idx==idx){
-            v.content=content;
-        }
-    })}
     function remove_hint(idx){hint.value=hint.value.filter(v=>v.idx!=idx);}
     function add_hint(){hint.value.push({content:'',idx:++count})};
 </script>
@@ -114,8 +93,11 @@
 </style>
 <template>
     <Menu>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
+        integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" 
+        crossorigin="anonymous">
         <div class="example-bg" v-if="is_example">
-            <ExamplePopup :parameter="display_parameter" @close="is_example=false" @added="handle_add_example"/>
+            <ExamplePopup :parameter="parameter" @close="is_example=false" @added="handle_add_example"/>
         </div>
         <div style="margin-left: 14px;margin-right: 14px;">
             <div v-if="!page">
@@ -124,10 +106,7 @@
                 </div>
                 <div class="column" style="margin-top: 14px;">
                     <span style="display: block;text-align: center;">description</span>
-                    <textarea placeholder="your description here" @input="resize_field" v-model="description"
-                    style="font-size: 15px;scrollbar-width: none;resize: none;" ></textarea>
-                    <span style="display: block;text-align: center;">tip:use $ latex expression $ 
-                    to input latex math expression</span>
+                    <LatexInput placeholder="your description here" v-model="description"></LatexInput>
                 </div>
                 <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">
                     <span>difficulty</span>
@@ -137,14 +116,14 @@
                         <option value="hard">hard</option>
                     </select>
                 </div>
-                <div class="column" style="margin-bottom: 12px;align-items: center;">
+                <div class="column hint-row">
                     <div class="row" style="align-items: center;">
                         <span style="display: block;text-align: center;font-size: 18px;">hints</span>
                         <button class="add-hint-btn hover-shadow" @click="add_hint">
                             <img :src="add_mini" alt="">
                         </button>
                     </div>
-                    <HintInputWidget v-for="h in hint" @update="update_hint" style="margin-top: 8px;" @remove="remove_hint" 
+                    <HintInputWidget v-for="h in hint" v-model="h.content" style="margin-top: 8px;" @remove="remove_hint" 
                     :idx="h.idx" :key="h.idx">
                     </HintInputWidget>
                 </div>
@@ -160,12 +139,12 @@
                 <div class="row" style="align-items: center;margin-bottom: 14px;margin-top: 12px;">
                     <span>input</span>
                     <Parameter v-for="param in parameter" :key="param.id" :name="param.name" :idx="param.id" 
-                    @remove="remove_parameter" @update="handle_update"/>
+                    @remove="remove_parameter" v-model="param.name"/>
                     <button style="margin-left: 14px;border-radius: 40%;padding: 4px;">
                         <img :src="add" v-once alt="" @click="add_parameter">
                     </button>
                 </div>
-                <Calculator :buttons="display_parameter.map((v)=>v.name)" @input="edit_expression"
+                <Calculator :buttons="parameter.map((v)=>v.name)" @input="edit_expression"
                 :init_content="expression"/>
                 <div class="row" style="justify-content: space-between;margin-top: 14px;">
                     <button @click="page=0" class="page-btn hover-shadow">

@@ -98,3 +98,7 @@ span{
     background-color: white;
     margin-left: 8px;
 }
+.hint-row{
+    margin-bottom: 12px;
+    align-items: center;
+}

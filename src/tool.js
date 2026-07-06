@@ -1,20 +1,11 @@
 import { renderToString } from "katex";
 import dompurify from "dompurify";
-export function html(s,...v){
-    let o="";
-    let n=document.createElement("a");
-    for(let i=0;i<v.length;i++){
-        n.innerText=v[i];
-        o+=s[i]+n.innerHTML;
-    }
-    return o+(s.length>v.length?s[s.length-1]:"");
-}
 export function parse_percentage(n){
     if(n===null || n===undefined){return undefined;}
     return n.endsWith('%')?parseFloat(n.slice(0,n.length-1))+'%':parseFloat(n);
 }
 export function serialize_percentage(n){
-    if(n===null || n===undefined){return undefined;}
+    if(n==null){return undefined;}
     if(n==""){return 0;}
     return n.endsWith('%')?parseFloat(n.slice(0,n.length-1))/100:parseFloat(n);
 }
@@ -28,12 +19,12 @@ export function serialize_display_row(output){
             if(pr.length==3){
                 pr=pr.slice(1,pr.length);
             }
-            return html`<div class="column" style="align-items:center">
+            return `<div class="column" style="align-items:center">
                 <span style="border-bottom:1px solid black">${pr[0]}</span>
                 <span>${pr[1]}</span>
             </div>`;
         }
-        return html`<div class="row" style="align-items: center;">
+        return `<div class="row" style="align-items: center;">
             <span style="margin-right: 4px;">${pr[0]}</span>
             <div class="column" style="align-items:center"><span style="border-bottom:1px solid black">${pr[1]}</span>
                 <span>${pr[2]}</span>
@@ -47,11 +38,11 @@ export function serialize_display(output){
 export function serialize_expression(text,return_dom=false) {
     let out = "";
     for(let i=0;i<text.length;i++){
-        if(text[i]=='$'){
+        if(text[i]=='$' && (!i || text[i-1]!='\\')){
             let found=false;
             let j=i+1;
             for(;j<text.length;j++){
-                if(text[j]=='$'){
+                if(text[j]=='$' && (!j || text[j-1]!='\\')){
                     found=true;
                     out+=renderToString(text.slice(i+1,j));
                     break;
@@ -63,13 +54,19 @@ export function serialize_expression(text,return_dom=false) {
             }
             i=j;
         }else{
-            out+=text[i];
+            if(text[i]=='\\' && i<text.length-1 && text[i+1]=='$'){
+                out+='$';
+                i++;
+            }else{
+                out+=text[i];
+            }
         }
     }
     return dompurify.sanitize(out,{
         ADD_TAGS: ['math', 'annotation', 'semantics', 'mtext', 'mn', 'mo', 'mi', 'mspace', 'mover', 'elements'],
         ADD_ATTR: ['target'],
         FORBID_ATTR:["id"],
+        FORBID_TAGS:["svg","form","dialog"],
         RETURN_DOM_FRAGMENT:return_dom
     });
 }

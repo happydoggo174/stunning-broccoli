@@ -1,19 +1,11 @@
 <script setup>
     import delete_svg from "@/assets/delete.svg";
-    import { ref,watch,useTemplateRef } from "vue";
+    import { useTemplateRef } from "vue";
     const prop=defineProps({
         idx:Number
     });
-    const content=ref("");
-    const emits=defineEmits(["remove","update"]);
-    /**
-     * 
-     * @param {InputEvent} e
-     */
-    function handle_input(e){
-        emits("update",prop.idx,content.value);
-    }
-    watch(content,handle_input);
+    const model=defineModel();
+    const emits=defineEmits(["remove"]);
     const name_field=useTemplateRef("name-field");
     function resize_field(){
         const field=name_field.value;
@@ -48,7 +40,7 @@
 </style>
 <template>
     <div class="hint-item row">
-        <textarea type="text" class="hint-content spacer" placeholder="your hint text here" v-model="content" 
+        <textarea type="text" class="hint-content spacer" placeholder="your hint text here" v-model="model" 
         ref="name-field" @input="resize_field"></textarea>
         <button style="margin-left: 8px;border: none" @click="emits('remove',idx)">
             <img :src="delete_svg" alt="remove" v-once >
