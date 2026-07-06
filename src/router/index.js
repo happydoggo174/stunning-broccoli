@@ -41,6 +41,10 @@ const routes = [
   {
     path:'/latex',
     component:()=>import("@/latex.vue")
+  },
+  {
+    path:'/make_lesson',
+    component:()=>import("@/MakeKnowledge.vue")
   }
 ]
 
