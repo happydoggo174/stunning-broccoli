@@ -35,8 +35,6 @@
         }
         return {name:prop.name,value:value,display:display};
     }
-    function handle_input(e){
-    }
     watch(is_frac,(v)=>{
         if(v && content.value && !top.value){
             side.value=content.value;
@@ -63,13 +61,13 @@
 <template>
     <div class="row" style="margin-top: 14px;align-items: center;">
         <span>{{ prop.name }}</span>
-        <input type="text" style="margin-left: 12px;" v-model="content" v-if="!is_frac" @input="handle_input">
+        <input type="text" style="margin-left: 12px;" v-model="content" v-if="!is_frac">
         <div class="row" v-else style="align-items: center;margin-left: 12px;" >
-            <input type="text" class="spacer side-cell" v-model="side" @input="handle_input" placeholder="0">
+            <input type="text" class="spacer side-cell" v-model="side" placeholder="0">
             <div class="column spacer" style="margin-left: 4px;">
                 <input type="text" v-model="top" class="frac-cell" style="border-bottom: 1px solid black" 
-                @input="handle_input" placeholder="0">
-                <input type="text" v-model="bottom" class="frac-cell" @input="handle_input" placeholder="1">
+                 placeholder="0">
+                <input type="text" v-model="bottom" class="frac-cell" placeholder="1">
             </div>
         </div>
         <div class="row" style="margin-left: 6px;align-items: center;">

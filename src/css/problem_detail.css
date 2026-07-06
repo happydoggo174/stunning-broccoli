@@ -78,6 +78,5 @@
 }
 .description{
     margin-top: 16px;
-    word-wrap: break-word;
     overflow-x: auto;
 }

@@ -49,7 +49,7 @@
             const desc=description.value;
             example.value.forEach((v)=>{delete v.output;delete v.id});
             await make_problem(title.value,desc,difficulty.value,expression,
-            display_parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name),
+            parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name),
             hint.value.map(v=>v.content));
             router.push('/').then();
         }catch(e){
@@ -76,7 +76,7 @@
     function show_example_dialog(){
         const blacklist=["__proto__","__constructor__","prototype","output","is_err"];
         let valid=true;
-        display_parameter.value.forEach((pr)=>{
+        parameter.value.forEach((pr)=>{
             if(blacklist.find(v=>v==pr.name)){
                 show_dialog("error",`invalid parameter name ${pr.name}`);
                 valid=false;
@@ -161,7 +161,7 @@
                             add example
                         </button>
                     </div>
-                    <TestSample  v-for="exp in example" :parameter="display_parameter" :value="exp" @delete="
+                    <TestSample  v-for="exp in example" :parameter="parameter" :value="exp" @delete="
                         (id)=>example=example.filter((v)=>v.id!=id)
                     "/>
                 </div>

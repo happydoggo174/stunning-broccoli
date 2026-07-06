@@ -19,5 +19,5 @@
     });
 </script>
 <template>
-    <div ref="content"></div>
+    <div ref="content" style="word-break: break-all;word-wrap: break-word;padding: 8px;"></div>
 </template>
