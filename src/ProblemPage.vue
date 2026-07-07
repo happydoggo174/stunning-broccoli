@@ -144,7 +144,7 @@ import LatexDisplay from './LatexDisplay.vue';
                         <img :src="detail.profile" alt="author profile" 
                         width="24px" height="24px" class="author-profile">
                     </div>
-                    <LatexDisplay class="description" :content="detail.description">
+                    <LatexDisplay class="description" :content="detail.description" :plaintext="detail.plain_desc">
                     </LatexDisplay>
                     <div class="row">
                         <div class="row react-wrapper">

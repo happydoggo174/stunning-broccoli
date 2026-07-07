@@ -11,9 +11,11 @@
     const content=ref("");
     const level=ref("beginner");
     const category=ref([]);
+    const plain_content=ref(false);
     let idx=0;
     function handle_post(){
-        make_knowledge(title.value,content.value,category.value.map(v=>v.content),level.value).then(()=>{
+        make_knowledge(title.value,content.value,category.value.map(v=>v.content),level.value,plain_content.value)
+        .then(()=>{
             router.push("/");
         },()=>{
             show_dialog("error","unable to post lesson");
@@ -81,7 +83,7 @@
                     <img :src="add_mini" alt="">
                 </button>
             </div>
-            <LatexInput placeholder="your content here" v-model="content"></LatexInput>
+            <LatexInput placeholder="your content here" v-model="content" v-model:is_plain="plain_content"></LatexInput>
             <div class="row diff-row">
                 <span class="level-banner">level</span>
                 <select v-model="level">

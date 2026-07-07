@@ -24,6 +24,7 @@
     const description=ref("");
     const difficulty=ref("easy");
     const hint=ref([]);
+    const plain_desc=ref(false);
     let refresh_handle=null;
     let expression="";
     function remove_parameter(id){
@@ -50,7 +51,7 @@
             example.value.forEach((v)=>{delete v.output;delete v.id});
             await make_problem(title.value,desc,difficulty.value,expression,
             parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name),
-            hint.value.map(v=>v.content));
+            hint.value.map(v=>v.content),plain_desc.value);
             router.push('/').then();
         }catch(e){
             show_dialog("error",e);
@@ -106,7 +107,8 @@
                 </div>
                 <div class="column" style="margin-top: 14px;">
                     <span style="display: block;text-align: center;">description</span>
-                    <LatexInput placeholder="your description here" v-model="description"></LatexInput>
+                    <LatexInput placeholder="your description here" v-model="description" 
+                    v-model:is_plain="plain_desc"></LatexInput>
                 </div>
                 <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">
                     <span>difficulty</span>

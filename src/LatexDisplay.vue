@@ -2,11 +2,16 @@
     import { serialize_expression } from './tool';
     import { watch,useTemplateRef,onMounted } from 'vue';
     const prop=defineProps({
-        content:String
+        content:String,
+        plaintext:Boolean
     });
     const content_tag=useTemplateRef("content");
     onMounted(()=>{
         watch(()=>prop.content,c=>{
+            if(prop.plaintext===true){
+                content_tag.value.innerText=c;
+                return;
+            }
             try{
                 const node=serialize_expression(c,true);
                 content_tag.value.innerHTML='';

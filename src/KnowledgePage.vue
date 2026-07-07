@@ -1,5 +1,5 @@
 <script setup>
-    import { watch,reactive,ref } from 'vue';
+    import { watch,reactive } from 'vue';
     import { get_knowledge_detail } from './api';
     import Menu from './Menu.vue';
     import CategoryLabel from './CategoryLabel.vue';
@@ -37,7 +37,7 @@
             <div class="row" style="border-bottom: 1px solid black;padding-bottom: 4px;margin-top: 8px;">
                 <CategoryLabel v-for="tag in data.category" :tag="tag"></CategoryLabel>
             </div>
-            <LatexDisplay class="content" :content="data.content"></LatexDisplay>
+            <LatexDisplay class="content" :content="data.content" :plaintext="data.plain_content"></LatexDisplay>
         </div>
     </Menu>
 </template>

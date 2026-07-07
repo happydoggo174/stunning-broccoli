@@ -76,7 +76,7 @@ export async function make_comment(problem_id,content) {
     const resp=await fetch(`${BASE_ADDR}/comment/make`,{method:"POST",headers:header,body:data});
     if(!resp.ok){throw 0;}
 }
-export async function make_problem(title,description,difficulty,expr,parameter,test_case,display_name,hint) {
+export async function make_problem(title,description,difficulty,expr,parameter,test_case,display_name,hint,plain_desc) {
     const headers=await make_auth_header(true);
     const data=new FormData();
     const send_case=[];
@@ -103,6 +103,7 @@ export async function make_problem(title,description,difficulty,expr,parameter,t
     data.set("test_case",JSON.stringify(send_case));
     data.set("display_name",JSON.stringify(send_name));
     data.set("hint",JSON.stringify(hint));
+    data.set("plain_desc",plain_desc);
     const resp=await fetch(`${BASE_ADDR}/problem/make`,{method:"POST",headers:headers,body:data});
     if(!resp.ok){throw await resp.text();}
 }
@@ -153,7 +154,7 @@ export async function get_knowledge_detail(knowledge_id) {
     url.searchParams.set("knowledge_id",knowledge_id);
     return json_or_err(await fetch(url));
 }
-export async function make_knowledge(title,content,category,difficulty) {
+export async function make_knowledge(title,content,category,difficulty,plain_content) {
     const header=await make_auth_header(true);
     const table={
         "beginner":"easy",
@@ -165,6 +166,7 @@ export async function make_knowledge(title,content,category,difficulty) {
     data.append("content",content);
     data.append("category",JSON.stringify(category));
     data.append("difficulty",table[difficulty]);
+    data.append("plain_content",plain_content);
     const resp=await fetch(`${BASE_ADDR}/knowledge/make`,{method:"POST",headers:header,body:data});
     if(!resp.ok){
         throw 0;
