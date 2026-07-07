@@ -4,13 +4,9 @@
     const model=defineModel();
     const input_mode=ref("plain text");
     const mode=defineModel("is_plain");
-    watch(input_mode,i=>mode.value=i=='plain text');
+    watch(input_mode,i=>mode.value=(i=='plain text'));
     function handle_input(e){
-        if(input_mode.value=='latex'){
-            model.value=e.target.value;
-        }else{
-            model.value=e.target.value.replace('$','\\$');
-        }
+        model.value=e.target.value;
         const field=e.target;
         field.style.height="auto";
         field.style.height=field.scrollHeight+'px';
