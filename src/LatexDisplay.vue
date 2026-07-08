@@ -12,12 +12,11 @@
                 content_tag.value.innerText=c;
                 return;
             }
+            content_tag.value.innerHTML='';
             try{
                 const node=serialize_expression(c,true);
-                content_tag.value.innerHTML='';
                 content_tag.value.appendChild(node);
             }catch{
-                content_tag.value.innerHTML='';
                 content_tag.value.innerText=c;
             }
         },{immediate:true});

@@ -1,19 +1,40 @@
-<style>
+<style scoped>
   .auth-btn{
     padding: 6px;
     border-radius: 10px;
     background-color: aqua;
     margin-right: 8px;
   }
+  .logout-btn{
+    padding: 4px;
+    border-radius: 8px;
+    border: none;
+    background-color: unset;
+  }
+  .logout-btn:hover{
+    background-color: rgba(0,0,0,0.2);
+  }
+  .menu{
+    background-color: white;
+    padding: 8px;
+    width: 20vw;
+    position: absolute;
+    right: 0px;
+    top: 36px;
+  }
 </style>
 <template>
   <div v-if="isLoading">Loading...</div>
-
-  <div v-else-if="isAuthenticated && auth!=null" class="row">
-    <div style="justify-content: center;" class="column">
-      <p style="color: black;margin-right: 12px;">{{ auth.user?.nickname }}</p>
+  <div class="column" v-else-if="isAuthenticated && auth!=null" style="position: relative;">
+    <div  class="row" @click="show_menu=!show_menu">
+      <div style="justify-content: center;" class="column">
+        <p style="color: black;margin-right: 12px;">{{ auth.user?.nickname }}</p>
+      </div>
+      <img :src="auth.user?.picture" alt="profile picture" width="32px" height="32px" class="circle">
     </div>
-    <img :src="auth.user?.picture" alt="profile picture" width="32px" height="32px" class="circle">
+    <div class="column menu" v-if="show_menu">
+      <button @click="logout" class="logout-btn">logout</button>
+    </div>
   </div>
 
   <div v-else class="row">
@@ -25,11 +46,11 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { get_auth_object,isAuthenticated,isLoading } from './auth';
-import { computed,onMounted,ref,Ref } from 'vue';
-import { useAuth0 } from '@auth0/auth0-vue';
-const auth:Ref<null|ReturnType< typeof useAuth0>>=ref(null);
+import { computed,onMounted,ref } from 'vue';
+const auth=ref(null);
+const show_menu=ref(false);
 onMounted(async()=>{
   auth.value=await get_auth_object();
 });

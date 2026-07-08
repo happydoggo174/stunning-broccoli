@@ -74,8 +74,7 @@
 </script>
 <style scoped>
     .comment-banner{
-        font-size: 18px;
-        margin-top: 14px;
+        font-size: 16px;
         justify-content: center;
     }
     .more-btn{
@@ -100,7 +99,7 @@
     }
 </style>
 <template>
-    <div class="row" style="justify-content: space-between;align-items: center;">
+    <div class="row" style="justify-content: space-between;align-items: center;margin-top: 12px;">
         <span class="comment-banner column">comments({{ comment_cnt }})</span>
         <button class="more-btn" @click="toggle_comment">
             <img :src="more_src" alt="show comments">

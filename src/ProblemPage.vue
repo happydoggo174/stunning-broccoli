@@ -113,10 +113,10 @@ import LatexDisplay from './LatexDisplay.vue';
     @import "./css/problem_detail.css";
 </style>
 <template>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
+    integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" 
+    crossorigin="anonymous">
     <Menu>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
-        integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" 
-        crossorigin="anonymous">
         <Loading v-if="!resolved" :resolved="resolved" :err="err"/>
         <div id="top-panel" v-else>
             <div id="info-panel">

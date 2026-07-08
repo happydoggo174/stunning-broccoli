@@ -12,19 +12,23 @@
     const bottom=ref("");
     const side=ref("");
     function save_value(){
-        if(is_frac.value && serialize_percentage(bottom.value)==0){
+        let bottom_text=bottom.value;
+        if(bottom_text==""){
+            bottom_text="1";
+        }
+        if(is_frac.value && serialize_percentage(bottom_text)==0){
             return show_dialog("error",`denominator can't be 0 for parameter ${prop.name}`);
         }
         const vtop=serialize_percentage(top.value);
-        const vbottom=serialize_percentage(bottom.value);
+        const vbottom=serialize_percentage(bottom_text);
         const vside=serialize_percentage(side.value);
         const value=is_frac.value?vside+vtop/vbottom:serialize_percentage(content.value);
         let display="";
         if(is_frac.value){
             if(!side.value || !vside){
-                display=`${top.value}|${bottom.value}`;
+                display=`${top.value}|${bottom_text}`;
             }else{
-                display=`${side.value}|${top.value}|${bottom.value}`
+                display=`${side.value}|${top.value}|${bottom_text}`
             }
         }else{
             if(content.value.endsWith('%')){

@@ -3,9 +3,6 @@
     import dislike_filled from "@/assets/dislike_filled.svg";
     import done from "@/assets/done.svg";
     import { computed } from 'vue';
-    import green_circle from "@/assets/green_circle.svg";
-    import yellow_circle from "@/assets/yellow_circle.svg";
-    import red_circle from "@/assets/red_circle.svg";
     const prop=defineProps({
         id:Number,
         title:String,
@@ -15,20 +12,17 @@
     });
     const react_image=computed(()=>(prop.reaction>=0)?like_filled:dislike_filled);
     const react_alt=computed(()=>prop.reaction>=0?"like":"dislike");
-    const circle_img=computed(()=>{
-        if(prop.difficulty=="easy"){
-            return green_circle;
-        }
-        if(prop.difficulty=="medium"){
-            return yellow_circle;
-        }
-        return red_circle;
-    });
     const bg_colors={
         easy:"green",
         medium:"yellow",
         hard:"red"
     }
+    const circle=computed(()=>{
+        if(prop.difficulty=='easy'){
+            return 'rgb(24,242,31)';
+        }
+        return prop.difficulty=='medium'?"rgb(255,240,31)":"rgb(234,51,35)";
+    });
 </script>
 <style scoped>
     .solved-img{
@@ -41,7 +35,7 @@
     <RouterLink :to="`/problem/${id}`" :class="'math-problem '+`${bg_colors[difficulty]}-shadow`">
         <div class="difficult-cover">
             <div style="margin-right: 14px;align-items: center;width: 62px;" class="column">
-                <img :src="circle_img" width="24px" height="24px">
+                <div :style="`width:20px;height:20px;border-radius:50%;background-color:${circle}`"></div>
                 <span>{{ difficulty }}</span>
             </div>
             <h2 class="tilte" style="color: black;">{{title}}</h2>

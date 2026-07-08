@@ -6,7 +6,6 @@
     const mode=defineModel("is_plain");
     watch(input_mode,i=>mode.value=(i=='plain text'));
     function handle_input(e){
-        model.value=e.target.value;
         const field=e.target;
         field.style.height="auto";
         field.style.height=field.scrollHeight+'px';
@@ -36,7 +35,7 @@
             tip: use $ latex expression $ to use latex,\$ to use a literal $</div>
         </div>
         <textarea :placeholder="placeholder" @input="handle_input" 
-        style="font-size: 15px;scrollbar-width: none;resize: none;" ></textarea>
+        style="font-size: 15px;scrollbar-width: none;resize: none;" v-model="model"></textarea>
         <div class="column" v-if="input_mode=='latex'" style="color: black;">
             <div class="row" style="justify-content: space-between;">
                 <span style="display: block;text-align: center;">preview</span>

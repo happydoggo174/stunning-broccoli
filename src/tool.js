@@ -62,11 +62,12 @@ export function serialize_expression(text,return_dom=false) {
             }
         }
     }
-    return dompurify.sanitize(out,{
-        ADD_TAGS: ['math', 'annotation', 'semantics', 'mtext', 'mn', 'mo', 'mi', 'mspace', 'mover', 'elements'],
-        ADD_ATTR: ['target'],
-        FORBID_ATTR:["id"],
-        FORBID_TAGS:["svg","form","dialog"],
-        RETURN_DOM_FRAGMENT:return_dom
-    });
+    const cfg=Object.create(null);
+    Object.assign(cfg,{
+        USE_PROFILES:{html:true,mathMl:true,svg:false},//defend against namespace pollution
+        FORBID_ATTR:["id"],//prevent dom clobbering
+        FORBID_TAGS:["svg","form","dialog"],//prevent phising dialog
+        RETURN_DOM_FRAGMENT:return_dom//prevent mxss
+    });//defend against prototype pollution
+    return dompurify.sanitize(out,cfg);
 }
