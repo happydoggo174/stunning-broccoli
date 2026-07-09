@@ -38,7 +38,7 @@
         style="font-size: 15px;scrollbar-width: none;resize: none;" v-model="model"></textarea>
         <div class="column" v-if="input_mode=='latex'" style="color: black;">
             <div class="row" style="justify-content: space-between;">
-                <span style="display: block;text-align: center;">preview</span>
+                <span class="text-center">preview</span>
                 <div class="row">
                     <span style="margin-right: 8px;">font size</span>
                     <input type="range" v-model="font_size" min="15" max="50">

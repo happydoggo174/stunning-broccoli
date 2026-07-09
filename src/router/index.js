@@ -1,9 +1,14 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import ChallengePage from '@/ChallengePage.vue';
 import HomePage from '@/HomePage.vue';
 const routes = [
   {
-    path: '/',
-    component: HomePage,
+    path: '/challenge',
+    component: ChallengePage,
+  },
+  {
+    path:'/',
+    component:HomePage
   },
   {
     path:'/problem/:id',

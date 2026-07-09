@@ -22,8 +22,8 @@
     <div class="column" style="color: black;margin-left: 18px;margin-right: 18px;">
         <div class="row" style="justify-content: space-between;align-items: center;">
             <div></div>
-            <h2 style="display: block;text-align: center;color: red;">wrong answer</h2>
-            <button @click="emit('closed')" style="border: none;background-color: unset;">
+            <h2 style="color: red;" class="text-center">wrong answer</h2>
+            <button @click="emit('closed')" class="borderless no-bg">
                 <img :src="close" alt="close">
             </button>
         </div>

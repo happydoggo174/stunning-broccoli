@@ -106,7 +106,7 @@
                     <input type="text" placeholder="problem title here" id="title" v-model="title">
                 </div>
                 <div class="column" style="margin-top: 14px;">
-                    <span style="display: block;text-align: center;">description</span>
+                    <span class="text-center">description</span>
                     <LatexInput placeholder="your description here" v-model="description" 
                     v-model:is_plain="plain_desc"></LatexInput>
                 </div>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="column hint-row">
                     <div class="row" style="align-items: center;">
-                        <span style="display: block;text-align: center;font-size: 18px;">hints</span>
+                        <span style="font-size: 18px;" class="text-center">hints</span>
                         <button class="add-hint-btn hover-shadow" @click="add_hint">
                             <img :src="add_mini" alt="">
                         </button>

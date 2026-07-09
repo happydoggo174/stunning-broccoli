@@ -61,7 +61,7 @@
         <div class="row" id="search-row" v-if="show_banner">
           <div></div>
           <h2 id="search-header">search reesult for {{ query }}</h2>
-          <button @click="show_banner=false" style="border: none;background-color: unset;">
+          <button @click="show_banner=false" class="borderless no-bg">
             <img :src="close" alt="">
           </button>
         </div>

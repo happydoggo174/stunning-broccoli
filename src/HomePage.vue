@@ -1,80 +1,61 @@
 <script setup>
-  import { onMounted,ref,watch } from 'vue';
-  import MathObject from './MathObject.vue';
-  import Menu from './Menu.vue';
-  import { get_problems,get_favorite_problem,get_completed } from './api.js';
-  import Loading from './Loading.vue';
-  import filter_img from '@/assets/filter.svg';
-  import { sync_completion } from './completion';
-  import { show_dialog } from './notificationdaemon';
-  import { isAuthenticated } from './auth';
-  const err=ref(null);
-  const resolved=ref(false);
-  const problems=ref([]);
-  const filter=ref('all');
-  onMounted(async()=>{
-    watch(()=>isAuthenticated.value,async()=>{
-      resolved.value=false;
-      try{
-        problems.value=await get_problems();
-      }catch{
-        err.value="can't load problem";
-        return;
-      }
-      resolved.value=true;
-      if(isAuthenticated.value){
-        sync_completion().then((sync_count)=>{
-          if(sync_count){
-            show_dialog("done","completed problem saved",false);
-          }
-        }).catch(()=>{
-          show_dialog("error","can't save completed problem");
-        });
-      }
-    },{immediate:true});
-    watch(filter,async(v)=>{
-      try{  
-        if(v=='all' || v==''){
-          problems.value=await get_problems();
-        }else{
-          if(v=='favorite'){
-            problems.value=await get_favorite_problem();
-          }else{
-            if(v=='completed'){
-              problems.value=await get_completed();
-            }
-          }
-        }
-      }catch{
+    import Menu from './Menu.vue';
+    import { get_problems,get_knowledge_home } from './api.js';
+    import MathObject from './MathObject.vue';
+    import KnowledgeWidget from './KnowledgeWidget.vue';
+    import { onMounted,ref } from 'vue';
+    import next from "@/assets/next.svg";
+    import router from './router/index.js';
+    const challenge=ref([]);
+    const lesson=ref([]);
+    onMounted(async()=>{
+        try{
+            challenge.value=(await get_problems()).slice(0,2);
+            lesson.value=(await get_knowledge_home()).slice(0,2);
+        }catch{
 
-      }
+        }
     });
-  });
 </script>
-<style>
-  @import './css/index.css';
+<style scoped>
+    .outer-col{
+        margin-left: 24px;
+        margin-right: 24px;
+        color: black;
+    }
 </style>
 <template>
-  <Menu>
-    <Loading :err="err" :resolved="resolved"/>
-    <div class="column" v-if="resolved && !err">
-      <div class="row" style="color: black;margin-left: 14px;margin-top: 12px;" v-if="isAuthenticated">
-        <div class="row" style="align-items: center;"><img :src="filter_img" alt="" style="margin-left: 4px;">filter</div>
-        <select name="" id="" style="margin-left: 6px;border-radius: 8px;" v-model="filter">
-          <option value="all">all</option>
-          <option value="favorite">favorite</option>
-          <option value="completed">completed</option>
-        </select>
-      </div>
-      <MathObject
-        v-for="prob in problems"
-        :key="prob.id"
-        :title="prob.title"
-        :difficulty="prob.difficulty"
-        :reaction="prob.reaction"
-        :id="prob.id"
-        :problem_status="prob.status" 
-      />
-    </div>
-  </Menu>
+    <Menu>
+        <div class="column outer-col">
+            <div class="column">
+                <div class="row" style="justify-content: space-between;">
+                    <div></div>
+                    <h2>learn</h2>
+                    <button class="borderless no-bg" @click="router.push('/learn')">
+                        <img :src="next" alt="more lesson"></button>
+                </div>
+                <span class="text-center">learn about math and how it's used in the real world</span>
+                <KnowledgeWidget :category="kwd.category" :title="kwd.title" :id="kwd.id" :author="kwd.author_name"
+                :key="kwd.id" :difficulty="kwd.difficulty" v-for="kwd in lesson" ></KnowledgeWidget>
+            </div>
+            <div class="column">
+                <div class="row" style="justify-content: space-between;">
+                    <div></div>
+                    <h2>challenge</h2>
+                    <button class="borderless no-bg" @click="router.push('/challenge').then()">
+                        <img :src="next" alt="more challenge"></button>
+                </div>
+                <span class="text-center">try out your knowledge in real world application and remember better</span>
+                <MathObject
+                    v-for="prob in challenge"
+                    :key="prob.id"
+                    :title="prob.title"
+                    :difficulty="prob.difficulty"
+                    :reaction="prob.reaction"
+                    :id="prob.id"
+                    :problem_status="prob.status" 
+                />
+            </div>
+        </div>
+    </Menu>
 </template>

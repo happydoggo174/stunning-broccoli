@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch,ref,computed,nextTick,useTemplateRef} from 'vue';
+import { reactive, watch,ref,computed} from 'vue';
 import { get_problem_detail,get_problem_status,like_problem,dislike_problem,remove_problem } from './api.js';
 import Loading from './Loading.vue';
 import Menu from './Menu.vue';

@@ -49,7 +49,7 @@
 </style>
 <template>
     <div class="column" style="background-color: white;padding: 12px;border-radius: 16px;border: 1px solid black;color: black;">
-        <h2 style="display: block;text-align: center;">add an example</h2>
+        <h2 class="text-center">add an example</h2>
         <div class="column">
             <ExampleInput :name="param.name" v-for="param in parameter" ref="param-list"></ExampleInput>
         </div>
