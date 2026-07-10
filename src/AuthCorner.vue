@@ -66,5 +66,5 @@ const signup = () =>
 const login = () => auth.value?.loginWithRedirect()
 
 const logout = () =>
-  auth.value?.logout({ logoutParams: { returnTo: window.location.origin } })
+  auth.value?.logout({ logoutParams: { returnTo: window.location.origin+`/${import.meta.env.VITE_BASE}/` } })
 </script>
