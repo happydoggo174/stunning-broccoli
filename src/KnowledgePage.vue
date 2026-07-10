@@ -1,21 +1,51 @@
 <script setup>
-    import { watch,reactive } from 'vue';
+    import { watch,reactive,computed } from 'vue';
     import { get_knowledge_detail } from './api';
     import Menu from './Menu.vue';
     import CategoryLabel from './CategoryLabel.vue';
     import LatexDisplay from './LatexDisplay.vue';
     import { show_profile } from './tool';
+    import like from "@/assets/like.svg";
+    import dislike from "@/assets/dislike.svg";
+    import like_filled from "@/assets/like_filled.svg";
+    import dislike_filled from "@/assets/dislike_filled.svg";
+    import { isAuthenticated } from './auth';
+    import { like_knowledge,dislike_knowledge } from './api';
     const prop=defineProps({
         id:Number
     });
     const data=reactive({});
-    watch(()=>prop.id,async(id)=>{
+    watch(()=>[prop.id,isAuthenticated.value],async(id)=>{
         try{
             Object.assign(data,await get_knowledge_detail(prop.id));  
         }catch(e){
             console.log(e);
         }   
     },{immediate:true});
+    const like_src=computed(()=>{
+        return data.reaction==='liked'?like_filled:like;
+    });
+    const dislike_src=computed(()=>{
+        return data.reaction==='disliked'?dislike_filled:dislike;
+    });
+    function handle_like(){
+        like_knowledge(prop.id).then(()=>{
+            if(data.reaction=='disliked'){
+                data.dislikes--;
+            }
+            data.likes++;
+            data.reaction='liked';
+        });
+    }
+    function handle_dislike(){
+        dislike_knowledge(prop.id).then(()=>{
+            if(data.reaction=='liked'){
+                data.likes--;
+            }
+            data.dislikes++;
+            data.reaction='disliked';
+        });;
+    }
 </script>
 <style scoped>
     .content{
@@ -34,6 +64,21 @@
         border-radius: 16px;
         color: black;
         text-decoration: underline;
+    }
+    .react-wrapper{
+        margin-top: 16px;
+        border: 1px solid black;
+        padding: 4px;
+        border-radius: 12px;
+    }
+    .react-btn{
+        border: none;
+        background-color: unset;
+        border-radius: 10px;
+        transition: 0.12s background-color ease-in-out;
+    }
+    .react-btn:hover{
+        background-color: rgb(46, 134, 139);
     }
 </style>
 <template>
@@ -55,6 +100,18 @@
                 <span class="pbanner">practice problem</span>
                 <RouterLink :to="`/problem/${prob.id}`" v-for="prob in data.related_problem" class="rprob">
                 {{ prob.title }}</RouterLink>
+            </div>
+            <div class="row">
+                <div class="row react-wrapper" v-if="data!==undefined">
+                    <button @click="handle_like" class="react-btn">
+                        <img :src="like_src">
+                    </button>
+                    <span style="margin-left: 12px;">{{ data.likes-data.dislikes }}</span>
+                    <button style="margin-left: 12px;" @click="handle_dislike" class="react-btn">
+                        <img :src="dislike_src" >
+                    </button>
+                </div>
+                <div class="spacer"></div>
             </div>
         </div>
     </Menu>

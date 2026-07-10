@@ -150,9 +150,10 @@ export async function get_knowledge_home(last_id) {
     return json_or_err(await fetch(url));
 }
 export async function get_knowledge_detail(knowledge_id) {
+    const header=await make_auth_header();
     const url=new URL(`${BASE_ADDR}/knowledge/detail`);
     url.searchParams.set("knowledge_id",knowledge_id);
-    return json_or_err(await fetch(url));
+    return json_or_err(await fetch(url,{headers:header}));
 }
 export async function make_knowledge(title,content,category,difficulty,plain_content) {
     const header=await make_auth_header(true);
@@ -176,4 +177,20 @@ export async function get_user_profile(uid) {
     const url=new URL(`${BASE_ADDR}/account/detail`);
     url.searchParams.set("uid",uid);
     return await json_or_err(await fetch(url));
+}
+export async function like_knowledge(kid) {
+    const header=await make_auth_header(true);
+    const resp=await fetch(`${BASE_ADDR}/knowledge/react?reaction=liked&knowledge_id=${kid}`,
+    {method:"POST","headers":header});
+    if(!resp.ok){
+        throw 0;
+    }
+}
+export async function dislike_knowledge(kid) {
+    const header=await make_auth_header(true);
+    const resp=await fetch(`${BASE_ADDR}/knowledge/react?reaction=disliked&knowledge_id=${kid}`,
+    {method:"POST","headers":header});
+    if(!resp.ok){
+        throw 0;
+    }
 }

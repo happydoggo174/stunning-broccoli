@@ -26,7 +26,7 @@
 <template>
   <div v-if="isLoading">Loading...</div>
   <div class="column" v-else-if="isAuthenticated && auth!=null" style="position: relative;">
-    <div  class="row" @click="show_menu=!show_menu">
+    <div  class="row" @click="show_menu=!show_menu" @dblclick="show_profile(uid)">
       <div style="justify-content: center;" class="column">
         <p style="color: black;margin-right: 12px;">{{ auth.user?.nickname }}</p>
       </div>
@@ -47,8 +47,9 @@
 </template>
 
 <script setup>
-import { get_auth_object,isAuthenticated,isLoading } from './auth';
+import { get_auth_object,isAuthenticated,isLoading,uid } from './auth';
 import { computed,onMounted,ref } from 'vue';
+import { show_profile } from './tool';
 const auth=ref(null);
 const show_menu=ref(false);
 onMounted(async()=>{
@@ -65,6 +66,8 @@ const signup = () =>
 
 const login = () => auth.value?.loginWithRedirect()
 
-const logout = () =>
-  auth.value?.logout({ logoutParams: { returnTo: window.location.origin+`/${import.meta.env.VITE_BASE}/` } })
+const logout = () =>{
+  const return_addr=window.location.origin+`/${import.meta.env.VITE_BASE}/`;
+  auth.value?.logout({ logoutParams: { returnTo:  return_addr} });
+}
 </script>
