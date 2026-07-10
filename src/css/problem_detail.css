@@ -79,3 +79,7 @@
     margin-top: 16px;
     overflow-x: auto;
 }
+.author-row{
+    justify-content: center;
+    align-items: center;
+}

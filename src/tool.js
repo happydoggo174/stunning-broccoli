@@ -1,5 +1,4 @@
-import { renderToString } from "katex";
-import dompurify from "dompurify";
+import router from "./router";
 export function parse_percentage(n){
     if(n===null || n===undefined){return undefined;}
     return n.endsWith('%')?parseFloat(n.slice(0,n.length-1))+'%':parseFloat(n);
@@ -35,39 +34,6 @@ export function serialize_display_row(output){
 export function serialize_display(output){
     return output.map(row=>serialize_display_row(row));
 }
-export function serialize_expression(text,return_dom=false) {
-    let out = "";
-    for(let i=0;i<text.length;i++){
-        if(text[i]=='$' && (!i || text[i-1]!='\\')){
-            let found=false;
-            let j=i+1;
-            for(;j<text.length;j++){
-                if(text[j]=='$' && (!j || text[j-1]!='\\')){
-                    found=true;
-                    out+=renderToString(text.slice(i+1,j));
-                    break;
-                }
-            }
-            if(!found){
-                out+=text.slice(i,text.length);
-                break;
-            }
-            i=j;
-        }else{
-            if(text[i]=='\\' && i<text.length-1 && text[i+1]=='$'){
-                out+='$';
-                i++;
-            }else{
-                out+=text[i];
-            }
-        }
-    }
-    const cfg=Object.create(null);
-    Object.assign(cfg,{
-        USE_PROFILES:{html:true,mathMl:true,svg:false},//defend against namespace pollution
-        FORBID_ATTR:["id"],//prevent dom clobbering
-        FORBID_TAGS:["svg","form","dialog"],//prevent phising dialog
-        RETURN_DOM_FRAGMENT:return_dom//prevent mxss
-    });//defend against prototype pollution
-    return dompurify.sanitize(out,cfg);
+export function show_profile(uid){
+    router.push(`/profile/${uid}`);
 }

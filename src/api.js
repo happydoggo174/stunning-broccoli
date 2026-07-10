@@ -172,3 +172,8 @@ export async function make_knowledge(title,content,category,difficulty,plain_con
         throw 0;
     }
 }
+export async function get_user_profile(uid) {
+    const url=new URL(`${BASE_ADDR}/account/detail`);
+    url.searchParams.set("uid",uid);
+    return await json_or_err(await fetch(url));
+}

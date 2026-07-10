@@ -4,12 +4,12 @@
     import Menu from './Menu.vue';
     import CategoryLabel from './CategoryLabel.vue';
     import LatexDisplay from './LatexDisplay.vue';
+    import { show_profile } from './tool';
     const prop=defineProps({
         id:Number
     });
     const data=reactive({});
     watch(()=>prop.id,async(id)=>{
-        console.log(id);
         try{
             Object.assign(data,await get_knowledge_detail(prop.id));  
         }catch(e){
@@ -43,7 +43,7 @@
     <Menu>
         <div class="column" style="color: black;margin-left: 12vw;margin-right: 12vw;margin-top: 12px;">
             <h2 style="font-weight: bold;font-size: 24px;">{{ data.title }}</h2>
-            <div class="row" style="align-items: center;">
+            <div class="row" style="align-items: center;" @click="show_profile(data.author_id)">
                 <img :src="data.profile" alt="" width="24px" height="24px" style="margin-right: 8px;" class="circle">
                 <span>{{ data.author_name }}</span>
             </div>

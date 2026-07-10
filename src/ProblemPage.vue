@@ -19,6 +19,7 @@ import options from "@/assets/options.svg";
 import router from "./router"
 import HintWidget from './HintWidget.vue';
 import LatexDisplay from './LatexDisplay.vue';
+import { show_profile } from './tool.js';
     const err=ref(null);
     const resolved=ref(false);
     const prop=defineProps({
@@ -139,7 +140,7 @@ import LatexDisplay from './LatexDisplay.vue';
                             </button>
                         </div>
                     </div>
-                    <div class="row" style="justify-content: center;align-items: center;">
+                    <div class="row author-row" @click="show_profile(detail.author_id)">
                         <h2 class="problem-author">{{detail.author}}</h2>
                         <img :src="detail.profile" alt="author profile" 
                         width="24px" height="24px" class="author-profile">

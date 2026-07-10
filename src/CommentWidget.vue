@@ -5,6 +5,7 @@
     import { isAuthenticated,uid } from './auth';
     import { remove_comment } from './api';
     import { show_dialog,show_confirm } from './notificationdaemon';
+    import { show_profile } from './tool';
     const prop=defineProps({
         username:String,
         profile:String,
@@ -46,7 +47,7 @@
 <template>
     <div class="comment">
         <div class="row" style="justify-content: space-between;">
-            <div class="row">      
+            <div class="row" @click="show_profile(cid)">      
                 <img :src="profile" :alt="`profile picture`" width="24px" height="24px" class="circle">
                 <span style="margin-left: 14px;">{{ username }}</span>
             </div>

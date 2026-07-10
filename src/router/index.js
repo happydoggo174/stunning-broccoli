@@ -44,12 +44,15 @@ const routes = [
     })
   },
   {
-    path:'/latex',
-    component:()=>import("@/latex.vue")
-  },
-  {
     path:'/make_lesson',
     component:()=>import("@/MakeKnowledge.vue")
+  },
+  {
+    path:'/profile/:uid',
+    component:()=>import("@/ProfilePage.vue"),
+    props:route=>({
+      uid:route.params.uid
+    })
   }
 ]
 
