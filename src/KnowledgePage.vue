@@ -11,6 +11,7 @@
     import dislike_filled from "@/assets/dislike_filled.svg";
     import { isAuthenticated } from './auth';
     import { like_knowledge,dislike_knowledge } from './api';
+    import { show_dialog } from './notificationdaemon';
     const prop=defineProps({
         id:Number
     });
@@ -29,6 +30,10 @@
         return data.reaction==='disliked'?dislike_filled:dislike;
     });
     function handle_like(){
+        if(!isAuthenticated.value){
+            show_dialog("error","please login to like");
+            return;
+        }
         like_knowledge(prop.id).then(()=>{
             if(data.reaction=='disliked'){
                 data.dislikes--;
@@ -38,6 +43,10 @@
         });
     }
     function handle_dislike(){
+        if(!isAuthenticated.value){
+            show_dialog("error","please login to dislike");
+            return;
+        }
         dislike_knowledge(prop.id).then(()=>{
             if(data.reaction=='liked'){
                 data.likes--;

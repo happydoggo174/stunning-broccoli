@@ -6,20 +6,45 @@
     import router from './router';
     import { show_dialog } from './notificationdaemon';
     import add_mini from "@/assets/add_mini.svg";
+    import add from "@/assets/add.svg";
     import Menu from './Menu.vue';
+    import PracticeInput from './PracticeInput.vue';
     const title=ref("");
     const content=ref("");
     const level=ref("beginner");
     const category=ref([]);
     const plain_content=ref(false);
+    const related_problem=ref([]);
     let idx=0;
     function handle_post(){
-        make_knowledge(title.value,content.value,category.value.map(v=>v.content),level.value,plain_content.value)
-        .then(()=>{
+        let vaild=true;
+        const related_pid=related_problem.value.map(v=>{
+            try{
+                const part=v.address.split("/")
+                const pid=parseInt(part[part.length-1]);
+                if(pid===undefined || Number.isNaN(pid)){
+                    throw 0;
+                }
+                return pid;
+            }catch(e){
+                console.log(e);
+                vaild=false;
+                show_dialog("error",`invalid challenge url ${v.address}`);
+            }
+        }).filter(v=>v!==undefined);
+        if(!vaild){return;}
+        make_knowledge(title.value,content.value,category.value.map(v=>v.content),level.value,plain_content.value,
+        related_pid).then(()=>{
             router.push("/");
         },()=>{
             show_dialog("error","unable to post lesson");
         });
+    }
+    function add_related(){
+        related_problem.value.push({"address":"","id":++idx});
+    }
+    function drop_related(idx){
+        related_problem.value=related_problem.value.filter(v=>v.id!=idx);
     }
 </script>
 <style scoped>
@@ -65,6 +90,20 @@
     .cat-label{
         margin-right: 8px;
     }
+    .practice-col{
+        margin-top: 16px;
+    }
+    .practice-input{
+        margin-bottom: 8px;
+    }
+    .padd-btn{
+        margin-left: 8px;
+        transform: translateY(0px);
+        transition: 0.25s transform ease-in-out;
+    }
+    .padd-btn:hover{
+        transform: translateY(-6px);
+    }
 </style>
 <template>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
@@ -92,7 +131,18 @@
                     <option value="advanced">advanced</option>
                 </select>
             </div>
-            <button class="post-btn" @click="handle_post">post</button>
+            <div class="column practice-col">
+                <div class="row" style="justify-content: center;align-items: center;margin-bottom: 16px;">
+                    <span style="position: relative;">practice problem</span>
+                    <button class="circle padd-btn" @click="add_related">
+                        <img :src="add_mini" alt="" >    
+                    </button>
+                </div>
+                <PracticeInput v-for="rel in related_problem" v-model="rel.address" class="practice-input"
+                @remove="drop_related" :id="rel.id" :key="rel.id"></PracticeInput>
+                
+            </div>
+            <button class="post-btn hover-shadow" @click="handle_post">post</button>
         </div>
     </Menu>
 </template>
