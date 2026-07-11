@@ -34,6 +34,7 @@
     }
     .current{
         flex-grow: 2;
+        color: white;
     }
     .empty-banner{
         display: block;
@@ -51,9 +52,9 @@
             <div class="column">
                 <div class="row">
                     <button class="spacer page-btn borderless" @click="page=0"
-                    :class="page?'':'current'">completed problem</button>
+                    :class="page?'':'current'" :style="!page?'background-color:green':''">completed problem</button>
                     <button class="spacer page-btn borderless" @click="page=1" 
-                    :class="page?'current':''">favorite problem</button>
+                    :class="page?'current':''" :style="page?'background-color:pink;color:black':''">favorite problem</button>
                 </div>
                 <div class="column">
                     <div v-if="!display_problem.value.length" class="empty-banner">
