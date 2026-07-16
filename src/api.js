@@ -25,7 +25,11 @@ export async function get_problem_detail(problem_id){
 }
 export async function get_problems(page){
     const headers=await make_auth_header();
-    const resp=await fetch(`${BASE_ADDR}/problem/home`,{headers:headers});
+    const url=new URL(`${BASE_ADDR}/problem/home`);
+    if(page!==undefined){
+        url.searchParams.set("page",page);
+    }
+    const resp=await fetch(url,{headers:headers});
     return json_or_err(resp);
 }
 async function react_problem(problem_id,reaction){

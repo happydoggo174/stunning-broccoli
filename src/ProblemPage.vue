@@ -29,6 +29,7 @@ import { show_profile } from './tool.js';
     let detail=reactive({});
     let status=reactive({});
     let count=0;
+    let page=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
         if(!isAuthenticated.value){

@@ -25,14 +25,14 @@
 </style>
 <template>
   <div v-if="isLoading">Loading...</div>
-  <div class="column" v-else-if="isAuthenticated && auth!=null" style="position: relative;">
-    <div  class="row" @click="show_menu=!show_menu" @dblclick="show_profile(uid)">
+  <div class="column" v-else-if="isAuthenticated && auth!=null" style="position: relative;" ref="profile">
+    <div  class="row" @click="toggle_menu">
       <div style="justify-content: center;" class="column">
         <p style="color: black;margin-right: 12px;">{{ auth.user?.nickname }}</p>
       </div>
       <img :src="auth.user?.picture" alt="profile picture" width="32px" height="32px" class="circle">
     </div>
-    <div class="column menu" v-if="show_menu">
+    <div class="column menu" v-if="show_menu" ref="menu">
       <button @click="logout" class="logout-btn">logout</button>
     </div>
   </div>
@@ -48,10 +48,12 @@
 
 <script setup>
 import { get_auth_object,isAuthenticated,isLoading,uid } from './auth';
-import { computed,onMounted,ref } from 'vue';
+import { computed,onMounted,ref,useTemplateRef } from 'vue';
 import { show_profile } from './tool';
 const auth=ref(null);
 const show_menu=ref(false);
+const menu=useTemplateRef("menu");
+const profile=useTemplateRef("profile");
 onMounted(async()=>{
   auth.value=await get_auth_object();
 });
@@ -69,5 +71,21 @@ const login = () => auth.value?.loginWithRedirect()
 const logout = () =>{
   const return_addr=window.location.origin+`/${import.meta.env.VITE_BASE}/`;
   auth.value?.logout({ logoutParams: { returnTo:  return_addr} });
+}
+function handle_click(e){
+  if(menu.value?.contains(e.target) || profile.value?.contains(e.target)){
+    
+  }else{
+    document.removeEventListener('click',handle_click);
+    show_menu.value=false;
+  }
+}
+function toggle_menu(){
+  if(show_menu.value){
+    show_profile(uid.value);
+  }else{
+    show_menu.value=true;
+    document.addEventListener('click',handle_click);
+  }
 }
 </script>

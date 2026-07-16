@@ -43,7 +43,13 @@
         }
     }
     async function handle_submit(){
-        try{   
+        try{
+            if(!description.value.length){
+                return show_dialog("error","a description is required");
+            }
+            if(description.value.length>600){
+                return show_dialog("error",`description too long:${description.value.length}/600 character limit`);
+            }   
             if(!title.value.length){
                 return show_dialog("error","a title is required for submission");
             }
@@ -142,8 +148,8 @@
                     <span>input</span>
                     <Parameter v-for="param in parameter" :key="param.id" :name="param.name" :idx="param.id" 
                     @remove="remove_parameter" v-model="param.name"/>
-                    <button style="margin-left: 14px;border-radius: 40%;padding: 4px;">
-                        <img :src="add" v-once alt="" @click="add_parameter">
+                    <button style="margin-left: 14px;border-radius: 40%;padding: 2px;background-color: white;">
+                        <img :src="add_mini" v-once alt="" @click="add_parameter">
                     </button>
                 </div>
                 <Calculator :buttons="parameter.map((v)=>v.name)" @input="edit_expression"

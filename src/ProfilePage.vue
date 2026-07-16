@@ -1,5 +1,5 @@
 <script setup>
-    import { get_user_profile } from './api';
+    import { get_user_profile,get_favorite_problem } from './api';
     import { onMounted,reactive,ref,computed } from 'vue';
     import MathObject from './MathObject.vue';
     import Menu from './Menu.vue';
@@ -8,6 +8,7 @@
     });
     const account=reactive({});
     const problem=ref([]);
+    const favorite=ref(null);
     const page=ref(0);
     onMounted(()=>{
         get_user_profile(prop.uid).then((prof)=>{
@@ -15,9 +16,13 @@
             problem.value=prof["problem"];
         });
     });
-    const favorite=computed(()=>problem.value.filter(v=>v.reaction=='liked'));
+    async function load_favorite(){
+        if(favorite.value==null){
+            favorite.value=await get_favorite_problem();
+        }
+    }
     const completed=computed(()=>problem.value.filter(v=>v.status=='solved'));
-    const display_problem=computed(()=>page.value?favorite:completed);
+    const display_problem=computed(()=>page.value?favorite.value:completed.value);
 </script>
 <style scoped>
     .user-info{
@@ -53,16 +58,16 @@
                 <div class="row">
                     <button class="spacer page-btn borderless" @click="page=0"
                     :class="page?'':'current'" :style="!page?'background-color:green':''">completed problem</button>
-                    <button class="spacer page-btn borderless" @click="page=1" 
+                    <button class="spacer page-btn borderless" @click="()=>{load_favorite();page=1}" 
                     :class="page?'current':''" :style="page?'background-color:pink;color:black':''">favorite problem</button>
                 </div>
                 <div class="column">
-                    <div v-if="!display_problem.value.length" class="empty-banner">
+                    <div v-if="!display_problem?.length" class="empty-banner">
                         nothing to see here
                     </div>
                     <MathObject
                         v-else
-                        v-for="prob in display_problem.value"
+                        v-for="prob in display_problem"
                         :key="prob.id"
                         :title="prob.title"
                         :difficulty="prob.difficulty"
