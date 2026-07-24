@@ -17,8 +17,8 @@ export async function init_auth(){
         supabase.auth.onAuthStateChange((ev,s)=>{
             isAuthenticated.value=(s!=null);
             uid.value=s?.user.id;
-            if(s){
-                //auth.value=s;
+            if(s!=null){
+                auth.value.data.session=s;
             }
         });
     });

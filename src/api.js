@@ -161,7 +161,6 @@ export async function get_knowledge_detail(knowledge_id) {
     return json_or_err(await fetch(url,{headers:header}));
 }
 export async function make_knowledge(title,content,category,difficulty,plain_content,related) {
-    console.log("making");
     try{
         const header=await make_auth_header(true);
         const table={
@@ -178,8 +177,6 @@ export async function make_knowledge(title,content,category,difficulty,plain_con
         if(related.length){
             data.append("related_problem",JSON.stringify(related));
         }
-    
-        console.log("fetching");
         const resp=await fetch(`${BASE_ADDR}/knowledge/make`,{method:"POST",headers:header,body:data});
         if(!resp.ok){
             throw 0;
@@ -226,8 +223,6 @@ export async function register(email,name,password,profile) {
 export async function get_self_detail(auth){
     const uid=auth?.data.session?.user.id;
     if(uid==undefined){
-        console.log(JSON.stringify(auth));
-        console.log("error getting uid");
         return {};
     }
     try{
