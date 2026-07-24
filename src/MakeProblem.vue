@@ -15,6 +15,7 @@
     import { show_dialog } from './notificationdaemon';
     import TestSample from './TestSample.vue';
     import LatexInput from './LatexInput.vue';
+    import "katex/dist/katex.min.css";
     const page=ref(0);
     let count=3;
     const parameter=ref([{name:"x",id:0},{name:"y",id:1}]);
@@ -99,9 +100,6 @@
     @import './css/MakeProblem.css';
 </style>
 <template>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
-    integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" 
-    crossorigin="anonymous">
     <Menu>
         <div class="example-bg" v-if="is_example">
             <ExamplePopup :parameter="parameter" @close="is_example=false" @added="handle_add_example"/>

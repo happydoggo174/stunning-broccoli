@@ -6,7 +6,7 @@
     import router from './router';
     import { show_dialog } from './notificationdaemon';
     import add_mini from "@/assets/add_mini.svg";
-    import add from "@/assets/add.svg";
+    import "katex/dist/katex.min.css";
     import Menu from './Menu.vue';
     import PracticeInput from './PracticeInput.vue';
     const title=ref("");
@@ -106,9 +106,6 @@
     }
 </style>
 <template>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" 
-    integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" 
-    crossorigin="anonymous">
     <Menu>  
         <div class="column main-column">
             <div class="row title-row">

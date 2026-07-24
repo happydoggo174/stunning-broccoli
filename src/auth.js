@@ -14,12 +14,10 @@ export async function init_auth(){
         auth.value=auth0;
         isLoading.value=false;
         isAuthenticated.value=auth0.data.session!=null;
-        supabase.auth.onAuthStateChange((ev,s)=>{
+        supabase.auth.onAuthStateChange((_,s)=>{
             isAuthenticated.value=(s!=null);
             uid.value=s?.user.id;
-            if(s!=null){
-                auth.value.data.session=s;
-            }
+            auth.value.data.session=s;
         });
     });
 }

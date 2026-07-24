@@ -77,9 +77,7 @@ const logout = () =>{
   supabase.auth.signOut().then();
 }
 function handle_click(e){
-  if(menu.value?.contains(e.target) || profile.value?.contains(e.target)){
-    
-  }else{
+  if(!menu.value?.contains(e.target) && !profile.value?.contains(e.target)){
     document.removeEventListener('click',handle_click);
     show_menu.value=false;
   }

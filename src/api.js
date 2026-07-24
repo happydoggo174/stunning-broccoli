@@ -161,29 +161,24 @@ export async function get_knowledge_detail(knowledge_id) {
     return json_or_err(await fetch(url,{headers:header}));
 }
 export async function make_knowledge(title,content,category,difficulty,plain_content,related) {
-    try{
-        const header=await make_auth_header(true);
-        const table={
-            "beginner":"easy",
-            "intermediate":"medium",
-            "advanced":"hard"
-        };
-        const data=new FormData();
-        data.append("title",title);
-        data.append("content",content);
-        data.append("category",JSON.stringify(category));
-        data.append("difficulty",table[difficulty]);
-        data.append("plain_content",plain_content);
-        if(related.length){
-            data.append("related_problem",JSON.stringify(related));
-        }
-        const resp=await fetch(`${BASE_ADDR}/knowledge/make`,{method:"POST",headers:header,body:data});
-        if(!resp.ok){
-            throw 0;
-        }
-    }catch(e){
-        console.log(e);
-        return;
+    const header=await make_auth_header(true);
+    const table={
+        "beginner":"easy",
+        "intermediate":"medium",
+        "advanced":"hard"
+    };
+    const data=new FormData();
+    data.append("title",title);
+    data.append("content",content);
+    data.append("category",JSON.stringify(category));
+    data.append("difficulty",table[difficulty]);
+    data.append("plain_content",plain_content);
+    if(related.length){
+        data.append("related_problem",JSON.stringify(related));
+    }
+    const resp=await fetch(`${BASE_ADDR}/knowledge/make`,{method:"POST",headers:header,body:data});
+    if(!resp.ok){
+        throw 0;
     }
 }
 export async function get_user_profile(uid) {
