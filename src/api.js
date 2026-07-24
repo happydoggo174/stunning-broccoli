@@ -1,15 +1,16 @@
 const BASE_ADDR=window.location.href.includes("localhost")?"http://localhost:3000":`https://probable-giggle-k0p1.onrender.com`;
-import { get_auth_object } from "./auth";
+import { get_auth_object,isAuthenticated } from "./auth";
 async function make_auth_header(required=false){
     const auth0=await get_auth_object();
-    if(!auth0 || !auth0.isAuthenticated){
+    if(!auth0 || !isAuthenticated.value || auth0.data.session==null){
         if(required){throw new Error("missing auth");}
         return {};
     }
     try{
-        const token=await auth0.getAccessTokenSilently();
+        const token=auth0.data.session.access_token;
         return {"Authorization":`Bearer ${token}`}; 
-    }catch{
+    }catch(e){
+        console.log(e);
         if(required){throw new Error("missing auth");}
         return {};
     }
@@ -160,24 +161,32 @@ export async function get_knowledge_detail(knowledge_id) {
     return json_or_err(await fetch(url,{headers:header}));
 }
 export async function make_knowledge(title,content,category,difficulty,plain_content,related) {
-    const header=await make_auth_header(true);
-    const table={
-        "beginner":"easy",
-        "intermediate":"medium",
-        "advanced":"hard"
-    };
-    const data=new FormData();
-    data.append("title",title);
-    data.append("content",content);
-    data.append("category",JSON.stringify(category));
-    data.append("difficulty",table[difficulty]);
-    data.append("plain_content",plain_content);
-    if(related.length){
-        data.append("related_problem",JSON.stringify(related));
-    }
-    const resp=await fetch(`${BASE_ADDR}/knowledge/make`,{method:"POST",headers:header,body:data});
-    if(!resp.ok){
-        throw 0;
+    console.log("making");
+    try{
+        const header=await make_auth_header(true);
+        const table={
+            "beginner":"easy",
+            "intermediate":"medium",
+            "advanced":"hard"
+        };
+        const data=new FormData();
+        data.append("title",title);
+        data.append("content",content);
+        data.append("category",JSON.stringify(category));
+        data.append("difficulty",table[difficulty]);
+        data.append("plain_content",plain_content);
+        if(related.length){
+            data.append("related_problem",JSON.stringify(related));
+        }
+    
+        console.log("fetching");
+        const resp=await fetch(`${BASE_ADDR}/knowledge/make`,{method:"POST",headers:header,body:data});
+        if(!resp.ok){
+            throw 0;
+        }
+    }catch(e){
+        console.log(e);
+        return;
     }
 }
 export async function get_user_profile(uid) {
@@ -199,5 +208,37 @@ export async function dislike_knowledge(kid) {
     {method:"POST","headers":header});
     if(!resp.ok){
         throw 0;
+    }
+}
+export async function register(email,name,password,profile) {
+    const body=new FormData();
+    body.set("email",email);
+    body.set("username",name);
+    body.set("password",password);
+    if(profile){
+        body.set("profile",profile);
+    }
+    const resp=await fetch(`${BASE_ADDR}/account/register`,{method:"POST",body:body});
+    if(!resp.ok){
+        throw 0;
+    }
+}
+export async function get_self_detail(auth){
+    const uid=auth?.data.session?.user.id;
+    if(uid==undefined){
+        console.log(JSON.stringify(auth));
+        console.log("error getting uid");
+        return {};
+    }
+    try{
+        const cache=JSON.parse(localStorage.getItem("user_cache"));
+        if(cache==null || cache["uid"]!=uid){
+            throw 0;
+        }
+        return cache["account"]["account"];
+    }catch{
+        const data=await get_user_profile(uid);
+        localStorage.setItem("user_cache",JSON.stringify({uid:uid,account:data}));
+        return data["account"];
     }
 }

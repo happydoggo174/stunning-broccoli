@@ -42,8 +42,6 @@
     background-color: rgb(46, 134, 139);
 }
 .options-btn{
-    background-color: unset;
-    border: none;
     border-radius: 40%;
 }
 .options-btn:hover{

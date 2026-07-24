@@ -136,7 +136,7 @@ import { show_profile } from './tool.js';
                                     <img :src="delete_img" alt="">   
                                 </button>
                             </div>
-                            <button class="options-btn" v-if="isAuthenticated" @click="show_menu=!show_menu">
+                            <button class="options-btn icon-btn" v-if="isAuthenticated" @click="show_menu=!show_menu">
                                 <img :src="options" alt="more option">
                             </button>
                         </div>

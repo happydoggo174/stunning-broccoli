@@ -28,9 +28,9 @@
   <div class="column" v-else-if="isAuthenticated && auth!=null" style="position: relative;" ref="profile">
     <div  class="row" @click="toggle_menu">
       <div style="justify-content: center;" class="column">
-        <p style="color: black;margin-right: 12px;">{{ auth.user?.nickname }}</p>
+        <p style="color: black;margin-right: 12px;">{{ auth?.username }}</p>
       </div>
-      <img :src="auth.user?.picture" alt="profile picture" width="32px" height="32px" class="circle">
+      <img :src="auth?.profile" alt="profile picture" width="32px" height="32px" class="circle">
     </div>
     <div class="column menu" v-if="show_menu" ref="menu">
       <button @click="logout" class="logout-btn">logout</button>
@@ -50,12 +50,18 @@
 import { get_auth_object,isAuthenticated,isLoading,uid } from './auth';
 import { computed,onMounted,ref,useTemplateRef } from 'vue';
 import { show_profile } from './tool';
+import { get_self_detail } from './api';
+import { supabase } from './supabase';
+import router from './router';
 const auth=ref(null);
 const show_menu=ref(false);
 const menu=useTemplateRef("menu");
 const profile=useTemplateRef("profile");
 onMounted(async()=>{
-  auth.value=await get_auth_object();
+  const obj=(await get_auth_object());
+  if(obj){
+    auth.value=await get_self_detail(obj);
+  }
 });
 const error_msg=computed(()=>{
   if(!isAuthenticated.value && auth.value?.error?.value?.message=="Login required"){
@@ -63,14 +69,12 @@ const error_msg=computed(()=>{
   }
   return auth.value?.error?.value?.message;
 });
-const signup = () =>
-  auth.value?.loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
+const signup = () => router.push("/register")
 
-const login = () => auth.value?.loginWithRedirect()
+const login = () => router.push("/login")
 
 const logout = () =>{
-  const return_addr=window.location.origin+`/${import.meta.env.VITE_BASE}/`;
-  auth.value?.logout({ logoutParams: { returnTo:  return_addr} });
+  supabase.auth.signOut().then();
 }
 function handle_click(e){
   if(menu.value?.contains(e.target) || profile.value?.contains(e.target)){

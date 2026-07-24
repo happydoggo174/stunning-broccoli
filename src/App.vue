@@ -11,6 +11,7 @@
     .borderless{border: unset;}
     .no-bg{background-color: unset;}
     .text-center{display: block;text-align: center;}
+    .icon-btn{border: none;background-color: unset;}
 </style>
 <template>
     <Overlay/>

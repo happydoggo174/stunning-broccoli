@@ -53,6 +53,14 @@ const routes = [
     props:route=>({
       uid:route.params.uid
     })
+  },
+  {
+    path:'/login',
+    component:()=>import("@/LoginPage.vue")
+  },
+  {
+    path:"/register",
+    component:()=>import("@/RegisterPage.vue")
   }
 ]
 

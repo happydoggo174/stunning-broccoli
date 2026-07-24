@@ -5,7 +5,7 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import { init_auth } from './auth'
 const app=createApp(App);
-init_auth(app).then(()=>{});
+init_auth().then(()=>{});
 app.use(
     createPinia()
 ).use(

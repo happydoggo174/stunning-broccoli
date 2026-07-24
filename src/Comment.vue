@@ -1,5 +1,5 @@
 <script setup>
-    import { get_comment,make_comment } from '@/api';
+    import { get_comment,make_comment,get_self_detail } from '@/api';
     import CommentWidget from './CommentWidget.vue';
     import { ref,onMounted,computed } from 'vue';
     import more from "@/assets/more.svg";
@@ -24,10 +24,9 @@
     const comment=ref("");
     let is_commenting=false;
     async function add_comment(content){
-        const auth=await get_auth_object();
+        const auth=await get_self_detail(await get_auth_object());
         comment_cnt.value++;
-        const claim=auth.idTokenClaims;
-        data.value.push({username:claim.name|| claim.nickname,profile:claim.profile || claim.picture,content:content});
+        data.value.push({username:auth.username,profile:auth.profile,content:content});
     }
     function validate_comment(content){
         if(isLoading.value){
