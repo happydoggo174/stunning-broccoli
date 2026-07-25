@@ -2,16 +2,15 @@ const BASE_ADDR=window.location.href.includes("localhost")?"http://localhost:300
 import { get_auth_object,isAuthenticated } from "./auth";
 async function make_auth_header(required=false){
     const auth0=await get_auth_object();
-    if(!auth0 || !isAuthenticated.value || auth0.data.session==null){
-        if(required){throw new Error("missing auth");}
+    if(!auth0 || !isAuthenticated.value){
+        if(required)throw new Error("missing auth");
         return {};
     }
     try{
         const token=auth0.data.session.access_token;
         return {"Authorization":`Bearer ${token}`}; 
     }catch(e){
-        console.log(e);
-        if(required){throw new Error("missing auth");}
+        if(required)throw new Error("missing auth");
         return {};
     }
 }

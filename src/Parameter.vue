@@ -12,7 +12,6 @@
      */
     function handle_input(e){
         model.value=e.target.innerText;
-        e.target.focus();
     }
     const model=defineModel();
 </script>

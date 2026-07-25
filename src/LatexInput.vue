@@ -5,10 +5,16 @@
     const input_mode=ref("plain text");
     const mode=defineModel("is_plain");
     watch(input_mode,i=>mode.value=(i=='plain text'));
-    function handle_input(e){
-        const field=e.target;
-        field.style.height="auto";
-        field.style.height=field.scrollHeight+'px';
+    function handle_input(e) {
+        const field = e.target;
+        if(field.offsetHeight!=field.scrollHeight){
+            const scrollY = window.scrollY;
+
+            field.style.height = "auto";
+            field.style.height = field.scrollHeight + "px";
+
+            window.scrollTo(0,scrollY);
+        }
     }
     const prop=defineProps({
         placeholder:String,

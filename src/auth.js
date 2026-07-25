@@ -34,9 +34,5 @@ function nextChange(source) {
  * @returns {Promise<ReturnType<useAuth0>>}
  */
 export async function get_auth_object(){
-    if(auth.value){
-        return auth.value;
-    }else{
-        return await nextChange(auth);
-    }
+    return auth.value?auth.value:await nextChange(auth);
 }

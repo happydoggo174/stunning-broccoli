@@ -17,7 +17,7 @@
         id:Number
     });
     const data=reactive({});
-    watch(()=>[prop.id,isAuthenticated.value],async(id)=>{
+    watch(()=>[prop.id,isAuthenticated.value],async()=>{
         try{
             Object.assign(data,await get_knowledge_detail(prop.id));  
         }catch(e){
@@ -32,8 +32,7 @@
     });
     function handle_like(){
         if(!isAuthenticated.value){
-            show_dialog("error","please login to like");
-            return;
+            return show_dialog("error","please login to like");
         }
         like_knowledge(prop.id).then(()=>{
             if(data.reaction=='disliked'){
@@ -45,8 +44,7 @@
     }
     function handle_dislike(){
         if(!isAuthenticated.value){
-            show_dialog("error","please login to dislike");
-            return;
+            return show_dialog("error","please login to dislike");
         }
         dislike_knowledge(prop.id).then(()=>{
             if(data.reaction=='liked'){
