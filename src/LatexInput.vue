@@ -120,7 +120,7 @@
             </div>
             <div style="width:50%;margin-left: 12px;" class="scroll-flow" v-if="input_mode=='latex' && show_preview" ref="preview">
                 <div class="column" style="color: black;">
-                    <LatexDisplay :content="model" class="latex-preview"
+                    <LatexDisplay :content="model" class="latex-preview" :mutable="true"
                     :style="`font-size:${font_size}px;white-space:pre-wrap;line-height:1.5`"></LatexDisplay>
                 </div>
             </div>

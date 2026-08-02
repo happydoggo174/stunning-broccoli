@@ -5,8 +5,41 @@
     import dompurify from "dompurify";
     const prop=defineProps({
         content:String,
-        plaintext:Boolean
+        plaintext:Boolean,
+        mutable:Boolean
     });
+    class ce{
+        constructor(s){
+            this.s=s;
+            this.used=true;
+        }
+    }
+    /**
+     * @type {Map<String,ce>}
+     */
+    const cache=new Map();
+    function render(s){
+        if(!prop.mutable){return renderToString(s);}
+        const r=cache.get(s);
+        if(r!==undefined){
+            r.used=true;
+            return r.s;
+        }else{
+            const out=renderToString(s);
+            cache.set(s,new ce(out));
+            return out;
+        }
+    }
+    function flush(){
+        if(!prop.mutable){return;}
+        for(const [k,v] of cache){
+            if(!v.used){
+                cache.delete(k);
+            }else{
+                v.used=false;
+            }
+        }
+    }
     function serialize_expression(text) {
         let out = "";
         let is_text=true;
@@ -18,7 +51,7 @@
                 out+=node;
             }else{
                 try{
-                    out+=renderToString(node);
+                    out+=render(node);
                 }catch{
                     out+=node;
                 }
@@ -41,6 +74,7 @@
         }else{
             content_tag.value.appendChild(s);
         }
+        flush();
         return s;
     }
     const content_tag=useTemplateRef("content");
