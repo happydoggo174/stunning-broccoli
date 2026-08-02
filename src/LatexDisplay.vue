@@ -1,6 +1,7 @@
 <script setup>
     import { watch,useTemplateRef,onMounted } from 'vue';
     import { renderToString } from "katex";
+    import morphdom from 'morphdom';
     import dompurify from "dompurify";
     const prop=defineProps({
         content:String,
@@ -31,7 +32,16 @@
             FORBID_TAGS:["svg","form","dialog"],//prevent phising dialog
             RETURN_DOM_FRAGMENT:true//prevent mxss
         });//defend against prototype pollution
-        return dompurify.sanitize(out,cfg);
+        const s=dompurify.sanitize(out,cfg);
+        const c=content_tag.value?.firstChild;
+        if(c){
+            morphdom(c,s,{
+                onBeforeElUpdated:(f,t)=>!f.isEqualNode(t)
+            });
+        }else{
+            content_tag.value.appendChild(s);
+        }
+        return s;
     }
     const content_tag=useTemplateRef("content");
     onMounted(()=>{
@@ -43,9 +53,7 @@
                 content_tag.value.innerText=c;
                 return;
             }
-            content_tag.value.innerHTML='';
-            const node=serialize_expression(c,true);
-            content_tag.value.appendChild(node);
+            serialize_expression(c);
         },{immediate:true});
     });
 </script>

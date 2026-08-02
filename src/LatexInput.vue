@@ -1,12 +1,14 @@
 <script setup>
     import LatexDisplay from './LatexDisplay.vue';
-    import {ref,watch,useTemplateRef,computed,onMounted,onUnmounted} from "vue";
+    import {ref,watch,useTemplateRef,onMounted,onUnmounted} from "vue";
+    import morphdom from 'morphdom';
     const model=defineModel();
     const input_mode=ref("plain text");
     const show_preview=ref(true);
     const mode=defineModel("is_plain");
     const preview_tag=useTemplateRef("preview");
     const inp_field=useTemplateRef("inp-field");
+    const hg_back=useTemplateRef("latex-hg");
     watch(input_mode,i=>mode.value=(i=='plain text'));
     function handle_input() {
         const field = inp_field.value;
@@ -24,7 +26,7 @@
         placeholder:String,
     });
     const font_size=ref(15);
-    const highlight=computed(()=>{
+    watch(model,()=>{
         const a=document.createElement("a");
         function escape(t){
             a.innerText=t;
@@ -44,7 +46,14 @@
             }
             is_text=!is_text;
         });
-        return nodes.join("$");
+        const r=document.createElement("div");
+        r.innerHTML=nodes.join("$");
+        const fc=hg_back.value?.firstChild;
+        if(fc){
+            morphdom(fc,r,{onBeforeElUpdated:(f,t)=>!f.isEqualNode(t)});
+        }else{
+            hg_back.value?.appendChild(r);
+        }
     });
     onMounted(()=>window.addEventListener('resize',handle_input));
     onUnmounted(()=>window.removeEventListener('resize',handle_input));
@@ -105,7 +114,9 @@
             <div :style="`width:${input_mode=='latex'?'50%':'100%'}`" class="scroll-flow">
                 <textarea :placeholder="placeholder" @input="handle_input" class="latex-inp" v-model="model" ref="inp-field">
                 </textarea>
-                <div class="latex-back" v-html="highlight"></div>
+                <div class="latex-back">
+                    <div ref="latex-hg"></div>
+                </div>
             </div>
             <div style="width:50%;margin-left: 12px;" class="scroll-flow" v-if="input_mode=='latex' && show_preview" ref="preview">
                 <div class="column" style="color: black;">
