@@ -78,6 +78,7 @@
         border: 1px solid black;
         padding: 4px;
         border-radius: 12px;
+        margin-bottom: 16px;
     }
     .react-btn{
         border: none;

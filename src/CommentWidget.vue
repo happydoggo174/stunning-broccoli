@@ -11,7 +11,7 @@
         profile:String,
         content:String,
         problem_id:Number,
-        cid:Text
+        cid:String
     });
     const show_delete=ref(false);
     function handle_delete(){

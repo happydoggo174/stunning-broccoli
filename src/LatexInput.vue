@@ -1,56 +1,118 @@
 <script setup>
     import LatexDisplay from './LatexDisplay.vue';
-    import {ref,watch} from "vue";
+    import {ref,watch,useTemplateRef,computed,onMounted,onUnmounted} from "vue";
     const model=defineModel();
     const input_mode=ref("plain text");
+    const show_preview=ref(true);
     const mode=defineModel("is_plain");
+    const preview_tag=useTemplateRef("preview");
+    const inp_field=useTemplateRef("inp-field");
     watch(input_mode,i=>mode.value=(i=='plain text'));
-    function handle_input(e) {
-        const field = e.target;
-        if(field.offsetHeight!=field.scrollHeight){
-            const scrollY = window.scrollY;
-
-            field.style.height = "auto";
-            field.style.height = field.scrollHeight + "px";
-
-            window.scrollTo(0,scrollY);
+    function handle_input() {
+        const field = inp_field.value;
+        field.style.height = "auto";
+        field.style.height = field.scrollHeight + "px";
+        handle_scroll(field);
+    }
+    function handle_scroll(field){
+        const tag=preview_tag.value;
+        if(tag && model.value.length-field.selectionStart<=100){
+            tag.scrollTop=tag.scrollHeight;
         }
     }
     const prop=defineProps({
         placeholder:String,
     });
     const font_size=ref(15);
+    const highlight=computed(()=>{
+        const a=document.createElement("a");
+        function escape(t){
+            a.innerText=t;
+            return a.innerHTML;
+        }
+        if(input_mode.value!='latex'){return escape(model.value);}
+        let is_text=true;
+        const nodes=model.value.split("$");
+        nodes.forEach((node,i)=>{
+            if(is_text){
+                if(node.endsWith("\\")){
+                    is_text=false;
+                }
+                nodes[i]=escape(node);
+            }else{
+                nodes[i]=`<span class="green-hg">${escape(node)}</span>`;
+            }
+            is_text=!is_text;
+        });
+        return nodes.join("$");
+    });
+    onMounted(()=>window.addEventListener('resize',handle_input));
+    onUnmounted(()=>window.removeEventListener('resize',handle_input));
 </script>
 <style scoped>
     .latex-preview{
         background-color: white;
         border-radius: 6px;
-        margin-top: 8px;
         color: black;
+    }
+    .scroll-flow{
+        max-height: 95vh;
+        min-height: 48px;
+        overflow-y: auto;
+        position: relative;
+    }
+    .latex-inp,.latex-back{
+        font-size: 15px;
+        scrollbar-width: none;
+        resize: none;
+        line-height:1.6;
+        position: absolute;
+        width: 100%;
+        background-color: rgba(255,255,255,0.2);
+    }
+    .latex-back{
+        z-index: -1;
+        overflow-wrap: break-word;
+        letter-spacing: normal;
+        font-family: monospace;
+        color: rgba(0,0,0,0);
+    }
+</style>
+<style>
+    .green-hg{
+        background-color: green;
+        opacity: 0.3;
+    }
+    .green-hg:hover{
+        opacity: 0.5;
     }
 </style>
 <template>
     <div class="column" style="color: black;">
-        <div class="row" style="margin-bottom: 16px;">
-            <span>input mode</span>
-            <select v-model="input_mode" style="margin-left: 8px;">
-                <option value="plain text">plain text</option>
-                <option value="latex">latex</option>
-            </select>
-            <div v-if="input_mode=='latex'" style="color: black;margin-left: 8px;">
-            tip: use $ latex expression $ to use latex,\$ to use a literal $</div>
+        <div class="row" style="margin-bottom: 16px;justify-content: space-between;">
+            <div class="row">
+                <span>input mode</span>
+                <select v-model="input_mode" style="margin-left: 8px;">
+                    <option value="plain text">plain text</option>
+                    <option value="latex">latex</option>
+                </select>
+                <div v-if="input_mode=='latex'" style="color: black;margin-left: 8px;">
+                tip: use $ latex expression $ to use latex,\$ to use a literal $</div>
+            </div>
+            <span class="text-center" v-if="input_mode=='latex'">preview</span>
         </div>
-        <textarea :placeholder="placeholder" @input="handle_input" 
-        style="font-size: 15px;scrollbar-width: none;resize: none;" v-model="model"></textarea>
-        <div class="column" v-if="input_mode=='latex'" style="color: black;">
-            <div class="row" style="justify-content: space-between;">
-                <span class="text-center">preview</span>
-                <div class="row">
-                    <span style="margin-right: 8px;">font size</span>
-                    <input type="range" v-model="font_size" min="15" max="50">
+        <div class="row">
+            <div :style="`width:${input_mode=='latex'?'50%':'100%'}`" class="scroll-flow">
+                <textarea :placeholder="placeholder" @input="handle_input" class="latex-inp" v-model="model" ref="inp-field">
+                </textarea>
+                <div class="latex-back" v-html="highlight"></div>
+            </div>
+            <div style="width:50%;margin-left: 12px;" class="scroll-flow" v-if="input_mode=='latex' && show_preview" ref="preview">
+                <div class="column" style="color: black;">
+                    <LatexDisplay :content="model" class="latex-preview"
+                    :style="`font-size:${font_size}px;white-space:pre-wrap;line-height:1.5`"></LatexDisplay>
                 </div>
             </div>
-            <LatexDisplay :content="model" class="latex-preview" :style="`font-size:${font_size}px`"></LatexDisplay>
         </div>
     </div>
 </template>
