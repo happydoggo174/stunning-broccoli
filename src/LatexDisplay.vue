@@ -14,24 +14,31 @@
             this.used=true;
         }
     }
+    const cfg=Object.create(null);
+    Object.assign(cfg,{
+        USE_PROFILES:{html:true,mathMl:true,svg:false},//defend against namespace pollution
+        FORBID_ATTR:["id"],//prevent dom clobbering
+        FORBID_TAGS:["svg","form","dialog"],//prevent phising dialog
+        RETURN_DOM_FRAGMENT:true//prevent mxss
+    });//defend against prototype pollution
+    Object.freeze(cfg);
     /**
      * @type {Map<String,ce>}
      */
     const cache=new Map();
     function render(s){
-        if(!prop.mutable){return renderToString(s);}
         const r=cache.get(s);
         if(r!==undefined){
             r.used=true;
             return r.s;
         }else{
             const out=renderToString(s);
-            cache.set(s,new ce(out));
-            return out;
+            const res=dompurify.sanitize(out,cfg);
+            cache.set(s,new ce(res));
+            return res;
         }
     }
     function flush(){
-        if(!prop.mutable){return;}
         for(const [k,v] of cache){
             if(!v.used){
                 cache.delete(k);
@@ -40,7 +47,7 @@
             }
         }
     }
-    function serialize_expression(text) {
+    function serialize_expression_once(text) {
         let out = "";
         let is_text=true;
         text.split("$").forEach(node=>{
@@ -48,34 +55,49 @@
                 if(node.endsWith('\\')){
                     is_text=false;
                 }
-                out+=node;
+                out+=node
             }else{
                 try{
-                    out+=render(node);
+                    out+=renderToString(node);
                 }catch{
                     out+=node;
                 }
             }
             is_text=!is_text;
         });
-        const cfg=Object.create(null);
-        Object.assign(cfg,{
-            USE_PROFILES:{html:true,mathMl:true,svg:false},//defend against namespace pollution
-            FORBID_ATTR:["id"],//prevent dom clobbering
-            FORBID_TAGS:["svg","form","dialog"],//prevent phising dialog
-            RETURN_DOM_FRAGMENT:true//prevent mxss
-        });//defend against prototype pollution
-        const s=dompurify.sanitize(out,cfg);
+        const res=dompurify.sanitize(out,cfg);
+        content_tag.value?.appendChild(res);
+    }
+    function serialize_expression(text) {
+        if(!prop.mutable){
+            return serialize_expression_once(text);
+        }
+        const out = document.createElement("div");
+        let is_text=true;
+        text.split("$").forEach(node=>{
+            if(is_text){ 
+                if(node.endsWith('\\')){
+                    is_text=false;
+                }
+                out.appendChild(dompurify.sanitize(node,cfg));
+            }else{
+                try{
+                    out.appendChild(render(node));
+                }catch{
+                    out.appendChild(dompurify.sanitize(node,cfg));
+                }
+            }
+            is_text=!is_text;
+        });
         const c=content_tag.value?.firstChild;
         if(c){
-            morphdom(c,s,{
+            morphdom(c,out,{
                 onBeforeElUpdated:(f,t)=>!f.isEqualNode(t)
             });
         }else{
-            content_tag.value.appendChild(s);
+            content_tag.value.appendChild(out);
         }
         flush();
-        return s;
     }
     const content_tag=useTemplateRef("content");
     onMounted(()=>{
