@@ -27,12 +27,12 @@
     });
     const font_size=ref(15);
     watch(model,()=>{
+        if(input_mode.value!='latex'){return ;}
         const a=document.createElement("a");
         function escape(t){
             a.innerText=t;
             return a.innerHTML;
         }
-        if(input_mode.value!='latex'){return escape(model.value);}
         let is_text=true;
         const nodes=model.value.split("$");
         nodes.forEach((node,i)=>{

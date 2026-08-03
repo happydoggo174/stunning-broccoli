@@ -26,6 +26,10 @@
      * @type {Map<String,ce>}
      */
     const cache=new Map();
+    /**
+     * @type {Map<String,ce>}
+     */
+    const tcache=new Map();
     function render(s){
         const r=cache.get(s);
         if(r!==undefined){
@@ -42,6 +46,13 @@
         for(const [k,v] of cache){
             if(!v.used){
                 cache.delete(k);
+            }else{
+                v.used=false;
+            }
+        }
+        for(const [k,v] of tcache){
+            if(!v.used){
+                tcache.delete(k);
             }else{
                 v.used=false;
             }
@@ -68,6 +79,18 @@
         const res=dompurify.sanitize(out,cfg);
         content_tag.value?.appendChild(res);
     }
+    function sanitize(text){
+        if(text.length<500){return dompurify.sanitize(text,cfg);}
+        const r=tcache.get(text);
+        if(r===undefined){
+            const out=dompurify.sanitize(text,cfg);
+            tcache.set(text,new ce(out));
+            return out;
+        }else{
+            r.used=true;
+            return r.s;
+        }
+    }
     function serialize_expression(text) {
         if(!prop.mutable){
             return serialize_expression_once(text);
@@ -79,12 +102,12 @@
                 if(node.endsWith('\\')){
                     is_text=false;
                 }
-                out.appendChild(dompurify.sanitize(node,cfg));
+                out.appendChild(sanitize(node,cfg));
             }else{
                 try{
                     out.appendChild(render(node));
                 }catch{
-                    out.appendChild(dompurify.sanitize(node,cfg));
+                    out.appendChild(sanitize(node,cfg));
                 }
             }
             is_text=!is_text;
