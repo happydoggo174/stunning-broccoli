@@ -9,11 +9,15 @@
     const preview_tag=useTemplateRef("preview");
     const inp_field=useTemplateRef("inp-field");
     const hg_back=useTemplateRef("latex-hg");
+    const inp_cov=useTemplateRef("inp-cov");
     watch(input_mode,i=>mode.value=(i=='plain text'));
     function handle_input() {
         const field = inp_field.value;
         field.style.height = "auto";
-        field.style.height = field.scrollHeight + "px";
+        const sh=field.scrollHeight;
+        field.style.height = sh + "px";
+        const cov=inp_cov.value;
+        cov.style.height=sh+'px';
         handle_scroll(field);
     }
     function handle_scroll(field){
@@ -26,7 +30,7 @@
         placeholder:String,
     });
     const font_size=ref(15);
-    watch(model,()=>{
+    watch(()=>[model.value,input_mode.value],()=>{
         if(input_mode.value!='latex'){return ;}
         const a=document.createElement("a");
         function escape(t){
@@ -111,7 +115,7 @@
             <span class="text-center" v-if="input_mode=='latex'">preview</span>
         </div>
         <div class="row">
-            <div :style="`width:${input_mode=='latex'?'50%':'100%'}`" class="scroll-flow">
+            <div :style="`width:${input_mode=='latex'?'50%':'100%'}`" class="scroll-flow" ref="inp-cov">
                 <textarea :placeholder="placeholder" @input="handle_input" class="latex-inp" v-model="model" ref="inp-field">
                 </textarea>
                 <div class="latex-back">

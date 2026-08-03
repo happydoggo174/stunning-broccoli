@@ -13,6 +13,7 @@
     const expr=ref("");
     const is_fail=ref(false);
     const fail_detail=reactive({});
+    const constants=new Map();
     const param=defineProps({
         parameter:Array,
         output:Array,
@@ -20,8 +21,9 @@
         problem_status:String,
         example_name:Array
     });
+    const buttons=ref(param.parameter);
     const solved=defineEmits(["solved","solved-offline"]);
-    function serialize_output(output,param,example_name){
+    function serialize_output(output,example_name){
         const out=[];
         const display=serialize_display(example_name);
         for(let i=0;i<output.length;i++){
@@ -37,8 +39,7 @@
         }
         return out;
     }
-    const sample_input=ref(serialize_output(param.output,param.parameter,param.example_name));
-    const buttons=ref(param.parameter);
+    const sample_input=ref(serialize_output(param.output,param.example_name));
     async function mark_solved() {
         if(param.problem_status!="solved"){
             if(!isAuthenticated.value){
@@ -73,7 +74,7 @@
     async function parse_expr(){
         const exp=expr.value;
         for(let i=0;i<param.output.length;i++){
-            const val=param.output[i];
+            const val=reactive(param.output[i]);
             try{
                 const res=calculate(exp,val);
                 if(res!=val.output){
@@ -93,6 +94,12 @@
         }
         is_fail.value=false
         await mark_solved();
+    }
+    function resolve_constant(parameter){
+        for(const [name,value] of constants){
+            const res=calculate(value,parameter);
+            parameter[name]=res;
+        }
     }
 </script>
 <style scoped>
@@ -137,7 +144,7 @@
 </style>
 <template>
     <div class="column">
-        <Calculator :buttons="buttons" @input="(v)=>expr=v"/>
+        <Calculator :buttons="buttons" @input="v=>expr=v"/>
         <div class="sample-area column">
             <span id="sample-title">example</span>
             <div id="sample-list" class="column">
