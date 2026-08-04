@@ -11,7 +11,7 @@
     class ce{
         constructor(s){
             this.s=s;
-            this.used=true;
+            this.used=1;
         }
     }
     const cfg=Object.create(null);
@@ -33,7 +33,7 @@
     function render(s){
         const r=cache.get(s);
         if(r!==undefined){
-            r.used=true;
+            r.used++;
             return r.s;
         }else{
             const out=renderToString(s);
@@ -47,14 +47,14 @@
             if(!v.used){
                 cache.delete(k);
             }else{
-                v.used=false;
+                v.used=0;
             }
         }
         for(const [k,v] of tcache){
             if(!v.used){
                 tcache.delete(k);
             }else{
-                v.used=false;
+                v.used=0;
             }
         }
     }
@@ -79,6 +79,7 @@
         const res=dompurify.sanitize(out,cfg);
         content_tag.value?.appendChild(res);
     }
+    
     function sanitize(text){
         if(text.length<500){return dompurify.sanitize(text,cfg);}
         const r=tcache.get(text);
@@ -87,7 +88,7 @@
             tcache.set(text,new ce(out));
             return out;
         }else{
-            r.used=true;
+            r.used++;
             return r.s;
         }
     }

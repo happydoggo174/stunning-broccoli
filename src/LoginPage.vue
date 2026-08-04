@@ -10,10 +10,16 @@
     const password=ref("");
     const input_type=ref("password");
     async function login(){
+        if(email.value==''){
+            return show_dialog("error","email is required",true);
+        }
+        if(password.value==''){
+            return show_dialog("error","password is required",true);
+        }
         try{
             const {data,error} =await supabase.auth.signInWithPassword({email:email.value,password:password.value});
             if(error){
-                show_dialog("error",error.message);
+                show_dialog("error",error.message,true);
                 return;
             }
             router.push("/");

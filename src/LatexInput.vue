@@ -1,6 +1,6 @@
 <script setup>
     import LatexDisplay from './LatexDisplay.vue';
-    import {ref,watch,useTemplateRef,onMounted,onUnmounted} from "vue";
+    import {ref,watch,useTemplateRef,onMounted,onUnmounted,nextTick} from "vue";
     import morphdom from 'morphdom';
     const model=defineModel();
     const input_mode=ref("plain text");
@@ -10,7 +10,13 @@
     const inp_field=useTemplateRef("inp-field");
     const hg_back=useTemplateRef("latex-hg");
     const inp_cov=useTemplateRef("inp-cov");
-    watch(input_mode,i=>mode.value=(i=='plain text'));
+    watch(input_mode,i=>{
+        if(i=="plain text"){
+            hg_back.value.innerText="";
+        }
+        nextTick().then(handle_input);
+        mode.value=(i=='plain text')
+    });
     function handle_input() {
         const field = inp_field.value;
         field.style.height = "auto";
@@ -28,6 +34,7 @@
     }
     const prop=defineProps({
         placeholder:String,
+        max_length:Number
     });
     const font_size=ref(15);
     watch(()=>[model.value,input_mode.value],()=>{

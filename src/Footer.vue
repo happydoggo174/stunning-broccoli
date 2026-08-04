@@ -3,6 +3,7 @@
     import youtube from '@/assets/youtube.svg';
     import twitter from '@/assets/twitter.svg';
     import instagram from "@/assets/instagram.svg";
+    import router from './router';
 </script>
 <style scoped>
     footer button{
@@ -34,6 +35,7 @@
                 <button class="term-btn">term of use</button>
                 <button class="term-btn">privacy policy</button>
                 <button class="term-btn">faq</button>
+                <button class="term-btn" @click="router.push(`/license`).then()">open source license</button>
             </div>
             <div class="row" style="align-items: center;">
                 <span>contact us</span>

@@ -61,6 +61,10 @@ const routes = [
   {
     path:"/register",
     component:()=>import("@/RegisterPage.vue")
+  },
+  {
+    path:'/license',
+    component:()=>import("@/LicensePage.vue")
   }
 ]
 
