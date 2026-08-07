@@ -23,11 +23,12 @@ export async function get_problem_detail(problem_id){
     const resp=await fetch(`${BASE_ADDR}/problem/detail?problem_id=${problem_id}`,{headers:headers});
     return json_or_err(resp);
 }
-export async function get_problems(page){
+export async function get_problems(last_id){
     const headers=await make_auth_header();
     const url=new URL(`${BASE_ADDR}/problem/home`);
-    if(page!==undefined){
-        url.searchParams.set("page",page);
+    if(last_id!==undefined){
+        console.log("setting last id");
+        url.searchParams.set("last_id",last_id);
     }
     const resp=await fetch(url,{headers:headers});
     return json_or_err(resp);

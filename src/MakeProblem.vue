@@ -48,8 +48,8 @@
             if(!description.value.length){
                 return show_dialog("error","a description is required");
             }
-            if(description.value.length>600){
-                return show_dialog("error",`description too long:${description.value.length}/600 character limit`);
+            if(description.value.length>1000){
+                return show_dialog("error",`description too long:${description.value.length}/1000 character limit`);
             }   
             if(!title.value.length){
                 return show_dialog("error","a title is required for submission");
@@ -111,7 +111,7 @@
                 </div>
                 <div class="column" style="margin-top: 14px;">
                     <span class="text-center">description</span>
-                    <LatexInput placeholder="your description here" v-model="description" 
+                    <LatexInput placeholder="your description here" v-model="description" :max_length="1000"
                     v-model:is_plain="plain_desc"></LatexInput>
                 </div>
                 <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">

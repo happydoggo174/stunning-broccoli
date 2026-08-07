@@ -2,6 +2,8 @@
     import LatexDisplay from './LatexDisplay.vue';
     import {ref,watch,useTemplateRef,onMounted,onUnmounted,nextTick} from "vue";
     import morphdom from 'morphdom';
+    import warning from "@/assets/warning.svg";
+    import { show_dialog } from './notificationdaemon.js';
     const model=defineModel();
     const input_mode=ref("plain text");
     const show_preview=ref(true);
@@ -121,7 +123,13 @@
             </div>
             <span class="text-center" v-if="input_mode=='latex'">preview</span>
         </div>
-        <div class="row">
+        <div class="row" style="position: relative;">
+            <button style="position: absolute;bottom: 0;z-index: 1;background-color: red;" 
+            v-if="max_length && model.length>max_length" 
+            :title="`content too long:${model.length}/${max_length} characters used`"
+            @click="show_dialog('error',`your content is too long,${model.length}/${max_length} characters used`)">
+                <img :src="warning" alt="">
+            </button>
             <div :style="`width:${input_mode=='latex'?'50%':'100%'}`" class="scroll-flow" ref="inp-cov">
                 <textarea :placeholder="placeholder" @input="handle_input" class="latex-inp" v-model="model" ref="inp-field">
                 </textarea>
@@ -129,7 +137,8 @@
                     <div ref="latex-hg"></div>
                 </div>
             </div>
-            <div style="width:50%;margin-left: 12px;" class="scroll-flow" v-if="input_mode=='latex' && show_preview" ref="preview">
+            <div style="width:50%;margin-left: 12px;" class="scroll-flow" 
+            v-if="input_mode=='latex' && show_preview" ref="preview">
                 <div class="column" style="color: black;">
                     <LatexDisplay :content="model" class="latex-preview" :mutable="true"
                     :style="`font-size:${font_size}px;white-space:pre-wrap;line-height:1.5`"></LatexDisplay>
