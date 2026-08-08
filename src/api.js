@@ -232,3 +232,13 @@ export async function get_self_detail(auth){
         return data["account"];
     }
 }
+export async function upload_image(fp) {
+    const header=await make_auth_header(true);
+    const body=new FormData();
+    body.set("data",fp);
+    const res=await fetch(`${BASE_ADDR}/file/upload`,{method:"POST",headers:header,body:body});
+    if(!res.ok){
+        throw 0;
+    }
+    return await res.text();
+}

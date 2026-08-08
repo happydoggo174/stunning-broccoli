@@ -4,7 +4,10 @@
     import morphdom from 'morphdom';
     import warning from "@/assets/warning.svg";
     import { show_dialog } from './notificationdaemon.js';
+    import { upload_image } from './api.js';
+    import image from "@/assets/image.svg";
     const model=defineModel();
+    const selector=useTemplateRef("file-selector");
     const input_mode=ref("plain text");
     const show_preview=ref(true);
     const mode=defineModel("is_plain");
@@ -68,6 +71,21 @@
             hg_back.value?.appendChild(r);
         }
     });
+    async function add_selected_image(){
+        const file=selector.value.files[0];
+        try{
+            const name=await upload_image(file);
+            const tag=`<img src='${name}'>`;
+            const start=inp_field.value.selectionStart;
+            const text=model.value;
+            model.value=text.slice(0,start)+tag+text.slice(start,text.length);
+        }catch{
+            show_dialog("error","unable to add image",true);
+        }
+    }
+    async function add_image() {
+        selector.value.click();
+    }
     onMounted(()=>window.addEventListener('resize',handle_input));
     onUnmounted(()=>window.removeEventListener('resize',handle_input));
 </script>
@@ -108,10 +126,29 @@
     .green-hg:hover{
         opacity: 0.5;
     }
+    .toolbar{
+        height: 24px;
+        background-color: white;
+        margin-bottom: 12px;
+        border-radius: 6px;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        border-bottom: 1px solid black;
+    }
+    .toolbar:hover{
+        height: 38px;
+        padding: 4px;
+        margin-bottom: 0px;
+    }
+    .tool-btn:hover{
+        border-radius: 4px;
+        background-color: rgba(0,0,0,0.3);
+    }
 </style>
 <template>
     <div class="column" style="color: black;">
-        <div class="row" style="margin-bottom: 16px;justify-content: space-between;">
+        <div class="row" style="margin-bottom: 12px;justify-content: space-between;">
             <div class="row">
                 <span>input mode</span>
                 <select v-model="input_mode" style="margin-left: 8px;">
@@ -120,11 +157,17 @@
                 </select>
                 <div v-if="input_mode=='latex'" style="color: black;margin-left: 8px;">
                 tip: use $ latex expression $ to use latex,\$ to use a literal $</div>
+                <input type="file" ref="file-selector" style="display: none;" @change="add_selected_image">
             </div>
             <span class="text-center" v-if="input_mode=='latex'">preview</span>
         </div>
+        <div class="row toolbar" v-if="input_mode=='latex'">
+            <button @click="add_image" title="insert image" class="borderless no-bg tool-btn">
+                <img :src="image" alt="">
+            </button>
+        </div>
         <div class="row" style="position: relative;">
-            <button style="position: absolute;bottom: 0;z-index: 1;background-color: red;" 
+            <button style="background-color: red;position: absolute;z-index: 1;bottom: 0;" 
             v-if="max_length && model.length>max_length" 
             :title="`content too long:${model.length}/${max_length} characters used`"
             @click="show_dialog('error',`your content is too long,${model.length}/${max_length} characters used`)">

@@ -18,6 +18,7 @@ export default defineConfig({
   },
   build: {
     sourcemap:false,
+    target:'chrome109'
   },
   server:{
     watch: {
