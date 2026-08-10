@@ -34,11 +34,11 @@
         const r=cache.get(s);
         if(r!==undefined){
             r.used++;
-            return r.s;
+            return r.s.cloneNode(true);
         }else{
             const out=renderToString(s);
             const res=dompurify.sanitize(out,cfg);
-            cache.set(s,new ce(res));
+            cache.set(s,new ce(res.cloneNode(true)));
             return res;
         }
     }
@@ -86,10 +86,10 @@
         if(r===undefined){
             const out=dompurify.sanitize(text,cfg);
             tcache.set(text,new ce(out));
-            return out;
+            return out.cloneNode(true);
         }else{
             r.used++;
-            return r.s;
+            return r.s.cloneNode(true);
         }
     }
     function serialize_expression(text) {
@@ -116,7 +116,10 @@
         const c=content_tag.value?.firstChild;
         if(c){
             morphdom(c,out,{
-                onBeforeElUpdated:(f,t)=>!f.isEqualNode(t)
+                onBeforeElUpdated:(f,t)=>{
+                    return f.getAttribute('data-src')===undefined || 
+                    (f.getAttribute('data-src')!=t.getAttribute('data-src') && !f.isEqualNode(t))
+                }
             });
         }else{
             content_tag.value.appendChild(out);
