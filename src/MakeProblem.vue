@@ -16,6 +16,7 @@
     import TestSample from './TestSample.vue';
     import LatexInput from './LatexInput.vue';
     import "katex/dist/katex.min.css";
+    import DialogBackdrop from './DialogBackdrop.vue';
     const page=ref(0);
     let count=3;
     const parameter=ref([{name:"x",id:0},{name:"y",id:1}]);
@@ -101,9 +102,9 @@
 </style>
 <template>
     <Menu>
-        <div class="example-bg" v-if="is_example">
+        <DialogBackdrop v-if="is_example">
             <ExamplePopup :parameter="parameter" @close="is_example=false" @added="handle_add_example"/>
-        </div>
+        </DialogBackdrop>
         <div style="margin-left: 14px;margin-right: 14px;">
             <div v-if="!page">
                 <div class="row" style="justify-content: center;">

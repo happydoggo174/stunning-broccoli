@@ -92,10 +92,5 @@
                 </div>
             </div>
         </div>
-        <div class="notification-inner-padding column" v-else>
-            <div class="notification-box column">
-                <component :is="event_bridge.object" :data="event_bridge.data"/>
-            </div>
-        </div>
     </div>
 </template>

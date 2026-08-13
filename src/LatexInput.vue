@@ -6,6 +6,9 @@
     import { show_dialog } from './notificationdaemon.js';
     import { upload_image } from './api.js';
     import image from "@/assets/image.svg";
+    import quote from "@/assets/quote.svg";
+    import CitationDialog from './CitationDialog.vue';
+    import DialogBackdrop from './DialogBackdrop.vue';
     const model=defineModel();
     const selector=useTemplateRef("file-selector");
     const input_mode=ref("plain text");
@@ -15,6 +18,8 @@
     const inp_field=useTemplateRef("inp-field");
     const hg_back=useTemplateRef("latex-hg");
     const inp_cov=useTemplateRef("inp-cov");
+    const tool_name=ref("");
+    const show_citation=ref(false);
     watch(input_mode,i=>{
         if(i=="plain text"){
             hg_back.value.innerText="";
@@ -44,9 +49,9 @@
     const font_size=ref(15);
     watch(()=>[model.value,input_mode.value],()=>{
         if(input_mode.value!='latex'){return ;}
-        const a=document.createElement("a");
+        const a=document.createElement("pre");
         function escape(t){
-            a.innerText=t;
+            a.textContent=t;
             return a.innerHTML;
         }
         let is_text=true;
@@ -86,6 +91,21 @@
     async function add_image() {
         selector.value.click();
     }
+    function add_citation(data){
+        const a=document.createElement("a");
+        function escape(t){
+            a.innerText=t;
+            return a.innerHTML;
+        }
+        try{
+            const {name,url}=data;
+            model.value+=`<cite-src src="${escape(name)}" url="${escape(url)}"></cite-src>`;
+        }catch(e){
+            console.log(e);
+        }finally{
+            show_citation.value=false;
+        }
+    }
     onMounted(()=>window.addEventListener('resize',handle_input));
     onUnmounted(()=>window.removeEventListener('resize',handle_input));
 </script>
@@ -108,6 +128,7 @@
         line-height:1.6;
         position: absolute;
         width: 100%;
+        white-space: pre-wrap;
         background-color: rgba(255,255,255,0.2);
     }
     .latex-back{
@@ -116,15 +137,6 @@
         letter-spacing: normal;
         font-family: monospace;
         color: rgba(0,0,0,0);
-    }
-</style>
-<style>
-    .green-hg{
-        background-color: green;
-        opacity: 0.3;
-    }
-    .green-hg:hover{
-        opacity: 0.5;
     }
     .toolbar{
         height: 24px;
@@ -141,12 +153,30 @@
         padding: 4px;
         margin-bottom: 0px;
     }
+    .tool-btn{
+        margin-left: 6px;
+    }
     .tool-btn:hover{
         border-radius: 4px;
         background-color: rgba(0,0,0,0.3);
     }
+    .tool-name{
+        margin-left: 8px;
+    }
+</style>
+<style>
+    .green-hg{
+        background-color: green;
+        opacity: 0.3;
+    }
+    .green-hg:hover{
+        opacity: 0.5;
+    }
 </style>
 <template>
+    <DialogBackdrop v-if="show_citation">
+        <CitationDialog @add="add_citation" @cancel="show_citation=false"></CitationDialog>
+    </DialogBackdrop>
     <div class="column" style="color: black;">
         <div class="row" style="margin-bottom: 12px;justify-content: space-between;">
             <div class="row">
@@ -162,9 +192,15 @@
             <span class="text-center" v-if="input_mode=='latex'">preview</span>
         </div>
         <div class="row toolbar" v-if="input_mode=='latex'">
-            <button @click="add_image" title="insert image" class="borderless no-bg tool-btn">
+            <button @click="add_image" title="insert image" class="borderless no-bg tool-btn"  
+            @mouseenter="tool_name='image'" @mouseleave="tool_name=''">
                 <img :src="image" alt="">
             </button>
+            <button @click="show_citation=true" title="insert citation" class="borderless no-bg tool-btn" 
+            @mouseenter="tool_name='citation'" @mouseleave="tool_name=''">
+                <img :src="quote" alt="">
+            </button>
+            <div class="tool-name">{{ tool_name }}</div>
         </div>
         <div class="row" style="position: relative;">
             <button style="background-color: red;position: absolute;z-index: 1;bottom: 0;" 

@@ -1,6 +1,6 @@
 <script setup>
     import { watch,useTemplateRef,onMounted } from 'vue';
-    import { renderToString } from "katex";
+    import { renderToString,render } from "katex";
     import morphdom from 'morphdom';
     import dompurify from "dompurify";
     const prop=defineProps({
@@ -19,7 +19,10 @@
         USE_PROFILES:{html:true,mathMl:true,svg:false},//defend against namespace pollution
         FORBID_ATTR:["id"],//prevent dom clobbering
         FORBID_TAGS:["svg","form","dialog"],//prevent phising dialog
-        RETURN_DOM_FRAGMENT:true//prevent mxss
+        RETURN_DOM_FRAGMENT:true,//prevent mxss
+        CUSTOM_ELEMENT_HANDLING:{
+            tagNameCheck:n=>n==='cite-src'
+        }
     });//defend against prototype pollution
     Object.freeze(cfg);
     /**
@@ -30,7 +33,7 @@
      * @type {Map<String,ce>}
      */
     const tcache=new Map();
-    function render(s){
+    function render_cached(s){
         const r=cache.get(s);
         if(r!==undefined){
             r.used++;
@@ -58,6 +61,39 @@
             }
         }
     }
+    function open_url(url){
+        const a=document.createElement("a");
+        a.href=url;
+        a.setAttribute("target","_blank");
+        a.click();
+    }
+    function make_citation(name,url){
+        const node=document.createElement("span");
+        render(`^{${name.replace(/[^a-zA-Z0-9]/g, '')}}`,node);
+        node.setAttribute("data-cite",name);
+        node.setAttribute("data-url",url);
+        node.addEventListener('click',(e)=>{
+            let url;
+            try{
+                url=new URL(e.currentTarget.getAttribute("data-url"));
+            }catch{
+                console.log(`invalid url ${e.currentTarget.getAttribute("data-url")}`);
+                return;
+            }
+            if(url.protocol!="http:" && url.protocol!="https:"){
+                return;
+            }
+            open_url(url);
+        });
+        return node;
+    }
+    dompurify.addHook("afterSanitizeElements",(node)=>{
+        if(node.tagName==='CITE-SRC'){
+            const div=make_citation(node.getAttribute("src")  ?? "1",node.getAttribute("url"));
+            node.innerText='';
+            node.appendChild(div);
+        }
+    });
     function serialize_expression_once(text) {
         let out = "";
         let is_text=true;
@@ -106,7 +142,7 @@
                 out.appendChild(sanitize(node,cfg));
             }else{
                 try{
-                    out.appendChild(render(node));
+                    out.appendChild(render_cached(node));
                 }catch{
                     out.appendChild(sanitize(node,cfg));
                 }
@@ -137,6 +173,14 @@
         },{immediate:true});
     });
 </script>
+<style>
+    cite-src{
+        color: green;
+    }
+    cite-src:hover{
+        background-color: rgba(0,128,0,0.3);
+    }
+</style>
 <template>
     <div ref="content" style="word-break: break-all;word-wrap: break-word;padding: 8px;min-height:45px">
     </div>
