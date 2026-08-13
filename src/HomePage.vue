@@ -10,8 +10,9 @@
     const lesson=ref([]);
     onMounted(async()=>{
         try{
-            challenge.value=(await get_problems()).slice(0,2);
-            lesson.value=(await get_knowledge_home()).slice(0,2);
+            const [prob,chal]=await Promise.all([get_problems(),get_knowledge_home()]);
+            challenge.value=prob.slice(0,2);
+            lesson.value=chal.slice(0,2);
         }catch{
 
         }
