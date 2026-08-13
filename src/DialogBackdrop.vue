@@ -1,5 +1,5 @@
-<style scoped>
-    .bg{
+<template>
+    <div style="
         width: 100vw;
         height: 100vh;
         z-index: 1;
@@ -8,11 +8,7 @@
         top: 0;
         display: flex;
         justify-content: center;
-        align-items: center;
-    }
-</style>
-<template>
-    <div class="bg">
+        align-items: center;">
         <slot></slot>    
     </div>
 </template>

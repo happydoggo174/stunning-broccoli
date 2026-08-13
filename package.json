@@ -13,7 +13,7 @@
     "lint:eslint": "eslint . --fix --cache"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.110.6",
+    "@supabase/supabase-js": "^2.112.2",
     "dompurify": "^3.4.13",
     "katex": "^0.17.0",
     "morphdom": "^2.7.8",
