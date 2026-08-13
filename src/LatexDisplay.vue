@@ -116,10 +116,7 @@
         const c=content_tag.value?.firstChild;
         if(c){
             morphdom(c,out,{
-                onBeforeElUpdated:(f,t)=>{
-                    return f.getAttribute('data-src')===undefined || 
-                    (f.getAttribute('data-src')!=t.getAttribute('data-src') && !f.isEqualNode(t))
-                }
+                onBeforeElUpdated:(f,t)=>!f.isEqualNode(t)
             });
         }else{
             content_tag.value.appendChild(out);
