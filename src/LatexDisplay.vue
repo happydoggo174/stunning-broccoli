@@ -86,10 +86,10 @@
         if(r===undefined){
             const out=dompurify.sanitize(text,cfg);
             tcache.set(text,new ce(out));
-            return out.cloneNode(true);
+            return out;
         }else{
             r.used++;
-            return r.s.cloneNode(true);
+            return r.s;
         }
     }
     function serialize_expression(text) {
