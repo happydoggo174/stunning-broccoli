@@ -11,7 +11,7 @@
     const input_type=ref("password");
     async function signup(){
         try{
-            const{data,error} =await supabase.auth.signUp({email:email.value,password:password.value,options:{
+            const{data,error} =await supabase.signUp({email:email.value,password:password.value,options:{
                 data:{
                     username:name.value
                 }

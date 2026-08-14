@@ -6,7 +6,7 @@ export const isLoading=ref(true);
 export const uid=ref(null);
 async function load(){
     return await new Promise(r=>{
-        setTimeout(()=>supabase.auth.getSession().then(s=>r(s)),0);
+        setTimeout(()=>supabase.getSession().then(s=>r(s)),0);
     });
 }
 export async function init_auth(){
@@ -14,7 +14,7 @@ export async function init_auth(){
         auth.value=auth0;
         isLoading.value=false;
         isAuthenticated.value=auth0.data.session!=null;
-        supabase.auth.onAuthStateChange((_,s)=>{
+        supabase.onAuthStateChange((_,s)=>{
             isAuthenticated.value=(s!=null);
             uid.value=s?.user.id;
             auth.value.data.session=s;

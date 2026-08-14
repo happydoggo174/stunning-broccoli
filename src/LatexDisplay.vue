@@ -3,6 +3,7 @@
     import { renderToString,render } from "katex";
     import morphdom from 'morphdom';
     import dompurify from "dompurify";
+    import { show_dialog } from './notificationdaemon';
     const prop=defineProps({
         content:String,
         plaintext:Boolean,
@@ -77,11 +78,10 @@
             try{
                 url=new URL(e.currentTarget.getAttribute("data-url"));
             }catch{
-                console.log(`invalid url ${e.currentTarget.getAttribute("data-url")}`);
-                return;
+                return show_dialog("error",`invalid url ${url.href}`,true);;
             }
             if(url.protocol!="http:" && url.protocol!="https:"){
-                return;
+                return show_dialog("error",`invalid url ${url.href}`,true);
             }
             open_url(url);
         });

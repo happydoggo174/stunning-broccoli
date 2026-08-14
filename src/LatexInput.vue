@@ -99,11 +99,15 @@
         }
         try{
             const {name,url}=data;
+            const addr=new URL(url);
+            if(addr.protocol!="http:" && addr.protocol!="https:"){
+                return show_dialog('error',`invalid url,please use http:// or https://`,true);
+            }
             model.value+=`<cite-src src="${escape(name)}" url="${escape(url)}"></cite-src>`;
-        }catch(e){
-            console.log(e);
-        }finally{
             show_citation.value=false;
+        }catch(e){
+            show_dialog('error',`invalid url,please use http:// or https://`,true);
+            console.log(e);
         }
     }
     onMounted(()=>window.addEventListener('resize',handle_input));

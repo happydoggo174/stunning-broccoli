@@ -17,7 +17,7 @@
             return show_dialog("error","password is required",true);
         }
         try{
-            const {data,error} =await supabase.auth.signInWithPassword({email:email.value,password:password.value});
+            const {data,error} =await supabase.signInWithPassword({email:email.value,password:password.value});
             if(error){
                 show_dialog("error",error.message,true);
                 return;

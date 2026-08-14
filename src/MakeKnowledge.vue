@@ -29,8 +29,8 @@
             show_dialog("error","content can't be empty",true);
             throw 0;
         }
-        if(content.value.length>8000){
-            show_dialog("error",`content is too long.${content.value.length}/8000 characters used`,true);
+        if(content.value.length>10000){
+            show_dialog("error",`content is too long.${content.value.length}/10000 characters used`,true);
             throw 0;
         }
         let vaild=true;
@@ -145,7 +145,7 @@
                 </button>
             </div>
             <LatexInput placeholder="your content here" v-model="content" v-model:is_plain="plain_content" 
-            :max_length="8000"></LatexInput>
+            :max_length="10000"></LatexInput>
             <div class="row diff-row">
                 <span class="level-banner">level</span>
                 <select v-model="level">

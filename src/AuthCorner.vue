@@ -74,7 +74,7 @@ const signup = () => router.push("/register")
 const login = () => router.push("/login")
 
 const logout = () =>{
-  supabase.auth.signOut().then();
+  supabase.signOut().then();
 }
 function handle_click(e){
   if(!menu.value?.contains(e.target) && !profile.value?.contains(e.target)){
