@@ -20,6 +20,7 @@
     const inp_cov=useTemplateRef("inp-cov");
     const tool_name=ref("");
     const show_citation=ref(false);
+    let selected=null;
     watch(input_mode,i=>{
         if(i=="plain text"){
             hg_back.value.innerText="";
@@ -103,7 +104,11 @@
             if(addr.protocol!="http:" && addr.protocol!="https:"){
                 return show_dialog('error',`invalid url,please use http:// or https://`,true);
             }
-            model.value+=`<cite-src src="${escape(name)}" url="${escape(url)}"></cite-src>`;
+            const start=selected;
+            console.log(Number.isInteger(start));
+            const text=model.value;
+            const tag=`<cite-src src="${escape(name)}" url="${escape(url)}"></cite-src>`;
+            model.value=text.slice(0,start)+tag+text.slice(start,text.length);
             show_citation.value=false;
         }catch(e){
             show_dialog('error',`invalid url,please use http:// or https://`,true);
@@ -141,6 +146,7 @@
         letter-spacing: normal;
         font-family: monospace;
         color: rgba(0,0,0,0);
+        border: 1px solid black;
     }
     .toolbar{
         height: 24px;
@@ -200,7 +206,8 @@
             @mouseenter="tool_name='image'" @mouseleave="tool_name=''">
                 <img :src="image" alt="">
             </button>
-            <button @click="show_citation=true" title="insert citation" class="borderless no-bg tool-btn" 
+            <button @click="()=>{selected=inp_field.selectionEnd;show_citation=true}" 
+            title="insert citation" class="borderless no-bg tool-btn" 
             @mouseenter="tool_name='citation'" @mouseleave="tool_name=''">
                 <img :src="quote" alt="">
             </button>
