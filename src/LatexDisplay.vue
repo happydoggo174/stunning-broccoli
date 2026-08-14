@@ -34,6 +34,8 @@
      * @type {Map<String,ce>}
      */
     const tcache=new Map();
+    let handler=null;
+    let edit=0;
     function render_cached(s){
         const r=cache.get(s);
         if(r!==undefined){
@@ -159,6 +161,18 @@
         }
         flush();
     }
+    function handle_change(c){
+        edit++;
+        if(prop.content.length<5000 || !prop.mutable){
+            return serialize_expression(c);
+        }
+        clearTimeout(handler);
+        if(edit%5){
+            handler=setTimeout(()=>serialize_expression(c),180);
+        }else{
+            serialize_expression(c);
+        }
+    }
     const content_tag=useTemplateRef("content");
     onMounted(()=>{
         watch(()=>prop.content,c=>{
@@ -169,7 +183,7 @@
                 content_tag.value.innerText=c;
                 return;
             }
-            serialize_expression(c);
+            handle_change(c);
         },{immediate:true});
     });
 </script>
