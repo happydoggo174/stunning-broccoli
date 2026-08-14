@@ -132,21 +132,21 @@
     }
     .latex-inp,.latex-back{
         font-size: 15px;
-        scrollbar-width: none;
+        overflow: hidden;
         resize: none;
         line-height:1.6;
         position: absolute;
         width: 100%;
         white-space: pre-wrap;
         background-color: rgba(255,255,255,0.2);
+        border: 1px solid black;
+        font-family: monospace;
     }
     .latex-back{
         z-index: -1;
         overflow-wrap: break-word;
         letter-spacing: normal;
-        font-family: monospace;
         color: rgba(0,0,0,0);
-        border: 1px solid black;
     }
     .toolbar{
         height: 24px;
