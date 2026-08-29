@@ -11,6 +11,9 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
+  define:{
+    __VUE_OPTIONS_API__:false
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

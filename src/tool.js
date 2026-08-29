@@ -37,3 +37,8 @@ export function serialize_display(output){
 export function show_profile(uid){
     router.push(`/profile/${uid}`);
 }
+export function generate_docid(){
+    const b=new Uint8Array(8);
+    crypto.getRandomValues(b);
+    return b.map(s=>s.toString(16)).join("");
+}

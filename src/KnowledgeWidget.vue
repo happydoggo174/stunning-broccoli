@@ -28,9 +28,6 @@
         } 
         return prop.difficulty=='medium'?yellow_star:red_star;  
     },)
-    function open_learn(){
-        router.push({path:`/learn/detail/${prop.id}`}).then();
-    }
 </script>
 <style scoped>
     .widget{
@@ -39,9 +36,11 @@
         border-radius: 12px;
         margin-top: 8px;
         transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) transform,0.3s cubic-bezier(0.25, 0.8, 0.25, 1) box-shadow;
+        color: black;
     }
     .widget:hover{
         transform: translateY(-6px);
+        background-color: unset;
     }
     .title{
         line-height: 1.4;
@@ -55,9 +54,9 @@
     }
 </style>
 <template>
-    <div class="row widget hover-shadow" @click="open_learn">
+    <RouterLink :to="`/learn/detail/${id}`" class="row widget hover-shadow">
         <div class="column diff">
-            {{ diff_level[difficulty] }}
+        {{ diff_level[difficulty] }}
             <div class="column">
                 <img :src="star_src" alt="" style="margin-left: 4px;" 
                 v-for="_ in star_table[difficulty]" width="24px" height="24px">
@@ -70,5 +69,5 @@
                 <CategoryLabel v-for="tag in category" :tag="tag"></CategoryLabel>
             </div>
         </div>
-    </div>
+    </RouterLink>
 </template>

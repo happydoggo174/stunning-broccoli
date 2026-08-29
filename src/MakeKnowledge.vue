@@ -9,6 +9,8 @@
     import "katex/dist/katex.min.css";
     import Menu from './Menu.vue';
     import PracticeInput from './PracticeInput.vue';
+    import { generate_docid } from './tool';
+    import { list_img } from './imgkit';
     const title=ref("");
     const content=ref("");
     const level=ref("beginner");
@@ -16,6 +18,7 @@
     const plain_content=ref(false);
     const related_problem=ref([]);
     let idx=0;
+    const doc_id=generate_docid();
     function validate_post(){
         if(!title.value.length){
             show_dialog("error","title can't be empty",true);
@@ -59,7 +62,7 @@
             return;
         }
         make_knowledge(title.value,content.value,category.value.map(v=>v.content),level.value,plain_content.value,
-        related_pid).then(()=>{
+        related_pid,doc_id,list_img(content.value)).then(()=>{
             router.push("/");
         },()=>{
             show_dialog("error","unable to post lesson");
@@ -145,7 +148,7 @@
                 </button>
             </div>
             <LatexInput placeholder="your content here" v-model="content" v-model:is_plain="plain_content" 
-            :max_length="10000"></LatexInput>
+            :max_length="10000" :doc_id="doc_id"></LatexInput>
             <div class="row diff-row">
                 <span class="level-banner">level</span>
                 <select v-model="level">

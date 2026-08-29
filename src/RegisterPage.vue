@@ -9,7 +9,8 @@
     const password=ref("");
     const name=ref("");
     const input_type=ref("password");
-    async function signup(){
+    async function signup(e){
+        e.preventDefault();
         try{
             const{data,error} =await supabase.signUp({email:email.value,password:password.value,options:{
                 data:{
@@ -80,19 +81,19 @@
 <template>
     <Menu> 
         <div class="wrapper">     
-            <div class="column box">
+            <form class="column box" @submit="signup">
                 <div class="register-banner text-center">register</div>
                 <input type="text" v-model="name" placeholder="username" style="padding: 4px;margin-bottom: 8px;">
                 <input type="email" v-model="email" placeholder="email" style="padding: 4px;margin-bottom: 8px;">
                 <div class="row spacer" style="margin-bottom: 16px;">
                     <input :type="input_type" v-model="password" placeholder="password" class="spacer" style="padding: 4px;">
-                    <button @click="toggle_input" class="icon-btn" style="margin-left: 8px;">
+                    <button @click="toggle_input" class="icon-btn" style="margin-left: 8px;" type="button">
                         <img :src="eye_src" alt="">
                     </button>
                 </div>
-                <button @click="signup" class="register-btn">sign up</button>
+                <button class="register-btn">sign up</button>
                 <span class="signup-banner">already have an account?<RouterLink to="/login">login</RouterLink></span>
-            </div>
+            </form>
         </div>
     </Menu>
 </template>

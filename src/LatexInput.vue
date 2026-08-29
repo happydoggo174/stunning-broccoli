@@ -45,7 +45,8 @@
     }
     const prop=defineProps({
         placeholder:String,
-        max_length:Number
+        max_length:Number,
+        doc_id:String
     });
     const font_size=ref(15);
     watch(()=>[model.value,input_mode.value],()=>{
@@ -80,7 +81,7 @@
     async function add_selected_image(){
         const file=selector.value.files[0];
         try{
-            const name=await upload_image(file);
+            const name=await upload_image(file,prop.doc_id);
             const tag=`<img src='${name}'>`;
             const start=inp_field.value.selectionStart;
             const text=model.value;

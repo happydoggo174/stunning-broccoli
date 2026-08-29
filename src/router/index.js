@@ -65,6 +65,20 @@ const routes = [
   {
     path:'/license',
     component:()=>import("@/LicensePage.vue")
+  },
+  {
+    path:'/solution/:id',
+    component:()=>import("@/SolutionPage.vue"),
+    props:route=>({
+      id:Number(route.params.id)
+    })
+  },
+  {
+    path:'/post/solution/:id',
+    component:()=>import("@/PostSolution.vue"),
+    props:route=>({
+      id:Number(route.params.id)
+    })
   }
 ]
 

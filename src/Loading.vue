@@ -2,7 +2,7 @@
   defineProps({err:String|null,resolved:Boolean|undefined});
 </script>
 <template>
-  <div class="spinner-container" v-if="!resolved">
+  <div class="spinner-container" v-if="!resolved || err">
     <div style="justify-content: center;height: calc(100vh - 36px);" class="column">
         <p style="color: red;font-size: 24px;" v-if="err">error:{{ err }}</p>
         <div class="loading-wheel" v-else></div>

@@ -17,7 +17,10 @@
     import LatexInput from './LatexInput.vue';
     import "katex/dist/katex.min.css";
     import DialogBackdrop from './DialogBackdrop.vue';
+    import { generate_docid } from './tool';
+    import { list_img } from './imgkit';
     const page=ref(0);
+    const doc_id=generate_docid();
     let count=3;
     const parameter=ref([{name:"x",id:0},{name:"y",id:1}]);
     const example=ref([]);
@@ -27,6 +30,7 @@
     const difficulty=ref("easy");
     const hint=ref([]);
     const plain_desc=ref(false);
+
     let refresh_handle=null;
     let expression="";
     function remove_parameter(id){
@@ -59,7 +63,7 @@
             example.value.forEach((v)=>{delete v.output;delete v.id});
             await make_problem(title.value,desc,difficulty.value,expression,
             parameter.value.map(v=>v.name),example.value,example.value.map(e=>e.display_name),
-            hint.value.map(v=>v.content),plain_desc.value);
+            hint.value.map(v=>v.content),plain_desc.value,doc_id,list_img(desc));
             router.push('/').then();
         }catch(e){
             show_dialog("error",e);

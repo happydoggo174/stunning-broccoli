@@ -81,7 +81,8 @@ export async function make_comment(problem_id,content) {
     const resp=await fetch(`${BASE_ADDR}/comment/make`,{method:"POST",headers:header,body:data});
     if(!resp.ok){throw 0;}
 }
-export async function make_problem(title,description,difficulty,expr,parameter,test_case,display_name,hint,plain_desc) {
+export async function make_problem(title,description,difficulty,expr,parameter,test_case,display_name,hint,plain_desc,
+doc_id,used_img) {
     const headers=await make_auth_header(true);
     const data=new FormData();
     const send_case=[];
@@ -109,6 +110,7 @@ export async function make_problem(title,description,difficulty,expr,parameter,t
     data.set("display_name",JSON.stringify(send_name));
     data.set("hint",JSON.stringify(hint));
     data.set("plain_desc",plain_desc);
+    await commit(doc_id,used_img);
     const resp=await fetch(`${BASE_ADDR}/problem/make`,{method:"POST",headers:headers,body:data});
     if(!resp.ok){throw await resp.text();}
 }
@@ -160,7 +162,7 @@ export async function get_knowledge_detail(knowledge_id) {
     url.searchParams.set("knowledge_id",knowledge_id);
     return json_or_err(await fetch(url,{headers:header}));
 }
-export async function make_knowledge(title,content,category,difficulty,plain_content,related) {
+export async function make_knowledge(title,content,category,difficulty,plain_content,related,doc_id,used_img) {
     const header=await make_auth_header(true);
     const table={
         "beginner":"easy",
@@ -176,6 +178,7 @@ export async function make_knowledge(title,content,category,difficulty,plain_con
     if(related.length){
         data.append("related_problem",JSON.stringify(related));
     }
+    await commit(doc_id,used_img);//make sure to commit first to avoid partial failure
     const resp=await fetch(`${BASE_ADDR}/knowledge/make`,{method:"POST",headers:header,body:data});
     if(!resp.ok){
         throw 0;
@@ -232,13 +235,45 @@ export async function get_self_detail(auth){
         return data["account"];
     }
 }
-export async function upload_image(fp) {
+export async function upload_image(fp,doc_id) {
     const header=await make_auth_header(true);
     const body=new FormData();
     body.set("data",fp);
+    body.set("doc_id",doc_id);
     const res=await fetch(`${BASE_ADDR}/file/upload`,{method:"POST",headers:header,body:body});
     if(!res.ok){
         throw 0;
     }
     return await res.text();
+}
+export async function get_solution(sid) {
+    return await json_or_err(await fetch(`${BASE_ADDR}/solution/detail?solution_id=${sid}`));
+}
+export async function list_solution(problem_id,last_id) {
+    const url=new URL(`${BASE_ADDR}/solution/list`);
+    url.searchParams.set("problem_id",problem_id);
+    if(last_id!==undefined){
+        url.searchParams.set("last_id",last_id);
+    }
+    return await json_or_err(await fetch(url));
+}
+export async function post_solution(pid,title,description,equation) {
+    const header=await make_auth_header(true)
+    const body=new FormData();
+    body.set("problem_id",pid);
+    body.set("title",title);
+    body.set("description",description);
+    body.set("equation",equation);
+    const resp=await fetch(`${BASE_ADDR}/solution/make`,{method:"POST",headers:header,body:body});
+    if(!resp.ok){throw 0;}
+}
+export async function commit(doc_id,used_img) {
+    const header=await make_auth_header(true);
+    const url=new URL(`${BASE_ADDR}/file/commit`);
+    url.searchParams.set("doc_id",doc_id);
+    const arr=JSON.stringify(used_img);
+    const body =new FormData();
+    body.set("used_img",arr);
+    const resp=await fetch(url,{headers:header,method:"POST",body:body});
+    if(!resp.ok){throw 0;}
 }

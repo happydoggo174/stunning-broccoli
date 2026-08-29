@@ -2,12 +2,9 @@ import './assets/main.css'
 import router from './router'
 import { createApp } from 'vue'
 import App from './App.vue'
-import { createPinia } from 'pinia'
 import { init_auth } from './auth'
 const app=createApp(App);
 init_auth().then(()=>{});
 app.use(
-    createPinia()
-).use(
     router
 ).mount("#app")

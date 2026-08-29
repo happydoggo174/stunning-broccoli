@@ -42,9 +42,8 @@ body{
     border-radius: 12px;
     display: flex;
     justify-content: space-between;
-    margin-top: 16px;
-    margin-left: 16px;
-    margin-right: 16px;
+    margin: 16px;
+    margin-bottom: 0;
     overflow: hidden;
     transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
     background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),

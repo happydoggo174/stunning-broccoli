@@ -21,12 +21,14 @@ import HintWidget from './HintWidget.vue';
 import LatexDisplay from './LatexDisplay.vue';
 import { show_profile } from './tool.js';
 import "katex/dist/katex.min.css";
-    const err=ref(null);
-    const resolved=ref(false);
+import loading from "./loading.js";
+import SolutionList from './SolutionList.vue';
+    const loader=reactive(new loading());
     const prop=defineProps({
         id:Number
     });
     const show_menu=ref(false);
+    const page=ref(0);
     let detail=reactive({});
     let status=reactive({});
     let count=0;
@@ -41,8 +43,9 @@ import "katex/dist/katex.min.css";
             show_dialog("error","can't like this problem");
             return;
         }
-        if(detail.reaction!=undefined){
-            detail.reaction+=status.reaction=="disliked"?2:1;
+        if(detail.likes!=undefined){
+            detail.likes++;
+            detail.dislikes--;
         }
         status.reaction="liked";
     };
@@ -56,31 +59,28 @@ import "katex/dist/katex.min.css";
         }catch{
             return show_dialog("error","can't dislike this problem");
         }
-        if(detail.reaction!=undefined){
-            detail.reaction-=status.reaction=='liked'?2:1;
+        if(detail.dislikes!=undefined){
+            detail.dislikes++;
+            detail.likes--;
         }
         status.reaction="disliked";
     }
     watch(()=>prop.id,async(newid)=>{
         if(newid==undefined){return;}
-        const cnt=++count;
-        let data=null;
-        resolved.value=false;
-        err.value=false;
-        if(is_problem_completed(prop.id) && status.status!="solved"){
-            status.status='solved-offline';
-        }
-        try{
-            data=await get_problem_detail(newid);
-        }catch{
-            if(cnt==count){
-                err.value="failed to load problem";
+        await loader.wrap(async()=>{    
+            const cnt=++count;
+            let data=null;
+            if(is_problem_completed(prop.id) && status.status!="solved"){
+                status.status='solved-offline';
             }
-            return;
-        }
-        if(cnt!=count || data==null){return;}
-        Object.assign(detail,data);
-        resolved.value=true;
+            try{
+                data=await get_problem_detail(newid);
+            }catch{
+                throw "failed to load problem";
+            }
+            if(cnt!=count || data==null){return;}
+            Object.assign(detail,data);
+        });
     },{immediate:true});
     watch(()=>[isAuthenticated,prop.id],async()=>{
         if(!isAuthenticated){return;}
@@ -116,10 +116,14 @@ import "katex/dist/katex.min.css";
 </style>
 <template>
     <Menu>
-        <Loading v-if="!resolved" :resolved="resolved" :err="err"/>
-        <div id="top-panel" v-else>
+        <Loading :resolved="loader.resolved" :err="loader.err"/>
+        <div id="top-panel" v-if="loader.resolved && !loader.err">
             <div id="info-panel">
-                <div id="info-padding">
+                <div class="row tab-bar">
+                    <button class="tab-btn" :class="!page?'underline':''" style="margin-left: 16px;" @click="page=0">challenge</button>
+                    <button class="tab-btn" :class="page?'underline':''" @click="page=1">solution</button>
+                </div>
+                <div id="info-padding"  v-show="!page">
                     <div class="row" style="justify-content: space-between;">
                         <div></div>
                         <div style="justify-content: center;align-items: center;" class="row">
@@ -147,19 +151,23 @@ import "katex/dist/katex.min.css";
                     </LatexDisplay>
                     <div class="row">
                         <div class="row react-wrapper">
-                            <button @click="handle_like" class="react-btn">
-                                <img :src="like_src">
-                            </button>
-                            <span style="margin-left: 12px;">{{ detail.reaction }}</span>
-                            <button style="margin-left: 12px;" @click="handle_dislike" class="react-btn">
+                            <div class="row" style="padding-right:6px;border-right: 1px solid black;">
+                                <button @click="handle_like" class="react-btn">
+                                    <img :src="like_src">
+                                </button>
+                                <span style="margin-left: 12px;">{{ detail.likes }}</span>
+                            </div>
+                            <button style="margin-left: 6px;" @click="handle_dislike" class="react-btn">
                                 <img :src="dislike_src" >
                             </button>
+                            <span style="margin-left: 12px;">{{ detail.dislikes }}</span>
                         </div>
                         <div class="spacer"></div>
                     </div>
                     <HintWidget :hint="detail.hint"></HintWidget>
                     <Comment :problem_id="prop.id" :comment_count="detail.comment_count"/>
                 </div>
+                <SolutionList :problem_id="prop.id" :shown="page==1" v-show="page==1"></SolutionList>
             </div>
             <div id="run-panel">
                 <Solver :parameter="detail.parameter" @solved="status.status='solved'" 

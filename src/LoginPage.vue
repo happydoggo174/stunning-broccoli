@@ -9,7 +9,8 @@
     const email=ref("");
     const password=ref("");
     const input_type=ref("password");
-    async function login(){
+    async function login(e){
+        e.preventDefault();
         if(email.value==''){
             return show_dialog("error","email is required",true);
         }
@@ -83,18 +84,18 @@
 <template>
     <Menu> 
         <div class="wrapper">     
-            <div class="column box">
+            <form class="column box" @submit="login">
                 <div class="login-banner text-center">login</div>
                 <input type="email" v-model="email" placeholder="email" style="padding: 4px;margin-bottom: 8px;">
                 <div class="row spacer" style="margin-bottom: 16px;">
                     <input :type="input_type" v-model="password" placeholder="password" class="spacer" style="padding: 4px;">
-                    <button @click="toggle_input" class="icon-btn" style="margin-left: 8px;">
+                    <button @click="toggle_input" class="icon-btn" style="margin-left: 8px;" type="button">
                         <img :src="eye_src" alt="">
                     </button>
                 </div>
-                <button @click="login" class="login-btn">continue</button>
+                <button class="login-btn">continue</button>
                 <span class="signup-banner">don't have an account ?<RouterLink to="/register">sign up</RouterLink></span>
-            </div>
+            </form>
         </div>
     </Menu>
 </template>
