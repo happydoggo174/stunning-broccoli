@@ -45,7 +45,9 @@ import SolutionList from './SolutionList.vue';
         }
         if(detail.likes!=undefined){
             detail.likes++;
-            detail.dislikes--;
+            if(status.reaction=='disliked'){
+                detail.dislikes--;
+            }
         }
         status.reaction="liked";
     };
@@ -61,7 +63,9 @@ import SolutionList from './SolutionList.vue';
         }
         if(detail.dislikes!=undefined){
             detail.dislikes++;
-            detail.likes--;
+            if(status.reaction=='liked'){
+                detail.likes--;
+            }
         }
         status.reaction="disliked";
     }
