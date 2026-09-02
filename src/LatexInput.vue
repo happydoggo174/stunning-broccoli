@@ -148,6 +148,7 @@
         overflow-wrap: break-word;
         letter-spacing: normal;
         color: rgba(0,0,0,0);
+        border-color: rgba(0,0,0,0);
     }
     .toolbar{
         height: 24px;

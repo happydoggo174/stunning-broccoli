@@ -47,13 +47,16 @@
               fn=get_completed;
             }
           }
-          fn(last_id).then(more=>{
+          try{
+            const more=await fn(last_id);
             if(!more.length){
               all_loaded=true;
             }else{
               problems.value=problems.value.concat(more);
             }
-          },e=>console.log(`error:${e}`));
+          }catch(e){
+            console.log(e);
+          }
       });
     }
     watch(filter,async()=>{
