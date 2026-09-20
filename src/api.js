@@ -205,19 +205,6 @@ export async function dislike_knowledge(kid) {
         throw 0;
     }
 }
-export async function register(email,name,password,profile) {
-    const body=new FormData();
-    body.set("email",email);
-    body.set("username",name);
-    body.set("password",password);
-    if(profile){
-        body.set("profile",profile);
-    }
-    const resp=await fetch(`${BASE_ADDR}/account/register`,{method:"POST",body:body});
-    if(!resp.ok){
-        throw 0;
-    }
-}
 export async function get_self_detail(auth){
     const uid=auth?.data.session?.user.id;
     if(uid==undefined){
@@ -274,5 +261,28 @@ export async function commit(doc_id,used_img) {
     url.searchParams.set("doc_id",doc_id);
     const body =JSON.stringify({"used_img":used_img});
     const resp=await fetch(url,{headers:header,method:"POST",body:body});
+    if(!resp.ok){throw 0;}
+}
+export async function remove_knowledge(kid) {
+    const header=await make_auth_header(true);
+    const resp=await fetch(`${BASE_ADDR}/knowledge/drop?knowledge_id=${kid}`,{method:"DELETE",headers:header});
+    if(!resp.ok){throw 0;}
+}
+export async function update_problem(pid,title,description,difficulty,plain_desc) {
+    const header=await make_auth_header(true);
+    const body={problem_id:pid};
+    if(description!=undefined){
+        body.description=description;
+    }
+    if(difficulty!=undefined){
+        body.difficulty=difficulty;
+    }
+    if(title!=undefined){
+        body.title=title;
+    }
+    if(plain_desc!=undefined){
+        body.plain_desc=plain_desc;
+    }
+    const resp=await fetch(`${BASE_ADDR}/problem/update`,{body:JSON.stringify(body),headers:header,method:"POST"});
     if(!resp.ok){throw 0;}
 }

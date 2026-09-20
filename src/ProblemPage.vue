@@ -23,6 +23,7 @@ import { show_profile } from './tool.js';
 import "katex/dist/katex.min.css";
 import loading from "./loading.js";
 import SolutionList from './SolutionList.vue';
+import edit from "@/assets/edit.svg";
     const loader=reactive(new loading());
     const prop=defineProps({
         id:Number
@@ -124,7 +125,8 @@ import SolutionList from './SolutionList.vue';
         <div id="top-panel" v-if="loader.resolved && !loader.err">
             <div id="info-panel">
                 <div class="row tab-bar">
-                    <button class="tab-btn" :class="!page?'underline':''" style="margin-left: 16px;" @click="page=0">challenge</button>
+                    <button class="tab-btn" :class="!page?'underline':''" style="margin-left: 16px;" 
+                    @click="page=0">challenge</button>
                     <button class="tab-btn" :class="page?'underline':''" @click="page=1">solution</button>
                 </div>
                 <div id="info-padding"  v-show="!page">
@@ -136,9 +138,13 @@ import SolutionList from './SolutionList.vue';
                         </div>
                         <div class="row" style="position: relative;">    
                             <div class="menu column" v-if="show_menu && uid==detail.author_id">
+                                <button class="delete-btn row" @click="router.push(`/edit/problem/${parseInt(id)}`)">
+                                    <img :src="edit" alt="" style="margin-right: 4px;">   
+                                    edit problem
+                                </button>
                                 <button class="delete-btn row" @click="delete_problem">
+                                    <img :src="delete_img" alt="" style="margin-right: 4px;">   
                                     remove problem
-                                    <img :src="delete_img" alt="">   
                                 </button>
                             </div>
                             <button class="options-btn icon-btn" v-if="isAuthenticated" @click="show_menu=!show_menu">

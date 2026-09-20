@@ -79,6 +79,13 @@ const routes = [
     props:route=>({
       id:Number(route.params.id)
     })
+  },
+  {
+    path:'/edit/problem/:id',
+    component:()=>import("@/UpdateProblem.vue"),
+    props:route=>({
+      id:Number(route.params.id)
+    })
   }
 ]
 

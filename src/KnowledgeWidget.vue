@@ -34,7 +34,7 @@
         border: 1px solid black;
         padding: 6px;
         border-radius: 12px;
-        margin-top: 8px;
+        margin-top: 16px;
         transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) transform,0.3s cubic-bezier(0.25, 0.8, 0.25, 1) box-shadow;
         color: black;
     }
@@ -48,7 +48,7 @@
     .diff{
         margin-right: 12px;
         align-items: center;
-        border-right: 1px solid black;
+        border-right: 1px solid rgba(0, 0, 0, 0.4);
         padding-right: 8px;
         width: 100px;
     }
@@ -65,7 +65,7 @@
         <div class="column">
             <span>{{ author }}</span>
             <h2 class="title">{{ title }}</h2>
-            <div class="row">
+            <div class="row" style="margin-top: 4px;">
                 <CategoryLabel v-for="tag in category" :tag="tag"></CategoryLabel>
             </div>
         </div>

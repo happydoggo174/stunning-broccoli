@@ -1,5 +1,5 @@
 <script setup>
-    import { watch,reactive,computed } from 'vue';
+    import { watch,reactive,computed,ref } from 'vue';
     import { get_knowledge_detail } from './api';
     import Menu from './Menu.vue';
     import CategoryLabel from './CategoryLabel.vue';
@@ -9,14 +9,17 @@
     import dislike from "@/assets/dislike.svg";
     import like_filled from "@/assets/like_filled.svg";
     import dislike_filled from "@/assets/dislike_filled.svg";
-    import { isAuthenticated } from './auth';
-    import { like_knowledge,dislike_knowledge } from './api';
-    import { show_dialog } from './notificationdaemon';
+    import { isAuthenticated,uid } from './auth';
+    import { like_knowledge,dislike_knowledge,remove_knowledge } from './api';
+    import { show_dialog,show_confirm } from './notificationdaemon';
     import "katex/dist/katex.min.css";
+    import options from "@/assets/options.svg";
+    import router from './router';
     const prop=defineProps({
         id:Number
     });
     const data=reactive({});
+    const show_menu=ref(false);
     watch(()=>[prop.id,isAuthenticated.value],async()=>{
         try{
             Object.assign(data,await get_knowledge_detail(prop.id));  
@@ -52,7 +55,17 @@
             }
             data.dislikes++;
             data.reaction='disliked';
-        });;
+        });
+    }
+    async function drop_kwd() {
+        show_confirm("warning",`are you sure you want to delete lesson ${data.title}`,async r=>{
+            if(!r){return;}
+            remove_knowledge(prop.id).then(()=>{
+                router.push("/");
+            },()=>{
+                show_dialog("error","can't delete lesson",true);
+            });
+        });        
     }
 </script>
 <style scoped>
@@ -93,12 +106,25 @@
 <template>
     <Menu>
         <div class="column" style="color: black;margin-left: 12vw;margin-right: 12vw;margin-top: 12px;">
-            <h2 style="font-weight: bold;font-size: 24px;">{{ data.title }}</h2>
-            <div class="row" style="align-items: center;" @click="show_profile(data.author_id)">
-                <img :src="data.profile" alt="" width="24px" height="24px" style="margin-right: 8px;" class="circle">
-                <span>{{ data.author_name }}</span>
+            <div class="row" style="justify-content: space-between;">
+                <h2 style="font-weight: bold;font-size: 24px;">{{ data.title }}</h2>
+                <div class="row" v-if="data.author_id==uid">
+                    <div v-if="show_menu" style="background-color: white;">
+                        <button @click="drop_kwd" class="borderless no-bg hover-shadow" 
+                        style="padding: 8px;border-radius: 8px;">delete</button>
+                    </div>
+                    <button @click="show_menu=!show_menu" class="borderless no-bg">
+                        <img :src="options" alt="">
+                    </button>
+                </div>
             </div>
-            <div class="row" style="border-bottom: 1px solid black;padding-bottom: 4px;margin-top: 8px;">
+            <div class="row" style="align-items: center;">
+                <div class="row" @click="show_profile(data.author_id)">
+                    <img :src="data.profile" alt="" width="24px" height="24px" style="margin-right: 8px;" class="circle">
+                    <span>{{ data.author_name }}</span>
+                </div>
+            </div>
+            <div class="row" style="border-bottom: 1px solid black;padding-bottom: 8px;margin-top: 8px;">
                 <CategoryLabel v-for="tag in data.category" :tag="tag"></CategoryLabel>
             </div>
             <LatexDisplay class="content" :content="data.content" :plaintext="data.plain_content"></LatexDisplay>

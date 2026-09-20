@@ -38,7 +38,7 @@
                 <div :style="`width:20px;height:20px;border-radius:50%;background-color:${circle}`"></div>
                 <span>{{ difficulty }}</span>
             </div>
-            <h2 class="tilte" style="color: black;">{{title}}</h2>
+            <h3 class="tilte" style="color: black;">{{title}}</h3>
             <img :src="done" alt="completed" v-if='problem_status=="solved"' class="solved-img circle">
         </div>
         <div class="stat">

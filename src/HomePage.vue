@@ -39,7 +39,7 @@
                 <KnowledgeWidget :category="kwd.category" :title="kwd.title" :id="kwd.id" :author="kwd.author_name"
                 :key="kwd.id" :difficulty="kwd.difficulty" v-for="kwd in lesson" ></KnowledgeWidget>
             </div>
-            <div class="column">
+            <div class="column" style="margin-top: 12px;">
                 <div class="row" style="justify-content: space-between;">
                     <div></div>
                     <h2>challenge</h2>
