@@ -268,7 +268,7 @@ export async function remove_knowledge(kid) {
     const resp=await fetch(`${BASE_ADDR}/knowledge/drop?knowledge_id=${kid}`,{method:"DELETE",headers:header});
     if(!resp.ok){throw 0;}
 }
-export async function update_problem(pid,title,description,difficulty,plain_desc) {
+export async function update_problem(pid,title,description,difficulty,plain_desc,hint) {
     const header=await make_auth_header(true);
     const body={problem_id:pid};
     if(description!=undefined){
@@ -282,6 +282,9 @@ export async function update_problem(pid,title,description,difficulty,plain_desc
     }
     if(plain_desc!=undefined){
         body.plain_desc=plain_desc;
+    }
+    if(hint!=undefined){
+        body.hint=hint;
     }
     const resp=await fetch(`${BASE_ADDR}/problem/update`,{body:JSON.stringify(body),headers:header,method:"POST"});
     if(!resp.ok){throw 0;}

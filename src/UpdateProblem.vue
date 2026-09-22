@@ -1,7 +1,7 @@
 <script setup>
     import Menu from './Menu.vue';
     import { get_problem_detail,update_problem } from './api.js';
-    import { reactive,onMounted,ref,useTemplateRef } from 'vue';
+    import { reactive,onMounted,ref,useTemplateRef,computed } from 'vue';
     import loading from './loading.js';
     import LatexDisplay from './LatexDisplay.vue';
     import LatexInput from './LatexInput.vue';
@@ -17,7 +17,7 @@
         id:Number
     });
     const detail=reactive({});
-    const edited=reactive({title:"",description:"",hint:[],plain_desc:true});
+    const edited=reactive({title:"",description:"",hint:[],plain_desc:true,difficulty:"easy"});
     const loader=reactive(new loading());
     const editing_title=ref(false);
     const hovering_title=ref(false);
@@ -34,6 +34,7 @@
             edited.description=out.description;
             edited.hint=out.hint;
             edited.plain_desc=out.plain_desc;
+            edited.difficulty=out.difficulty;
         });
     });
     function toggle_title(){
@@ -64,11 +65,19 @@
         edit_hint.value=false;
     }
     async function save_edit() {
-        if(edit_desc.value || editing_title.value){
+        if(edit_desc.value || editing_title.value || edit_hint.value){
             show_confirm("warning",'you have unsaved change,continue?',async(r)=>{
                 if(!r){return;}
                 try{
-                    await update_problem(prop.id,detail.title,detail.description,detail.difficulty,detail.plain_desc);
+                    await update_problem(
+                        prop.id,
+                        detail.title,
+                        detail.description,
+                        detail.difficulty,
+                        detail.plain_desc,
+                        detail.hint
+                    );
+                    router.push('/');
                 }catch(e){
                     console.log(e);
                     show_dialog('error','unable to edit problem',true);
@@ -77,12 +86,26 @@
             return;
         }
         try{
-            await update_problem(prop.id,detail.title,detail.description,detail.difficulty,detail.plain_desc);
+            await update_problem(
+                prop.id,
+                detail.title,
+                detail.description,
+                detail.difficulty,
+                detail.plain_desc,
+                detail.hint
+            );
+            router.push('/');
         }catch(e){
             console.log(e);
             show_dialog('error','unable to edit problem',true);
         }
     }
+    const diff_color=computed(()=>{
+        if(detail.difficulty=='easy'){
+            return 'rgb(24,242,31)';
+        }
+        return detail.difficulty=='medium'?"rgb(255,240,31)":"rgb(234,51,35)";
+    });
 </script>
 <style scoped>
     .title{
@@ -91,12 +114,25 @@
     .act-btn{
         padding: 8px;
         border-radius: 12px;
+        font-size: 16px;
     }
     .edit-btn{
         border: none;
         background-color: rgba(0,0,0,0);
         border-radius: 50%;
         padding: 4px;
+    }
+    .diff-circle{
+        margin-left:8px;
+        width:24px;
+        height:24px;
+        border-radius: 50%;
+    }
+    .hitem{
+        margin-top: 4px;
+    }
+    .hitem:hover{
+        background-color: rgba(0,0,0,0.1);
     }
 </style>
 <template>
@@ -141,6 +177,15 @@
                 <LatexDisplay :content="detail.description" :plaintext="detail.plain_desc" v-if="!edit_desc"></LatexDisplay>
                 <LatexInput v-model="edited.description" v-model:is_plain="edited.plain_desc" v-else></LatexInput>
             </div>
+            <div class="row" style="margin-bottom: 16px;margin-left: 8px;">
+                <span>difficulty</span>
+                <div :style="`background-color:${diff_color}`" class="diff-circle"></div>
+                <select name="" id="" class="spacer" style="margin-left: 12px;" v-model="detail.difficulty">
+                    <option value="easy">easy</option>
+                    <option value="medium">medium</option>
+                    <option value="hard">hard</option>
+                </select>
+            </div>
             <div class="row" style="justify-content: center;">
                 <span style="font-size: 20px;font-weight: bold;">hints</span>
                 <button @click="show_hint=!show_hint" class="no-bg circle hover-shadow" style="margin-left: 8px;">
@@ -160,16 +205,16 @@
                     </button>
                 </div>
             </div>
-            <div v-if="show_hint">
+            <div v-if="show_hint" style="margin-left: 24px;">
                 <ol v-if="!edit_hint">
-                    <li v-for="hint in detail.hint">{{ hint }}</li>
+                    <li v-for="hint in detail.hint" class="hitem">{{ hint }}</li>
                 </ol>
                 <HintEditor v-else :old_hint="detail.hint" ref="hint-edit"></HintEditor>
             </div>
-            <div class="row" style="margin-top: 12px;">
-                <button class="act-btn spacer hover-shadow" @click="save_edit">save</button>
-                <button class="act-btn spacer hover-shadow" style="margin-left: 8px;" 
+            <div class="row" style="margin-top: 10px;padding: 8px;">
+                <button class="act-btn spacer hover-shadow" style="margin-right: 8px;" 
                 @click="router.push('/')">cancel</button>
+                <button class="act-btn spacer hover-shadow" @click="save_edit">save</button>
             </div>
         </div>
     </Menu>
