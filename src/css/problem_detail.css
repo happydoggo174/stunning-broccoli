@@ -39,7 +39,7 @@
     transition: 0.12s background-color ease-in-out;
 }
 .react-btn:hover{
-    background-color: rgb(46, 134, 139);
+    background-color: rgba(46, 134, 139, 0.7);
 }
 .options-btn{
     border-radius: 40%;
@@ -100,4 +100,15 @@
 }
 .underline{
     text-decoration: 1.5px underline;
+}
+.solved-btn{
+    margin-top: 16px;
+    padding: 8px;
+    border-radius: 16px;
+    transition: 0.25s background-color ease-in-out;
+}
+.solved-btn:hover{
+    color: white;
+    background-color: rgb(19, 168, 19);
+    opacity: 0.8;
 }

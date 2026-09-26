@@ -96,11 +96,16 @@
     .make-comment-btn{
         background-color: green;
     }
+    .cmt-row{
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 12px;
+    }
 </style>
 <template>
-    <div class="row" style="justify-content: space-between;align-items: center;margin-top: 12px;">
+    <div class="row hover-tint cmt-row" @click="toggle_comment">
         <span class="comment-banner column">comments({{ comment_cnt }})</span>
-        <button class="more-btn" @click="toggle_comment">
+        <button class="more-btn borderless">
             <img :src="more_src" alt="show comments">
         </button>
     </div>

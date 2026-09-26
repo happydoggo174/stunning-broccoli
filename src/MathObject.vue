@@ -32,7 +32,7 @@
     }
 </style>
 <template>
-    <RouterLink :to="`/problem/${id}`" :class="'math-problem '+`${bg_colors[difficulty]}-shadow`">
+    <RouterLink :to="`/problem/${id}`" :class="'math-problem '+`${bg_colors[difficulty]}-shadow`" v-once>
         <div class="difficult-cover">
             <div style="margin-right: 14px;align-items: center;width: 62px;" class="column">
                 <div :style="`width:20px;height:20px;border-radius:50%;background-color:${circle}`"></div>

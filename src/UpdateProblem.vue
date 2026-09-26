@@ -13,6 +13,7 @@
     import less from "@/assets/less.svg";
     import router from './router';
     import { show_dialog,show_confirm } from './notificationdaemon.js';
+    import 'katex/dist/katex.min.css';
     const prop=defineProps({
         id:Number
     });
@@ -25,6 +26,7 @@
     const edit_desc=ref(false);
     const show_hint=ref(false);
     const edit_hint=ref(false);
+    const hvr_hint=ref(false);
     const hint_ref=useTemplateRef("hint-edit");
     onMounted(async()=>{
         await loader.wrap(async()=>{
@@ -134,6 +136,10 @@
     .hitem:hover{
         background-color: rgba(0,0,0,0.1);
     }
+    .edit-hint{
+        margin-left: 8px;
+        padding: 4px;
+    }
 </style>
 <template>
     <Menu>
@@ -141,10 +147,10 @@
             <div class="row" style="justify-content: center;min-height: 32px;" @mouseenter="hovering_title=true" 
             @mouseleave="hovering_title=false">
                 <div class="title" v-show="editing_title==false">{{ detail.title }}</div>
-                <input type="text" v-model="edited.title" v-show="editing_title" style="font-size: 20px;">
+                <input type="text" v-model="edited.title" v-show="editing_title" style="font-size: 20px;text-align: center;">
                 <div class="row" :style="`margin-left:8px;${hovering_title?'opacity:1':'opacity:0'}`" >
-                    <button  class="edit-btn hover-shadow" @click="toggle_title">
-                        <img :src="edit" alt="">
+                    <button  class="edit-btn hover-shadow" @click="toggle_title" v-show="!editing_title">
+                        <img :src="edit" alt="" v-once>
                     </button>
                     <div class="row" v-show="editing_title">
                         <button @click="cancel_title_edit" class="edit-btn hover-shadow" style="margin-right: 4px;">
@@ -180,18 +186,18 @@
             <div class="row" style="margin-bottom: 16px;margin-left: 8px;">
                 <span>difficulty</span>
                 <div :style="`background-color:${diff_color}`" class="diff-circle"></div>
-                <select name="" id="" class="spacer" style="margin-left: 12px;" v-model="detail.difficulty">
+                <select name="" id="" style="margin-left: 12px;" v-model="detail.difficulty">
                     <option value="easy">easy</option>
                     <option value="medium">medium</option>
                     <option value="hard">hard</option>
                 </select>
             </div>
-            <div class="row" style="justify-content: center;">
+            <div class="row" style="justify-content: center;" @mouseenter="hvr_hint=true" @mouseleave="hvr_hint=false">
                 <span style="font-size: 20px;font-weight: bold;">hints</span>
                 <button @click="show_hint=!show_hint" class="no-bg circle hover-shadow" style="margin-left: 8px;">
                     <img :src="show_hint?less:more" alt="">
                 </button>
-                <button  class="borderless no-bg circle hover-shadow" style="margin-left: 8px;padding: 4px;" 
+                <button  class="borderless no-bg circle hover-shadow edit-hint" :style="`opacity:${hvr_hint?'1':'0'}`" 
                 @click="edit_hint=!edit_hint" v-show="!edit_hint">
                     <img :src="edit" alt="">
                 </button>

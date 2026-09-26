@@ -24,14 +24,16 @@ import "katex/dist/katex.min.css";
 import loading from "./loading.js";
 import SolutionList from './SolutionList.vue';
 import edit from "@/assets/edit.svg";
+import DialogBackdrop from './DialogBackdrop.vue';
     const loader=reactive(new loading());
     const prop=defineProps({
         id:Number
     });
     const show_menu=ref(false);
     const page=ref(0);
-    let detail=reactive({});
-    let status=reactive({});
+    const detail=reactive({});
+    const status=reactive({});
+    const show_done=ref(false);
     let count=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
@@ -114,12 +116,31 @@ import edit from "@/assets/edit.svg";
     }
     const solved_title=computed(()=>
     status.status=='solved-offline'?'please login to save progess into your account':'solved');
+    function handle_solve(){
+        show_done.value=true;
+        status.status='solved';
+    }
+    function handle_offline_solve(){
+        status.status='solved-offline';
+    }
 </script>
 <style scoped>
     @import "./css/index.css";
     @import "./css/problem_detail.css";
 </style>
 <template>
+    <DialogBackdrop v-if="show_done">
+        <div style="background-color: white;color: black;padding: 16px;border-radius: 12px;" class="column">
+            <div class="row">
+                <h2 style="color: green;">problem solved</h2>
+                <img class="circle" :src="done" alt="" style="margin-left: 8px;">
+            </div>
+            <div style="margin-top: 8px;display: grid;grid-template-columns: repeat(2,1fr);">
+                <button class="solved-btn spacer" @click="show_done=false">ok</button>
+                <button class="solved-btn spacer" style="margin-left: 8px;">post solution</button>
+            </div>
+        </div>
+    </DialogBackdrop>
     <Menu>
         <Loading :resolved="loader.resolved" :err="loader.err"/>
         <div id="top-panel" v-if="loader.resolved && !loader.err">
@@ -180,8 +201,8 @@ import edit from "@/assets/edit.svg";
                 <SolutionList :problem_id="prop.id" :shown="page==1" v-show="page==1"></SolutionList>
             </div>
             <div id="run-panel">
-                <Solver :parameter="detail.parameter" @solved="status.status='solved'" 
-                @solved-offline="status.status='solved-offline'":output="detail.output" 
+                <Solver :parameter="detail.parameter" @solved="handle_solve" 
+                @solved-offline="handle_offline_solve":output="detail.output" 
                 :problem_id="prop.id" :problem_status="status.status" :example_name="detail.display_name"/>
             </div>
         </div>

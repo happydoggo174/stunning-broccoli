@@ -24,6 +24,13 @@
         margin-right: 24px;
         color: black;
     }
+    .next-btn{
+        padding: 4px;
+        border-radius: 8px;
+    }
+    .next-btn:hover{
+        background-color: rgba(0, 0, 0, 0.2);
+    }
 </style>
 <template>
     <Menu>
@@ -32,7 +39,7 @@
                 <div class="row" style="justify-content: space-between;">
                     <div></div>
                     <h2>learn</h2>
-                    <button class="borderless no-bg" @click="router.push('/learn')">
+                    <button class="borderless no-bg next-btn" @click="router.push('/learn')">
                         <img :src="next" alt="more lesson"></button>
                 </div>
                 <span class="text-center">learn about math and how it's used in the real world</span>
@@ -43,7 +50,7 @@
                 <div class="row" style="justify-content: space-between;">
                     <div></div>
                     <h2>challenge</h2>
-                    <button class="borderless no-bg" @click="router.push('/challenge').then()">
+                    <button class="borderless no-bg next-btn" @click="router.push('/challenge').then()">
                         <img :src="next" alt="more challenge"></button>
                 </div>
                 <span class="text-center">try out your knowledge in real world application and remember better</span>

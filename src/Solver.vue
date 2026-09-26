@@ -56,7 +56,6 @@
             }
         }
         solved("solved");
-        show_dialog("passed","all test passed",false);
     }
     function undo_status(i){
         i++;
