@@ -101,6 +101,14 @@
         align-items: center;
         margin-top: 12px;
     }
+    .v-enter-active,
+    .v-leave-active {
+    transition: opacity 0.2s ease-in-out;
+    }
+    .v-enter-from,
+    .v-leave-to {
+    opacity: 0;
+    }
 </style>
 <template>
     <div class="row hover-tint cmt-row" @click="toggle_comment">
@@ -109,15 +117,17 @@
             <img :src="more_src" alt="show comments">
         </button>
     </div>
-    <div class="comment-section column" v-if="show_comment">
-        <div class="row" style="width:100%;margin-top: 14px;margin-bottom: 12px;">
-            <textarea id="comment-field" :placeholder="comment_placeholder" v-model="comment" 
-            :readonly="!isAuthenticated" maxlength="250" @input="resize_comment"></textarea>
-            <button class="make-comment-btn"  @click="handle_make_comment" :style="send_style">
-                <img :src="send" v-once alt="send comment">
-            </button>
+    <Transition>
+        <div class="comment-section column" v-if="show_comment">
+            <div class="row" style="width:100%;margin-top: 14px;margin-bottom: 12px;">
+                <textarea id="comment-field" :placeholder="comment_placeholder" v-model="comment" 
+                :readonly="!isAuthenticated" maxlength="250" @input="resize_comment"></textarea>
+                <button class="make-comment-btn"  @click="handle_make_comment" :style="send_style">
+                    <img :src="send" v-once alt="send comment">
+                </button>
+            </div>
+            <CommentWidget v-for="comment in data" :content="comment.content" 
+            :profile="comment.profile" :username="comment.username" :problem_id="problem_id" :cid="comment.user_id"/>
         </div>
-        <CommentWidget v-for="comment in data" :content="comment.content" 
-        :profile="comment.profile" :username="comment.username" :problem_id="problem_id" :cid="comment.user_id"/>
-    </div>
+    </Transition>
 </template>

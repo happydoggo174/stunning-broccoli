@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch,ref,computed} from 'vue';
+import { reactive, watch,ref,computed,useTemplateRef} from 'vue';
 import { get_problem_detail,get_problem_status,like_problem,dislike_problem,remove_problem } from './api.js';
 import Loading from './Loading.vue';
 import Menu from './Menu.vue';
@@ -34,6 +34,7 @@ import DialogBackdrop from './DialogBackdrop.vue';
     const detail=reactive({});
     const status=reactive({});
     const show_done=ref(false);
+    const solver=useTemplateRef("solver");
     let count=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
@@ -123,6 +124,13 @@ import DialogBackdrop from './DialogBackdrop.vue';
     function handle_offline_solve(){
         status.status='solved-offline';
     }
+    async function post_solution() {
+        localStorage.setItem('solution-data',JSON.stringify({
+            id:prop.id,
+            expr:solver.value.get_expr()
+        }));
+        await router.push(`/post/solution/${prop.id}`);
+    }
 </script>
 <style scoped>
     @import "./css/index.css";
@@ -136,8 +144,8 @@ import DialogBackdrop from './DialogBackdrop.vue';
                 <img class="circle" :src="done" alt="" style="margin-left: 8px;">
             </div>
             <div style="margin-top: 8px;display: grid;grid-template-columns: repeat(2,1fr);">
+                <button class="solved-btn spacer" style="margin-right: 8px;" @click="post_solution">post solution</button>
                 <button class="solved-btn spacer" @click="show_done=false">ok</button>
-                <button class="solved-btn spacer" style="margin-left: 8px;">post solution</button>
             </div>
         </div>
     </DialogBackdrop>
@@ -168,7 +176,9 @@ import DialogBackdrop from './DialogBackdrop.vue';
                                     remove problem
                                 </button>
                             </div>
-                            <button class="options-btn icon-btn" v-if="isAuthenticated" @click="show_menu=!show_menu">
+                            <button :class="[uid==detail.author_id?'options-btn':'blocked','icon-btn']" 
+                            v-if="isAuthenticated" @click="show_menu=!show_menu" 
+                            :title="uid==detail.author_id?'more option':'only for author'">
                                 <img :src="options" alt="more option">
                             </button>
                         </div>
@@ -203,7 +213,8 @@ import DialogBackdrop from './DialogBackdrop.vue';
             <div id="run-panel">
                 <Solver :parameter="detail.parameter" @solved="handle_solve" 
                 @solved-offline="handle_offline_solve":output="detail.output" 
-                :problem_id="prop.id" :problem_status="status.status" :example_name="detail.display_name"/>
+                :problem_id="prop.id" :problem_status="status.status" :example_name="detail.display_name" 
+                ref="solver"/>
             </div>
         </div>
     </Menu>

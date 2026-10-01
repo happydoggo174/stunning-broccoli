@@ -2,14 +2,16 @@
     import Menu from './Menu.vue';
     import { post_solution } from './api';
     import { show_dialog } from './notificationdaemon.js';
-    import { ref } from 'vue';
+    import { ref,onMounted } from 'vue';
     import router from "./router";
+    import { get_problem_detail } from './api';
     const prop=defineProps({
         id:Number,
     });
     const title=ref("");
     const descripion=ref("");
     const equation=ref("");
+    const ptitle=ref(null);
     async function post(e){
         e.preventDefault();
         if(title.value.length=='' || title.value.length>150){
@@ -31,6 +33,27 @@
         field.style.height="auto";
         field.style.height=`${field.scrollHeight}px`;
     }
+    onMounted(async()=>{
+        try{
+            const detail=await get_problem_detail(prop.id);
+            ptitle.value=detail.title;
+        }catch{
+
+        }
+        const data=localStorage.getItem("solution-data");
+        if(data==null || !data.length){
+            return;
+        }
+        try{
+            const info=JSON.parse(data);
+            if(info.id!=prop.id){
+                return;
+            }
+            equation.value=info.expr;
+        }catch{
+            return;
+        }
+    });
 </script>
 <style scoped>
     form{
@@ -70,7 +93,14 @@
 <template>
     <Menu>
         <div style="color: black;margin-left: 12px;margin-right: 12px;" class="column">
-            <span class="title">post a solution</span>
+            <span class="title">
+                {{'post a solution'}}
+                <span v-if="ptitle!=null">for 
+                    <RouterLink style="color: green;font-weight: bold;" :to="`/problem/${prop.id}`">
+                        {{ ptitle }}
+                    </RouterLink>
+                </span>
+            </span>
             <div class="row" style="display: flex;justify-content: center;">
                 <input type="text" v-model="title" placeholder="your title here" class="title-inp field">
             </div>

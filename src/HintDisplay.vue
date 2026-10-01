@@ -35,6 +35,7 @@
     <button class="row hover-tint no-btn" style="margin-left: 8px;" @click="enabled=!enabled" @mouseenter="hvr=true" 
     @mouseleave="hvr=false" :title="enabled?'hide hint':'show hint'">
         <img :src="hint_sym" alt="">
-        <span style="margin-left: 8px;" :class="enabled?'shown':'hidden'">{{ enabled?content:'' }}</span>
+        <span style="margin-left: 8px;word-break: break-all;" 
+        :class="enabled?'shown':'hidden'">{{ enabled?content:'' }}</span>
     </button>
 </template>

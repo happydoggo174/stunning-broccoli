@@ -23,6 +23,10 @@
     });
     const buttons=ref(param.parameter);
     const solved=defineEmits(["solved","solved-offline"]);
+    function get_expr(){
+        return expr.value;
+    }
+    defineExpose({get_expr});
     function serialize_output(output,example_name){
         const out=[];
         const display=serialize_display(example_name);

@@ -47,6 +47,10 @@
 .options-btn:hover{
     background-color: rgb(42, 163, 163);
 }
+.blocked{
+    opacity: 50%;
+    border-radius: 40%;
+}
 .menu{
     background-color: white;
     padding: 8px;

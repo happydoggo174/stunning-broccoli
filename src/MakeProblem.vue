@@ -117,7 +117,7 @@
                 <div class="column" style="margin-top: 14px;">
                     <span class="text-center">description</span>
                     <LatexInput placeholder="your description here" v-model="description" :max_length="1000"
-                    v-model:is_plain="plain_desc"></LatexInput>
+                    v-model:is_plain="plain_desc" :doc_id="doc_id"></LatexInput>
                 </div>
                 <div class="row" style="justify-content: space-between;margin-top: 14px;margin-bottom: 14px;">
                     <span>difficulty</span>
@@ -151,7 +151,7 @@
                     <span>input</span>
                     <Parameter v-for="param in parameter" :key="param.id" :name="param.name" :idx="param.id" 
                     @remove="remove_parameter" v-model="param.name"/>
-                    <button style="margin-left: 14px;border-radius: 40%;padding: 2px;background-color: white;">
+                    <button class="add-cat">
                         <img :src="add_mini" v-once alt="" @click="add_parameter">
                     </button>
                 </div>

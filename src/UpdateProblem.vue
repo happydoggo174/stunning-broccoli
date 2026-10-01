@@ -14,6 +14,8 @@
     import router from './router';
     import { show_dialog,show_confirm } from './notificationdaemon.js';
     import 'katex/dist/katex.min.css';
+    import { generate_docid } from './tool.js';
+    import { list_img } from './imgkit.js';
     const prop=defineProps({
         id:Number
     });
@@ -28,6 +30,7 @@
     const edit_hint=ref(false);
     const hvr_hint=ref(false);
     const hint_ref=useTemplateRef("hint-edit");
+    const doc_id=generate_docid();
     onMounted(async()=>{
         await loader.wrap(async()=>{
             const out=await get_problem_detail(prop.id);
@@ -77,7 +80,9 @@
                         detail.description,
                         detail.difficulty,
                         detail.plain_desc,
-                        detail.hint
+                        detail.hint,
+                        doc_id,
+                        list_img(detail.description)
                     );
                     router.push('/');
                 }catch(e){
@@ -94,7 +99,9 @@
                 detail.description,
                 detail.difficulty,
                 detail.plain_desc,
-                detail.hint
+                detail.hint,
+                doc_id,
+                list_img(detail.description)
             );
             router.push('/');
         }catch(e){
@@ -181,7 +188,8 @@
                     </div>
                 </div>
                 <LatexDisplay :content="detail.description" :plaintext="detail.plain_desc" v-if="!edit_desc"></LatexDisplay>
-                <LatexInput v-model="edited.description" v-model:is_plain="edited.plain_desc" v-else></LatexInput>
+                <LatexInput v-model="edited.description" v-model:is_plain="edited.plain_desc" :doc_id="doc_id" 
+                v-else></LatexInput>
             </div>
             <div class="row" style="margin-bottom: 16px;margin-left: 8px;">
                 <span>difficulty</span>

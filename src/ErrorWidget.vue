@@ -1,13 +1,12 @@
 <script setup>
     import close from "@/assets/close.svg";
-    import { computed } from "vue";
     const prop=defineProps({
         params:Array,
         correct:Number,
         output:Number|String,
     });
     const emit=defineEmits(["closed"]);
-    const content=computed(()=>`f(${prop.params.join(',')})=`);
+    const content=`f(${prop.params.join(',')})=`;
 </script>
 <style scoped>
     .answer{
