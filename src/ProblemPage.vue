@@ -177,7 +177,7 @@ import DialogBackdrop from './DialogBackdrop.vue';
                                 </button>
                             </div>
                             <button :class="[uid==detail.author_id?'options-btn':'blocked','icon-btn']" 
-                            v-if="isAuthenticated" @click="show_menu=!show_menu" 
+                            v-if="isAuthenticated" @click="show_menu=!show_menu" :disabled="uid!=detail.author_id" 
                             :title="uid==detail.author_id?'more option':'only for author'">
                                 <img :src="options" alt="more option">
                             </button>

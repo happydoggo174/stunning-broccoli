@@ -142,10 +142,10 @@
         background-color: rgba(255,255,255,0.2);
         border: 1px solid black;
         font-family: monospace;
+        overflow-wrap: break-word;
     }
     .latex-back{
         z-index: -1;
-        overflow-wrap: break-word;
         letter-spacing: normal;
         color: rgba(0,0,0,0);
         border-color: rgba(0,0,0,0);

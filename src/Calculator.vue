@@ -53,6 +53,7 @@
         flex-grow: 1;
         font-size: 20px;
         padding: 8px;
+        color: green;
     }
     .formula-field{
         align-items: center;
@@ -61,29 +62,45 @@
         color: black;
         font-size: 18px;
     }
+    .fn-btn{
+        color: purple;
+    }
+    .opt-btn{
+        color: blue;
+    }
+    .const-btn{
+        color: rgb(32, 171, 32);
+    }
+    .keyboard button:hover{
+        text-decoration: underline;
+    }
 </style>
 <template>
-    <div class="column">
+    <div class="column keyboard">
         <div class="formula-field row">
-            <span id="formula-label">{{ `f(${buttons.join(",")})=` }}</span>
-            <textarea id="expr-field" type="text" v-model="content" autofocus ref="expr_field" @input="resize_field"></textarea>
+            <div class="row" style="align-items: center;height: 100%;">
+                <span id="formula-label">{{ `f(${buttons.join(",")})=` }}</span>
+            </div>
+            <textarea id="expr-field" type="text" v-model="content" autofocus ref="expr_field" @input="resize_field">
+            </textarea>
         </div>    
         <div class="row">
             <button v-for="btn in buttons" @click="add_key(btn)" class="var-btn">{{ btn }}</button>
         </div>
         <div id="data-key">
-            <button @click="add_key('+')">+</button>
-            <button @click="add_key('-')">-</button>
-            <button @click="add_key('*')">*</button>
-            <button @click="add_key('/')">/</button>
-            <button @click="add_key('^()')">x<sup>y</sup></button>
-            <button @click="add_key('√')">√</button>
-            <button @click="add_key('!')">!</button>
-            <button @click="add_key('%')">%</button>
-            <button @click="add_key('||')">|x|</button>
-            <button v-for="fn in functions" @click="add_key(fn+'()')" v-once>{{ fn }}</button>
-            <button @click="add_key('pi')">pi</button>
-            <button @click="add_key('e')">e</button>
+            <button @click="add_key('+')" class="opt-btn">+</button>
+            <button @click="add_key('-')" class="opt-btn">-</button>
+            <button @click="add_key('*')" class="opt-btn">*</button>
+            <button @click="add_key('/')"  class="opt-btn">/</button>
+            <button @click="add_key('^()')" class="opt-btn">x<sup>y</sup></button>
+            <button @click="add_key('√')" class="opt-btn">√</button>
+            <button @click="add_key('!')" class="opt-btn">!</button>
+            <button @click="add_key('%')" class="opt-btn">%</button>
+            <button @click="add_key('||')"  class="opt-btn">|x|</button>
+            <button v-for="fn in functions" @click="add_key(fn+'()')" v-once class="fn-btn">
+            {{ fn }}</button>
+            <button @click="add_key('pi')" class="const-btn">pi</button>
+            <button @click="add_key('e')" class="const-btn">e</button>
         </div>
     </div>
 </template>
