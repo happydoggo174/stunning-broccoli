@@ -1,17 +1,16 @@
 #top-panel{
     display: grid;
-    grid-template-columns: repeat(5,1fr);
+    grid-template-columns: 3fr 2fr;
     height: calc(100vh - 28px);
 }
+.top-fs{
+    grid-template-columns: 1fr 6fr !important;
+}
 #info-panel{
-    grid-column-start: 1;
-    grid-column-end: 4;
     background-color: rgb(176,224,230);
 }
 #run-panel{
     border-left: 1px solid black;
-    grid-column-start: 4;
-    grid-column-end: 6;
 }
 .problem-tilte{
     text-align: center;
@@ -115,4 +114,32 @@
     color: white;
     background-color: rgb(19, 168, 19);
     opacity: 0.8;
+}
+.info-btn{
+    padding: 4px;
+    border-radius: 8px;
+    margin-top: 8px;
+    margin-left: 8px;
+    margin-right: 8px;
+    font-size: 14px;
+    background-color: unset;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    transition: 0.2s background-color ease-in-out;
+    transition-delay: 60ms;
+    letter-spacing: 0.03em;
+}
+.info-btn .ex-img{
+    opacity: 0;
+    transition: 0.2s opacity ease-in-out;
+    transition-delay: 60ms;
+}
+.info-btn:hover{
+    background-color: rgba(0,0,555,0.4);
+}
+.info-btn:hover .ex-img{
+    opacity: 1;
 }

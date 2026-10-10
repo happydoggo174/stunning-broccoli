@@ -4,6 +4,7 @@
 }
 body{
     margin: 0;
+    background-color: rgb(197, 240, 246);
 }
 #app{
     width: 100%;
@@ -14,9 +15,6 @@ body{
     flex-direction: column;
     max-width: none;
     overflow-y: auto;
-}
-body{
-    background-color: rgb(197, 240, 246);
 }
 .green-shadow:hover{
     box-shadow: 0 12px 24px rgba(34, 197, 94, 0.5);

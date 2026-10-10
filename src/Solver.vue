@@ -120,6 +120,7 @@
         font-size: 18px;
         overflow: hidden;
         align-items: center;
+        letter-spacing: 0.02em;
     }
     #submit-btn:hover{
         background-color: rgb(0, 217, 255);

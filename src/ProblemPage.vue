@@ -25,6 +25,8 @@ import loading from "./loading.js";
 import SolutionList from './SolutionList.vue';
 import edit from "@/assets/edit.svg";
 import DialogBackdrop from './DialogBackdrop.vue';
+import fullscreen from "@/assets/fullscreen.svg";
+import expand from "@/assets/expand.svg";
     const loader=reactive(new loading());
     const prop=defineProps({
         id:Number
@@ -35,6 +37,7 @@ import DialogBackdrop from './DialogBackdrop.vue';
     const status=reactive({});
     const show_done=ref(false);
     const solver=useTemplateRef("solver");
+    const full_scr=ref(false);
     let count=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
@@ -151,11 +154,11 @@ import DialogBackdrop from './DialogBackdrop.vue';
     </DialogBackdrop>
     <Menu>
         <Loading :resolved="loader.resolved" :err="loader.err"/>
-        <div id="top-panel" v-if="loader.resolved && !loader.err">
-            <div id="info-panel">
+        <div id="top-panel" v-if="loader.resolved && !loader.err" :class="full_scr?`top-fs`:''">
+            <div id="info-panel" v-show="!full_scr">
                 <div class="row tab-bar">
                     <button class="tab-btn" :class="!page?'underline':''" style="margin-left: 16px;" 
-                    @click="page=0">challenge</button>
+                    @click="page=0">description</button>
                     <button class="tab-btn" :class="page?'underline':''" @click="page=1">solution</button>
                 </div>
                 <div id="info-padding"  v-show="!page">
@@ -210,11 +213,26 @@ import DialogBackdrop from './DialogBackdrop.vue';
                 </div>
                 <SolutionList :problem_id="prop.id" :shown="page==1" v-show="page==1"></SolutionList>
             </div>
+            <div class="info-fs column" v-show="full_scr">
+                <button class="info-btn">
+                    <div></div>
+                    solve
+                    <img :src="expand" alt="" class="ex-img">
+                </button>
+                <button class="info-btn">
+                    <div></div>
+                    detail
+                    <img :src="expand" alt="" class="ex-img">
+                </button>
+            </div>
             <div id="run-panel">
                 <Solver :parameter="detail.parameter" @solved="handle_solve" 
                 @solved-offline="handle_offline_solve":output="detail.output" 
                 :problem_id="prop.id" :problem_status="status.status" :example_name="detail.display_name" 
                 ref="solver"/>
+                <button style="position: absolute;bottom: 0px;display: none;" class="icon-btn" @click="full_scr=!full_scr">
+                    <img :src="fullscreen" alt="">
+                </button>
             </div>
         </div>
     </Menu>

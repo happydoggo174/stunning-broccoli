@@ -10,7 +10,7 @@
         border: none;
         background-color: unset;
     }
-    .social-btn{
+    .social{
         margin-left: 6px;
     }
     footer{
@@ -19,36 +19,36 @@
         height: 40px;
         padding: 6px;
     }
-    .term-btn{
+    .tbtn{
         margin-left: 8px;
         padding: 6px;
         border-radius: 12px;
     }
-    .term-btn:hover{
+    .tbtn:hover{
         background-color: rgb(0, 162, 255);
     }
 </style>
 <template>
-    <footer id="footer">
+    <footer>
         <div class="row" style="justify-content: space-between;">
             <div class="row">
-                <button class="term-btn">term of use</button>
-                <button class="term-btn">privacy policy</button>
-                <button class="term-btn">faq</button>
-                <button class="term-btn" @click="router.push(`/license`).then()">open source license</button>
+                <button class="tbtn">term of use</button>
+                <button class="tbtn">privacy policy</button>
+                <button class="tbtn">faq</button>
+                <button class="tbtn" @click="router.push(`/license`).then()">open source license</button>
             </div>
             <div class="row" style="align-items: center;">
                 <span>contact us</span>
-                <button class="social-btn">
+                <button class="social">
                     <img :src="facebook" alt="facebook" width="24px" height="24px">
                 </button>
-                <button class="social-btn">
+                <button class="social">
                     <img :src="youtube" alt="youtube" width="24px" height="24px">
                 </button>
-                <button class="social-btn">
+                <button class="social">
                     <img :src="instagram" alt="instagram" width="24px" height="24px">
                 </button>
-                <button class="social-btn">
+                <button class="social">
                     <img :src="twitter" alt="twitter" width="24px" height="24px">
                 </button>
             </div>
