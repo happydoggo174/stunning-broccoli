@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch,ref,computed,useTemplateRef} from 'vue';
+import { reactive, watch,ref,computed,useTemplateRef,onMounted,onUnmounted} from 'vue';
 import { get_problem_detail,get_problem_status,like_problem,dislike_problem,remove_problem } from './api.js';
 import Loading from './Loading.vue';
 import Menu from './Menu.vue';
@@ -102,6 +102,8 @@ import half_screen from "@/assets/half_screen.svg";
             Object.assign(status,pstatus);
         }catch{return;}
     },{immediate:true});
+    onMounted(()=>document.addEventListener('keydown',check_shortcut));
+    onUnmounted(()=>document.removeEventListener('keydown',check_shortcut));
     const like_src=computed(()=> status.reaction=='liked'?like_filled:like);
     const dislike_src=computed(()=>status.reaction=='disliked'?dislike_filled:dislike);
     const done_src=computed(()=>{
@@ -137,7 +139,13 @@ import half_screen from "@/assets/half_screen.svg";
         await router.push(`/post/solution/${prop.id}`);
     }
     function check_shortcut(e){
-        console.log(e);
+        if(!full_scr.value){return;}
+        if(e instanceof KeyboardEvent){
+            if(e.key=='S' && e.shiftKey){
+                fs_state.value=!fs_state.value;
+                e.preventDefault();
+            }
+        }
     }
 </script>
 <style scoped>
@@ -160,7 +168,7 @@ import half_screen from "@/assets/half_screen.svg";
     <Menu>
         <Loading :resolved="loader.resolved" :err="loader.err"/>
         <div id="top-panel" v-if="loader.resolved && !loader.err" :class="full_scr?`top-fs`:''" >
-            <div class="info-fs column" v-if="full_scr" @keydown="check_shortcut">
+            <div class="info-fs column" v-if="full_scr">
                 <button :class="['info-btn',fs_state?'':'used-btn']" @click="fs_state=false">
                     <div></div>
                     solve
