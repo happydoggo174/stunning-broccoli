@@ -137,9 +137,12 @@
     transition: 0.2s opacity ease-in-out;
     transition-delay: 60ms;
 }
-.info-btn:hover{
-    background-color: rgba(0,0,555,0.4);
+.used-btn{
+    background-color: rgba(0,0,255,0.4) !important;
 }
-.info-btn:hover .ex-img{
+.info-btn:hover{
+    background-color: rgba(0,0,255,0.2);
+}
+.info-btn:hover .ex-img,.used-btn .ex-img{
     opacity: 1;
 }

@@ -14,7 +14,7 @@
     }
 </script>
 <style scoped>
-    #notification-outer-padding{
+    #noti-outer{
         z-index: 2;
         justify-content: center;
         position: fixed;
@@ -24,28 +24,28 @@
         height: 100vh;
         background-color: rgba(0, 0, 0, 0.6);
     }
-    .notification-inner-padding{
+    .noti-inner{
         align-items: center;
         justify-content: center;
     }
-    .notification-box{
+    .noti-box{
         background-color: white;
         padding: 20px;
         border-radius: 28px;
         color: black;
     }
-    .notification-box .title{
+    .noti-box .title{
         font-size: 18px;
         display: block;
         text-align: center;
     }
-    .notification-box .msg{
+    .noti-box .msg{
         display: flex;
         text-align: center;
         margin-top: 4px;
         margin-bottom: 14px;
     }
-    .notification-box button{
+    .noti-box button{
         padding: 4px;
     }
     .yes-btn{
@@ -69,9 +69,9 @@
     }
 </style>
 <template>
-    <div id="notification-outer-padding" class="row" v-if="event_bridge.type">
-        <div class="notification-inner-padding column"  v-if="event_bridge.type=='alert'">
-            <div class="notification-box column">
+    <div id="noti-outer" class="row" v-if="event_bridge.type">
+        <div class="noti-inner column"  v-if="event_bridge.type=='alert'">
+            <div class="noti-box column">
                 <div class="row" style="justify-content: center;align-items: center;">
                     <img :src="error" width="24px" height="24px" style="margin-right: 6px;" v-show="event_bridge.is_err">
                     <span class="title">{{ event_bridge.title }}</span>
@@ -80,8 +80,8 @@
                 <button @click="close_dialog">ok</button>
             </div>
         </div>
-        <div class="notification-inner-padding column" v-else-if="event_bridge.type='confirm'" >
-            <div class="notification-box column">
+        <div class="noti-inner column" v-else-if="event_bridge.type='confirm'" >
+            <div class="noti-box column">
                 <div class="row" style="justify-content: center;align-items: center;">
                     <span class="title">{{ event_bridge.title }}</span>
                 </div>

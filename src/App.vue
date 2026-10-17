@@ -12,6 +12,7 @@
     .no-bg{background-color: unset;}
     .text-center{display: block;text-align: center;}
     .icon-btn{border: none;background-color: unset;}
+    .hover-tint:hover{background-color: rgba(0,0, 0, 0.15);}
 </style>
 <template>
     <Overlay/>

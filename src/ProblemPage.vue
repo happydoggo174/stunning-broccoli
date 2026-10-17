@@ -27,6 +27,7 @@ import edit from "@/assets/edit.svg";
 import DialogBackdrop from './DialogBackdrop.vue';
 import fullscreen from "@/assets/fullscreen.svg";
 import expand from "@/assets/expand.svg";
+import half_screen from "@/assets/half_screen.svg";
     const loader=reactive(new loading());
     const prop=defineProps({
         id:Number
@@ -38,6 +39,7 @@ import expand from "@/assets/expand.svg";
     const show_done=ref(false);
     const solver=useTemplateRef("solver");
     const full_scr=ref(false);
+    const fs_state=ref(false);
     let count=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
@@ -134,6 +136,9 @@ import expand from "@/assets/expand.svg";
         }));
         await router.push(`/post/solution/${prop.id}`);
     }
+    function check_shortcut(e){
+        console.log(e);
+    }
 </script>
 <style scoped>
     @import "./css/index.css";
@@ -154,8 +159,20 @@ import expand from "@/assets/expand.svg";
     </DialogBackdrop>
     <Menu>
         <Loading :resolved="loader.resolved" :err="loader.err"/>
-        <div id="top-panel" v-if="loader.resolved && !loader.err" :class="full_scr?`top-fs`:''">
-            <div id="info-panel" v-show="!full_scr">
+        <div id="top-panel" v-if="loader.resolved && !loader.err" :class="full_scr?`top-fs`:''" >
+            <div class="info-fs column" v-if="full_scr" @keydown="check_shortcut">
+                <button :class="['info-btn',fs_state?'':'used-btn']" @click="fs_state=false">
+                    <div></div>
+                    solve
+                    <img :src="expand" alt="" class="ex-img">
+                </button>
+                <button :class="['info-btn',fs_state?'used-btn':'']" @click="fs_state=true">
+                    <div></div>
+                    detail
+                    <img :src="expand" alt="" class="ex-img">
+                </button>
+            </div>
+            <div id="info-panel" v-show="!full_scr || fs_state">
                 <div class="row tab-bar">
                     <button class="tab-btn" :class="!page?'underline':''" style="margin-left: 16px;" 
                     @click="page=0">description</button>
@@ -213,25 +230,13 @@ import expand from "@/assets/expand.svg";
                 </div>
                 <SolutionList :problem_id="prop.id" :shown="page==1" v-show="page==1"></SolutionList>
             </div>
-            <div class="info-fs column" v-show="full_scr">
-                <button class="info-btn">
-                    <div></div>
-                    solve
-                    <img :src="expand" alt="" class="ex-img">
-                </button>
-                <button class="info-btn">
-                    <div></div>
-                    detail
-                    <img :src="expand" alt="" class="ex-img">
-                </button>
-            </div>
-            <div id="run-panel">
+            <div id="run-panel" v-show="!(fullscreen  && fs_state)">
                 <Solver :parameter="detail.parameter" @solved="handle_solve" 
                 @solved-offline="handle_offline_solve":output="detail.output" 
                 :problem_id="prop.id" :problem_status="status.status" :example_name="detail.display_name" 
                 ref="solver"/>
-                <button style="position: absolute;bottom: 0px;display: none;" class="icon-btn" @click="full_scr=!full_scr">
-                    <img :src="fullscreen" alt="">
+                <button style="position: absolute;bottom: 0px;" class="icon-btn" @click="full_scr=!full_scr">
+                    <img :src="full_scr?half_screen:fullscreen" alt="">
                 </button>
             </div>
         </div>
