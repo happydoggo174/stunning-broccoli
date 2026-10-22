@@ -28,6 +28,7 @@ import DialogBackdrop from './DialogBackdrop.vue';
 import fullscreen from "@/assets/fullscreen.svg";
 import expand from "@/assets/expand.svg";
 import half_screen from "@/assets/half_screen.svg";
+import ShortcutHint from './ShortcutHint.vue';
     const loader=reactive(new loading());
     const prop=defineProps({
         id:Number
@@ -40,6 +41,8 @@ import half_screen from "@/assets/half_screen.svg";
     const solver=useTemplateRef("solver");
     const full_scr=ref(false);
     const fs_state=ref(false);
+    const hover_solve=ref(false);
+    const hover_detail=ref(false);
     let count=0;
     async function handle_like(){
         if(isLoading.value || status.reaction=="liked"){return;}
@@ -141,7 +144,7 @@ import half_screen from "@/assets/half_screen.svg";
     function check_shortcut(e){
         if(!full_scr.value){return;}
         if(e instanceof KeyboardEvent){
-            if(e.key=='S' && e.shiftKey){
+            if(e.key=='W' && e.shiftKey){
                 fs_state.value=!fs_state.value;
                 e.preventDefault();
             }
@@ -169,16 +172,26 @@ import half_screen from "@/assets/half_screen.svg";
         <Loading :resolved="loader.resolved" :err="loader.err"/>
         <div id="top-panel" v-if="loader.resolved && !loader.err" :class="full_scr?`top-fs`:''" >
             <div class="info-fs column" v-if="full_scr">
-                <button :class="['info-btn',fs_state?'':'used-btn']" @click="fs_state=false">
-                    <div></div>
-                    solve
-                    <img :src="expand" alt="" class="ex-img">
-                </button>
-                <button :class="['info-btn',fs_state?'used-btn':'']" @click="fs_state=true">
-                    <div></div>
-                    detail
-                    <img :src="expand" alt="" class="ex-img">
-                </button>
+                <div style="position: relative;" @mouseenter="hover_solve=1" @mouseleave="hover_solve=0">    
+                    <button :class="['info-btn',fs_state?'':'used-btn']" @click="fs_state=false">
+                        <div></div>
+                        solve
+                        <img :src="expand" alt="" class="ex-img">
+                    </button>
+                    <Transition name="short">
+                        <ShortcutHint shortcut="shift+w" message="switch tab" v-show="hover_solve"></ShortcutHint>
+                    </Transition>
+                </div>
+                <div style="position: relative;" @mouseenter="hover_detail=1" @mouseleave="hover_detail=0">
+                    <button :class="['info-btn',fs_state?'used-btn':'']" @click="fs_state=true">
+                        <div></div>
+                        detail
+                        <img :src="expand" alt="" class="ex-img">
+                    </button>
+                    <Transition name="short"> 
+                        <ShortcutHint shortcut="shift+w" message="switch tab" v-show="hover_detail"></ShortcutHint>
+                    </Transition>
+                </div>
             </div>
             <div id="info-panel" v-show="!full_scr || fs_state">
                 <div class="row tab-bar">
@@ -234,7 +247,8 @@ import half_screen from "@/assets/half_screen.svg";
                         <div class="spacer"></div>
                     </div>
                     <HintWidget :hint="detail.hint"></HintWidget>
-                    <Comment :problem_id="prop.id" :comment_count="detail.comment_count"/>
+                    <Comment :problem_id="prop.id" :comment_count="detail.comment_count" v-if="!full_scr"/>
+                    <!--vue bug,fixes later-->
                 </div>
                 <SolutionList :problem_id="prop.id" :shown="page==1" v-show="page==1"></SolutionList>
             </div>

@@ -131,6 +131,7 @@
     transition: 0.2s background-color ease-in-out;
     transition-delay: 60ms;
     letter-spacing: 0.03em;
+    width: calc(100% - 16px);
 }
 .info-btn .ex-img{
     opacity: 0;
@@ -138,6 +139,7 @@
     transition-delay: 60ms;
 }
 .used-btn{
+    transition: 0.2s background-color ease-in-out;
     background-color: rgba(0,0,255,0.4) !important;
 }
 .info-btn:hover{
@@ -145,4 +147,10 @@
 }
 .info-btn:hover .ex-img,.used-btn .ex-img{
     opacity: 1;
+}
+.short-enter-from,.short-leave-to{
+    opacity: 0;
+}
+.short-enter-active,.short-leave-active{
+    transition: 0.25s opacity ease-in-out;
 }
