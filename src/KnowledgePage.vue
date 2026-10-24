@@ -117,6 +117,11 @@
                         <img :src="options" alt="">
                     </button>
                 </div>
+                <div v-else>
+                    <button class="borderless no-bg" title="only author can edit lesson">
+                        <img :src="options" alt="" style="opacity: 0.8;">
+                    </button>
+                </div>
             </div>
             <div class="row" style="align-items: center;">
                 <div class="row" @click="show_profile(data.author_id)">
