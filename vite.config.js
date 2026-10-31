@@ -30,7 +30,7 @@ export default defineConfig({
       interval: 100 // checks files every 100ms  
     },
     headers:{
-       "Content-Security-Policy": "frame-ancestors 'none';script-src 'self'; object-src 'none'; base-uri 'self'",
+       "Content-Security-Policy": "frame-ancestors 'none';script-src 'self'; object-src 'none'; base-uri 'self';style-src-elem 'self'",
        "X-Frame-Options": "DENY",
     }
   },
