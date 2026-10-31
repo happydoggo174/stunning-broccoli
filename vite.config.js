@@ -26,9 +26,13 @@ export default defineConfig({
   server:{
     watch: {
       usePolling: true,
-      ignored: ['**/.git/**'],
+      ignored: ['**/.git/**','**/dist/**','**/node_modules/**'],
       interval: 100 // checks files every 100ms  
     },
+    headers:{
+       "Content-Security-Policy": "frame-ancestors 'none';script-src 'self'; object-src 'none'; base-uri 'self'",
+       "X-Frame-Options": "DENY",
+    }
   },
   watch: {
       usePolling: true,

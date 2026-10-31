@@ -1,2 +1,5 @@
+/*
+  Content-Security-Policy: frame-ancestors 'none'; script-src 'self'; object-src 'none'; base-uri 'self';
+  X-Frame-Options: DENY
 /assets/*
   Cache-Control: public, max-age=2592000, immutable
